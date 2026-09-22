@@ -3,7 +3,8 @@ type: project-context
 title: "<org>/<repo>"
 description: "<one-line description>"
 resource: "<repo-url>"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
 tags: [language, type]
 ---
 # Project Context: <org>/<repo>
@@ -27,7 +28,7 @@ Every issue follows the same lifecycle. Active files live in `.opencode/`.
 | Start | `playbook/PLAYBOOK_<N>.md` | Strategy, patterns, pitfalls, verification commands |
 | During | `.opencode/WORK_LOG.md` | Session-by-session progress (see [_worklog.md](_worklog.md)) |
 | During | `_decisions.md` | Non-obvious choices worth an ADR |
-| End | `pr/PR_<N>.md`| PR description  Use template from [_templates.md](_templates.md) |
+| End | `pr/PR_<N>.md` | PR description — use [_templates.md](_templates.md) |
 | End | `.opencode/archive/` | Move completed issue files here |
 Templates and full workflow: [_templates.md](_templates.md).
 ---
@@ -46,6 +47,7 @@ Templates and full workflow: [_templates.md](_templates.md).
 | [_backlog.md](_backlog.md) | Planning — future work, ideas, tech debt |
 | [_decisions.md](_decisions.md) | Why something is the way it is — ADR log |
 | [_codestyle.md](_codestyle.md) | Writing code — SPDX, lint, conventions |
+| [_testing.md](_testing.md) | Testing practice — fixtures, mocking, golden files, coverage |
 | [_commands.md](_commands.md) | Need a command — build/test/run reference |
 **When things break — diagnostics**
 | File | When to read |
@@ -66,6 +68,7 @@ Templates and full workflow: [_templates.md](_templates.md).
 |------|-------------|
 | [_api.md](_api.md) | Public API — methods, commands, endpoints |
 | [_release.md](_release.md) | Release process — versioning, publishing, rollback |
+| [_performance.md](_performance.md) | Performance tracking — benchmarks, profiling, SLA/SLO targets |
 ---
 _This `.opencode/` directory is an OKF bundle. Entry point: this file. Bundle index: [index.md](index.md). Change log pointer: [log.md](log.md)._
 ---

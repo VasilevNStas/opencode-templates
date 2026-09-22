@@ -2,7 +2,8 @@
 type: decision-log
 title: "Architecture Decision Records"
 description: "Chronological log of significant decisions and their rationale"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
 tags: [adr, architecture, decisions]
 ---
 
@@ -22,7 +23,7 @@ choices that affect architecture, public API, or development process.
 
 ---
 
-## ADR-003: <title>
+## ADR-002: <title>
 
 - **Date:** <YYYY-MM-DD>
 - **Status:** accepted | proposed | rejected | superseded by ADR-XXX
@@ -44,13 +45,9 @@ choices that affect architecture, public API, or development process.
 - **Negative:** <what got worse, trade-offs>
 - **Follow-up:** <what needs to happen because of this>
 
-### References
-- [1] [Related issue](<url>)
-- [2] [Related PR](<url>)
-
 ---
-## ADR-002: <title>
-<same structure>
+## ADR-001: <title>
+(Repeat the same structure as above for older ADRs)
 ---
 ## ADR-001: <title>
 <same structure>

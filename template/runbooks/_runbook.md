@@ -4,7 +4,8 @@ title: "<scenario>"
 description: "<one-line summary of when to use this runbook>"
 severity: P0 | P1 | P2
 last-tested: <YYYY-MM-DD>
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: draft
 tags: [runbook, area]
 ---
 
@@ -65,8 +66,3 @@ tags: [runbook, area]
 - Record the incident in [_decisions.md](../_decisions.md) if it changed a process
 - Update this runbook if the procedure differed
 - Add follow-up tasks to [_backlog.md](../_backlog.md)
-
-## References
-
-- [1] [Related dashboard](<url>)
-- [2] [Monitoring alert definition](<url>)

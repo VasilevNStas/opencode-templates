@@ -3,8 +3,8 @@ type: finding
 title: "<short title>"
 description: "<one-line>"
 severity: high | medium | low
-status: open | in-progress | addressed | wontfix
-timestamp: <YYYY-MM-DD>
+status: open
+generated: { by: human:<id>, at: <YYYY-MM-DD> }
 tags: [finding, area]
 ---
 # Finding: <title>

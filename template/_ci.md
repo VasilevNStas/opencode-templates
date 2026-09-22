@@ -2,7 +2,8 @@
 type: ci
 title: "CI Workflows"
 description: "CI workflow reference and common failure patterns"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
 tags: [ci, workflows]
 ---
 
@@ -54,8 +55,3 @@ Faster alternative — run the individual commands from `Workflows` above.
    appear there first.
 4. **Check caching.** CI cache may be stale. Try clearing it.
 5. **Re-run the job** with debug logging enabled.
-
-## References
-
-- [1] [CI platform documentation](<url>)
-- [2] [Repository workflow files](<repo-url>/.github/workflows)

@@ -2,7 +2,8 @@
 type: architecture
 title: "<project-name> — Architecture"
 description: "<one-line summary of system architecture>"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
 tags: [architecture, language]
 ---
 
@@ -51,7 +52,3 @@ pipeline, event-driven), how components relate>
 - **Unit:** <framework, coverage target>
 - **Integration:** <what is integrated>
 - **E2E:** <end-to-end tests>
-
-## Citations
-
-- [1] [Design doc](<url>)

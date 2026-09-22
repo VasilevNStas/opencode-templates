@@ -2,7 +2,8 @@
 type: analysis-index
 title: "Analysis Results"
 description: "Index of analysis findings for this project"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: draft
 tags: [analysis, index]
 ---
 # Analysis
@@ -21,6 +22,3 @@ on one, create an entry in [_backlog.md](../_backlog.md).
 | F-001 | high     | <...>   | [link](./<file>.md) | todo        |
 | F-002 | medium   | <...>   | [link](./<file>.md) | in-progress |
 | F-003 | low      | <...>   | [link](./<file>.md) | wontfix     |
-
-## References
-- [1] [Original audit request](<url>)

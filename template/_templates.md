@@ -2,8 +2,9 @@
 type: templates
 title: "Issue and PR Workflow Templates"
 description: "Standard templates for PROJECT_SUMMARY, PLAYBOOK, and PR descriptions"
-timestamp: <YYYY-MM-DD>
 tags: [templates, workflow, issue, pr]
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
 ---
 
 # Issue Workflow Templates
@@ -31,7 +32,7 @@ type: project-summary
 issue: "#<N>"
 title: "<title>"
 status: draft | in-progress | completed
-timestamp: <YYYY-MM-DD>
+generated: { by: human:<id>, at: <YYYY-MM-DD> }
 tags: [<tag>]
 ---
 
@@ -82,7 +83,7 @@ type: playbook
 issue: "#<N>"
 title: "<title>"
 status: draft | in-progress | completed
-timestamp: <YYYY-MM-DD>
+generated: { by: human:<id>, at: <YYYY-MM-DD> }
 tags: [<tag>]
 ---
 
@@ -123,6 +124,7 @@ type: pr
 issue: "#<N>"
 title: "<PR title>"
 status: draft | ready-for-review | in-review | merged
+generated: { by: human:<id>, at: <YYYY-MM-DD> }
 ---
 
 ## Description
@@ -149,17 +151,9 @@ Fixes #<N>
 ## Notes for Reviewers
 
 <What to check especially carefully>
-
-## References
-
-- [1] [Related discussion](<url>)
 ```
 
 ---
-## References
-
-- [1] [Design doc](<url>)
-
 ## Lifecycle
 
 1. **Start** — create `issue/PROJECT_SUMMARY_<N>.md` and

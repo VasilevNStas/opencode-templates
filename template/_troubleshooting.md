@@ -2,7 +2,8 @@
 type: troubleshooting
 title: "Troubleshooting"
 description: "Local (non-CI) problems and their fixes"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
 tags: [troubleshooting, dev-env]
 ---
 # Troubleshooting
@@ -11,18 +12,15 @@ For initial setup, see [_setup.md](_setup.md)
 **Rule:** every time you spend more than 10 minutes solving a local problem,
 add it here. Future you will thank present you.
 ## Quick index
+
 | Symptom | Section |
 |---------|---------|
-| `Address already in use` | [Port already in use](#port-already-in-use) |
-| `database does not exist` | [Database errors](#database-errors) |
-| `bundle install` fails | [Dependency install fails](#dependency-install-fails) |
+| `Address already in use` / port conflict | [Port conflicts](#port-conflicts) |
+| Database does not exist / connection error | [Database errors](#database-errors) |
+| Dependency install fails (gem/npm) | [Dependency install fails](#dependency-install-fails) |
 | Tests hang or timeout | [Tests hang](#tests-hang) |
 | Migrations fail | [Migrations fail](#migrations-fail) |
 | `<other symptom>` | [<section>](#<anchor>) |
-| `port already in use` | [Port conflicts](#port-conflicts) |
-| `migration fails` | [Migrations](#migrations) |
-| `gem install fails` | [Dependencies](#dependencies) |
-| `tests hang` | [Tests](#tests) |
 ---
 ## Port conflicts
 **Symptom:**
@@ -104,5 +102,3 @@ If rollback fails, reset from scratch (only in dev!):
 2. Check [_ci.md](_ci.md) — maybe it's not a local problem.
 3. Search the project issue tracker for the error message.
 4. **After solving — add the fix here.**
-## References
-- [1] [Stack Overflow: EADDRINUSE](<url>)

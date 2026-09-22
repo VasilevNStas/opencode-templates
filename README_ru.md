@@ -93,7 +93,7 @@ Bundle — **локальный**, никогда не коммитится в �
 1. **Frontmatter** — метаданные (обязательное поле `type`).
 2. **Body** — markdown с содержимым.
 
-Bundle следует OKF v0.1 **с расширениями** (см. раздел
+Bundle следует OKF v0.2 **с расширениями** (см. раздел
 [OKF и этот шаблон](#okf-и-этот-шаблон)).
 
 ### Lazy vs eager
@@ -157,7 +157,7 @@ OpenCode при старте сессии собирает `AGENTS.md` со вс
 ├── index.md                      ← OKF entry point
 ├── log.md                        ← OKF log pointer
 ├── AGENTS.md                     ← главный файл
-├── SPEC_REFERENCE.md             ← выдержка из OKF v0.1
+├── SPEC_REFERENCE.md             ← выдержка из OKF v0.2
 │
 ├── _concepts.md                  ← архитектура
 ├── _setup.md                     ← локальный запуск
@@ -172,6 +172,10 @@ OpenCode при старте сессии собирает `AGENTS.md` со вс
 ├── _backlog.md                   ← будущие задачи
 ├── _worklog.md                   ← шаблон WORK_LOG
 ├── _templates.md                 ← шаблоны issue/PR
+├── _testing.md                   ← тестирование (фикстуры, моки, покрытия)
+├── _api.md                       ← API reference (endpoints, методы)
+├── _release.md                   ← процесс релиза и отката
+├── _performance.md               ← бенчмарки, профилирование, SLO-цели
 ├── _ci.md                        ← CI-workflow и ошибки
 ├── _meta.md                      ← мета о bundle
 │
@@ -215,6 +219,7 @@ OpenCode при старте сессии собирает `AGENTS.md` со вс
 |------|--------------|
 | `_templates.md` | Новая issue — SUMMARY, PLAYBOOK, PR |
 | `_worklog.md` | Начало/продолжение сессии |
+| `_testing.md` | Тестирование — фикстуры, моки, golden files, покрытия |
 | `_backlog.md` | Планирование, идеи, техдолг |
 | `_decisions.md` | «Почему так сделано» — ADR |
 | `_codestyle.md` | Пишешь код — SPDX, lint, конвенции |
@@ -237,12 +242,15 @@ OpenCode при старте сессии собирает `AGENTS.md` со вс
 | `_security.md` | Секреты, уязвимости |
 | `analysis/` | Результаты глубокого анализа |
 | `_meta.md` | Как устроен сам bundle |
+| `_api.md` | Публичное API — методы, команды, эндпоинты (опционально) |
+| `_release.md` | Процесс релиза — версионирование, публикация, откат (опционально) |
+| `_performance.md` | Производительность — бенчмарки, профилирование, SLO (опционально) |
 
 ### Служебные
 
 | Файл | Роль |
 |------|------|
-| `SPEC_REFERENCE.md` | Выдержка из OKF v0.1 |
+| `SPEC_REFERENCE.md` | Выдержка из OKF v0.2 |
 | `.gitignore` | Защита от коммита |
 | `.template-version` | Версия шаблона |
 
@@ -436,6 +444,10 @@ OKF не регистрирует `type` централизованно, но д
 | `backlog` | `_backlog.md` |
 | `worklog` | `_worklog.md`, `WORK_LOG.md` |
 | `templates` | `_templates.md` |
+| `testing` | `_testing.md` |
+| `api` | `_api.md` |
+| `release` | `_release.md` |
+| `performance` | `_performance.md` |
 | `analysis-index` | `analysis/index.md` |
 | `finding` | `analysis/F-*.md` |
 | `runbook-index` | `runbooks/index.md` |
@@ -889,5 +901,5 @@ AI-агента. Не строго конформный, но следующий
 
 ---
 
-*Полное руководство по OKF v0.1: [SPEC.md](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md).*
+*Полное руководство по OKF v0.2: [SPEC.md](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md).*
 *Локальная выдержка: [`SPEC_REFERENCE.md`](SPEC_REFERENCE.md).*

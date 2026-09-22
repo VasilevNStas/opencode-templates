@@ -2,7 +2,8 @@
 type: worklog
 title: "Work Log Template"
 description: "Format and rules for WORK_LOG.md"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: draft
 tags: [worklog, log]
 ---
 
@@ -72,7 +73,3 @@ For trivial sessions (typo fix, one-line change), skip the table:
 3. Open `.opencode/WORK_LOG.md`
 4. Insert the new entry **immediately after the intro paragraph** and
    **before the first existing `## <date>` heading**
-
-## References
-
-- [1] [On keeping a work journal](<url>)

@@ -2,7 +2,8 @@
 type: backlog
 title: "Backlog — Future Work"
 description: "Planned and unplanned work items, ideas, and tech debt"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
 tags: [backlog, planning]
 ---
 
@@ -39,7 +40,3 @@ cheap to delete. Promote items to real issues when you decide to act.
 | Item | Why it hurts | Effort | Priority |
 |------|--------------|--------|----------|
 | <thing> | <pain> | S / M / L | P2 |
-
-## References
-
-- [1] [Project board](<url>)

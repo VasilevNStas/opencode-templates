@@ -2,7 +2,8 @@
 type: codestyle
 title: "Code Style Conventions"
 description: "SPDX headers, linting, language conventions, and testing setup"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
 tags: [codestyle, language]
 ---
 
@@ -38,14 +39,4 @@ Lint must pass with **zero offenses** before any commit.
 
 ## Testing
 
-- **Framework:** <test framework>
-- **Run all:** <command>
-- **Single test:** <command with name filter>
-- **Patterns:** <fixtures, mocking, golden files, etc.>
-
-Testing **strategy** (what we test and why) — see [_concepts.md](_concepts.md).
-
-## References
-
-- [1] [Official style guide](<url>)
-- [2] [Linter config](<path/to/config>)
+- Deep testing strategy: [_testing.md](_testing.md)

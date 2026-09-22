@@ -2,7 +2,8 @@
 type: setup
 title: "Local Setup"
 description: "How to get the project running locally from scratch"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
 tags: [setup, onboarding, dev-env]
 ---
 # Local Setup
@@ -49,16 +50,11 @@ Open <http://localhost:PORT>
 <test command>
 <lint command>
 ```
-If something fails, see [_troubleshooting.md](_troubleshooting.md)
-For details, see [_commands.md](_commands.md)
-If veryfy fails, see [_troubleshooting.md](_troubleshooting.md)
+If something fails, see [_troubleshooting.md](_troubleshooting.md).
+For details, see [_commands.md](_commands.md).
 ## First-day reading order
 1. [AGENTS.md](AGENTS.md) — what this project is
 2. [_concepts.md](_concepts.md) — how it's built
 3. [_codestyle.md](_codestyle.md) — how to write code
 4. [_commands.md](_commands.md) — common commands
 5. [_files.md](_files.md) — where things live
-
-## Citations
-- [1] [Official install guide](<url>)
-- [2] [Team wiki: dev environment](<url>)

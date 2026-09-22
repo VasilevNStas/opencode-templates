@@ -2,8 +2,21 @@
 type: security
 title: "Security & Secrets"
 description: "How secrets are handled, what must never be committed"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
+stale_after: 2027-12-31
 tags: [security, secrets]
+sources:
+  - id: owasp-secrets
+    resource: https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html
+    title: OWASP Secrets Management Cheat Sheet
+    author: team:owasp
+    last_modified: 2026-01-15
+  - id: github-sensitive-data
+    resource: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository
+    title: Removing sensitive data from a repository
+    author: github-support
+    last_modified: 2026-03-20
 ---
 # Security & Secrets
 ## Hard rules
@@ -15,7 +28,7 @@ tags: [security, secrets]
 ## Where secrets live
 | Environment | Source | How to get |
 |-------------|--------|-----------|
-| Local dev | `.env` (не коммитится) | <от тимлида / из vault> |
+| Local dev | `.env` (never committed) | <from team lead / vault> |
 | CI | GitHub Secrets | <repo settings> |
 | Staging | <vault path> | <access request> |
 | Prod | <vault path> | <on-call only> |
@@ -41,7 +54,4 @@ Full procedure: see [runbooks/](runbooks/index.md)
 For public reporting (external researchers), see `SECURITY.md` in the
 repository root if present.
 - <contact / security@ / bug bounty>
-- Don`t open public issue — use <private channel>.
-## References
-- [1] [OWASP Secrets Management](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html)
-- [2] [GitHub: removing sensitive data](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+- Don't open public issue — use <private channel>.

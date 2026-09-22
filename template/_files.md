@@ -2,7 +2,8 @@
 type: files
 title: "Key Files Map"
 description: "Navigation guide to the codebase — what lives where"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
 tags: [files, navigation]
 ---
 
@@ -40,7 +41,3 @@ Curated map, not an exhaustive listing. For the full list, use
 | File | Purpose | When to touch |
 |------|---------|---------------|
 | `<path>` | <what it does> | <when to modify> |
-
-## References
-
-- [1] [Repository tree](<url>)

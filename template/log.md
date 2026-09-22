@@ -2,7 +2,7 @@
 type: log
 title: "Change Log"
 description: "Pointers to chronological records in this bundle"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
 ---
 
 # Log

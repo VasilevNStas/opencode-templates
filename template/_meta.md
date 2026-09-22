@@ -2,7 +2,8 @@
 type: meta
 title: "Bundle Meta"
 description: "What this .opencode/ bundle is and how to work with it"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
 tags: [meta, okf]
 ---
 
@@ -41,7 +42,7 @@ This bundle follows OKF v0.1 with the following extensions:
 | `_*.md` naming | Prefix `_` marks reference files (partials) |
 | `WORK_LOG.md` | Local work log, analogous to OKF's `log.md` |
 | Subdirectories | `issue/`, `playbook/`, `pr/`, `analysis/`, `runbooks/`, `archive/` for dynamic content |
-| Custom `type` values | `project-context`, `setup`, `worklog`, `backlog`, `decision-log`, etc. |
+| Custom `type` values | `project-context`, `setup`, `worklog`, `backlog`, `decision-log`, `testing`, `api`, `release`, `performance`, etc. |
 
 Local extract of the spec: [SPEC_REFERENCE.md](SPEC_REFERENCE.md).
 
@@ -59,7 +60,8 @@ init-opencode --update <project-dir>
   `pr/*`, `archive/*`
 - **Always overwritten:** `_codestyle.md`, `_ci.md`, `_commands.md`,
   `_files.md`, `_glossary.md`, `_security.md`, `_troubleshooting.md`,
-  `_templates.md`, `AGENTS.md`, `index.md`, `log.md`, `_meta.md`
+  `_templates.md`, `_testing.md`, `_api.md`, `_release.md`, `_performance.md`,
+  `AGENTS.md`, `index.md`, `log.md`, `_meta.md`
 - **Diff preview:**
   ```bash
   init-opencode --diff <project-dir>
@@ -70,10 +72,4 @@ init-opencode --update <project-dir>
 - **Never commit** this directory. See [`.gitignore`](.gitignore) and
   project's `.git/info/exclude`
 - **Never put secrets** in any file here. See [_security.md](_security.md)
-- **Update `timestamp`** in a file's frontmatter whenever you edit it
-
-## References
-
-- [1] [OKF spec](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
-- [2] [Template repository](<repo-url>)
-- [3] [OpenCode AGENTS.md docs](https://opencode.ai/docs/agents/)
+- **Update `generated.at`** in a file's frontmatter whenever you edit it

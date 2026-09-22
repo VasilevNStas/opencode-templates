@@ -2,7 +2,8 @@
 type: runbook-index
 title: "Runbooks"
 description: "Incident response procedures"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: draft
 tags: [runbooks, index, incidents]
 ---
 
@@ -26,7 +27,3 @@ open it, follow the steps in order
 2. Fill in all sections
 3. Test the procedure (in staging if possible)
 4. Add a row to the Index above
-
-## References
-
-- [1] [On-call handbook](<url>)

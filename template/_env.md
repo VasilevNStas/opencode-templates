@@ -2,7 +2,8 @@
 type: env
 title: "Environments"
 description: "Map of deployment environments — URLs, ownership, access"
-timestamp: <YYYY-MM-DD>
+generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
+status: stable
 tags: [env, infrastructure]
 ---
 # Environments
@@ -38,6 +39,3 @@ For incident procedures, see [runbooks/](runbooks/index.md).
 - **Never** deploy outside the process — see Deploy above.
 - **Never** share prod credentials — see [_security.md](_security.md).
 - **Always** announce changes in <channel> before running.
-## References
-- [1] [Infra dashboard](<url>)
-- [2] [Deploy runbook](runbooks/<file>.md)

@@ -92,7 +92,7 @@ Every file is a **concept document**. It has two parts:
 1. **Frontmatter** — metadata (required field `type`).
 2. **Body** — markdown content.
 
-The bundle follows OKF v0.1 **with extensions** (see
+The bundle follows OKF v0.2 **with extensions** (see
 [OKF and this template](#okf-and-this-template)).
 
 ### Lazy vs eager
@@ -156,7 +156,7 @@ Full structure of `.opencode/`:
 ├── index.md                      ← OKF entry point
 ├── log.md                        ← OKF log pointer
 ├── AGENTS.md                     ← main file
-├── SPEC_REFERENCE.md             ← extract of OKF v0.1
+├── SPEC_REFERENCE.md             ← extract of OKF v0.2
 │
 ├── _concepts.md                  ← architecture
 ├── _setup.md                     ← local setup
@@ -171,6 +171,10 @@ Full structure of `.opencode/`:
 ├── _backlog.md                   ← future work
 ├── _worklog.md                   ← WORK_LOG template
 ├── _templates.md                 ← issue/PR templates
+├── _testing.md                   ← testing practice (fixtures, mocking, coverage)
+├── _api.md                       ← API reference (endpoints, methods)
+├── _release.md                   ← release process and rollback
+├── _performance.md               ← benchmarks, profiling, SLO targets
 ├── _ci.md                        ← CI workflows and failures
 ├── _meta.md                      ← bundle meta
 │
@@ -214,6 +218,7 @@ Full structure of `.opencode/`:
 |------|--------------|
 | `_templates.md` | New issue — SUMMARY, PLAYBOOK, PR |
 | `_worklog.md` | Starting/continuing a session |
+| `_testing.md` | Testing practice — fixtures, mocking, golden files, coverage |
 | `_backlog.md` | Planning, ideas, tech debt |
 | `_decisions.md` | "Why is it like this" — ADR |
 | `_codestyle.md` | Writing code — SPDX, lint, conventions |
@@ -236,12 +241,15 @@ Full structure of `.opencode/`:
 | `_security.md` | Secrets, vulnerabilities |
 | `analysis/` | Deep analysis findings |
 | `_meta.md` | How the bundle itself is organized |
+| `_api.md` | Public API — methods, commands, endpoints (optional) |
+| `_release.md` | Release process — versioning, publishing, rollback (optional) |
+| `_performance.md` | Performance tracking — benchmarks, profiling, SLO targets (optional) |
 
 ### Utility
 
 | File | Role |
 |------|------|
-| `SPEC_REFERENCE.md` | Extract of OKF v0.1 |
+| `SPEC_REFERENCE.md` | Extract of OKF v0.2 |
 | `.gitignore` | Commit protection |
 | `.template-version` | Template version |
 
@@ -434,6 +442,10 @@ single project it's useful to stick to a fixed set.
 | `backlog` | `_backlog.md` |
 | `worklog` | `_worklog.md`, `WORK_LOG.md` |
 | `templates` | `_templates.md` |
+| `testing` | `_testing.md` |
+| `api` | `_api.md` |
+| `release` | `_release.md` |
+| `performance` | `_performance.md` |
 | `analysis-index` | `analysis/index.md` |
 | `finding` | `analysis/F-*.md` |
 | `runbook-index` | `runbooks/index.md` |
@@ -887,5 +899,5 @@ tasks. Not strictly conformant, but following the spirit of the spec.
 
 ---
 
-*Full OKF v0.1 guide: [SPEC.md](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md).*
+*Full OKF v0.2 guide: [SPEC.md](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md).*
 *Local extract: [`SPEC_REFERENCE.md`](SPEC_REFERENCE.md).*
