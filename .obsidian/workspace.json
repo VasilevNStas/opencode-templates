@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "85897ade61f123a7",
+        "id": "543d67df0d56b119",
         "type": "tabs",
         "children": [
           {
-            "id": "a119caa252fb71c2",
+            "id": "eedf4c9de3190dee",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "template/runbooks/_runbook.md",
-                "mode": "source",
+                "file": "README_en.md",
+                "mode": "preview",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "_runbook"
+              "title": "README_en"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "template/runbooks/_runbook.md",
+                "file": "README_en.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "template/runbooks/_runbook.md",
+                "file": "README_en.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "template/runbooks/_runbook.md",
+                "file": "README_en.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -188,10 +188,19 @@
       "bases:Create new base": false
     }
   },
-  "active": "a119caa252fb71c2",
+  "active": "eedf4c9de3190dee",
   "lastOpenFiles": [
-    "template/runbooks/index.md",
+    "README_ru.md",
+    "README_en.md",
+    "template/log.md",
+    "template/index.md",
+    "template/_meta.md",
+    "template/SPEC_REFERENCE.md",
+    "template/_env.md",
+    "template/_ci.md",
+    "template/_codestyle.md",
     "template/runbooks/_runbook.md",
+    "template/runbooks/index.md",
     "template/_glossary.md",
     "template/_troubleshooting.md",
     "template/analysis/_finding.md",
@@ -203,19 +212,10 @@
     "template/_templates.md",
     "template/_commands.md",
     "template/_testing.md",
-    "template/_codestyle.md",
     "template/_concepts.md",
     "template/_decisions.md",
     "template/_setup.md",
     "template/AGENTS.md",
-    "template/index.md",
-    "template/log.md",
-    "template/WORK_LOG.md",
-    "WORK_LOG.md",
-    "template/_release.md",
-    "template/_performance.md",
-    "template/_api.md",
-    "template/_meta.md",
     "template/runbooks",
     "template/archive",
     "template/_runbooks",
