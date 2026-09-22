@@ -623,6 +623,74 @@ init-opencode --help
 4. Leaves "never overwritten" files untouched.
 5. Updates `.template-version`.
 
+### Environment
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `OPENCODE_TEMPLATE_REPO` | `~/Projects/opencode-templates` | Path to the template repository |
+
+Override if your template clone lives elsewhere:
+
+```bash
+OPENCODE_TEMPLATE_REPO=~/work/opencode-templates \
+  init-opencode ~/Projects/my-app
+```
+
+### Version file
+
+The template repository contains a `VERSION` file at its root (e.g.,
+`v0.1.0`). `init-opencode` reads it and writes `.opencode/.template-version`
+with metadata:
+
+```
+version: v0.1.0
+installed: 2026-09-21
+source: /home/user/Projects/opencode-templates
+```
+
+`--diff` and `--update` use this to detect drift.
+
+### What gets overwritten
+
+`--update` only touches "always overwritten" files. The full lists:
+
+**Never overwritten** (user-owned):
+
+- `WORK_LOG.md`
+- `_concepts.md`
+- `_setup.md`
+- `_decisions.md`
+- `_backlog.md`
+- `_meta.md`
+- Everything in `analysis/`, `runbooks/`, `issue/`, `playbook/`,
+  `pr/`, `archive/`
+
+**Always overwritten** (template-owned):
+
+- `AGENTS.md`, `index.md`, `log.md`, `SPEC_REFERENCE.md`
+- `_codestyle.md`, `_ci.md`, `_commands.md`, `_files.md`,
+  `_glossary.md`, `_security.md`, `_troubleshooting.md`,
+  `_templates.md`, `_env.md`, `_worklog.md`
+
+If you customized an "always overwritten" file, copy it to a new name
+(e.g., `_codestyle.local.md`) or move it to the "never" list in the
+script.
+
+### Verify installation
+
+```bash
+# Check the script is in PATH
+which init-opencode
+
+# Dry run in a test directory
+mkdir -p /tmp/test-project
+init-opencode /tmp/test-project
+ls -la /tmp/test-project/.opencode/
+
+# Update should be a no-op right after install
+init-opencode --update /tmp/test-project
+# → nothing to update
+```
 ### Installing the script
 
 The script should already be in `~/.local/bin/`. If not — download it

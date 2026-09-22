@@ -1,0 +1,241 @@
+#!/usr/bin/env bash
+#
+# init-opencode — install or update the OpenCode OKF bundle in a project.
+#
+# SPDX-FileCopyrightText: Copyright (c) 2026 <author>
+# SPDX-License-Identifier: MIT
+
+set -euo pipefail
+
+# ------------------------------------------------------------------------
+# Configuration
+# ------------------------------------------------------------------------
+
+# Path to the template repository. Override with OPENCODE_TEMPLATE_REPO.
+TEMPLATE_REPO="${OPENCODE_TEMPLATE_REPO:-$HOME/Projects/opencode-templates}"
+TEMPLATE_DIR="$TEMPLATE_REPO/template"
+VERSION_FILE="$TEMPLATE_REPO/VERSION"
+
+# Files that must NEVER be overwritten by --update (user-owned).
+NEVER_OVERWRITE=(
+  "WORK_LOG.md"
+  "_concepts.md"
+  "_setup.md"
+  "_decisions.md"
+  "_backlog.md"
+  "_meta.md"
+)
+
+# Files that are ALWAYS overwritten by --update (template-owned).
+ALWAYS_OVERWRITE=(
+  "AGENTS.md"
+  "index.md"
+  "log.md"
+  "SPEC_REFERENCE.md"
+  "_codestyle.md"
+  "_ci.md"
+  "_commands.md"
+  "_files.md"
+  "_glossary.md"
+  "_security.md"
+  "_troubleshooting.md"
+  "_templates.md"
+  "_env.md"
+  "_worklog.md"
+)
+
+# Directories that are created empty during install.
+EMPTY_DIRS=(
+  "issue"
+  "playbook"
+  "pr"
+  "analysis"
+  "runbooks"
+  "archive"
+)
+
+# ------------------------------------------------------------------------
+# Helpers
+# ------------------------------------------------------------------------
+
+die()  { printf 'error: %s\n' "$*" >&2; exit 1; }
+info() { printf '→ %s\n' "$*"; }
+warn() { printf '! %s\n' "$*" >&2; }
+
+#
+usage() {
+  cat <<'EOF'
+Usage: init-opencode [options] <project-dir>
+
+Install or update the OpenCode template bundle in <project-dir>/.opencode/.
+
+Options:
+  --analyze    Install and hint the agent to analyze the repository
+  --update     Update an existing bundle (only "always overwritten" files)
+  --diff       Show what would change without writing
+  --help       Show this help
+
+Environment:
+  OPENCODE_TEMPLATE_REPO   Path to the template repository
+                           (default: ~/Projects/opencode-templates)
+
+Examples:
+  init-opencode ~/Projects/my-app
+  init-opencode --analyze ~/Projects/existing-repo
+  init-opencode --update ~/Projects/my-app
+  init-opencode --diff ~/Projects/my-app
+EOF
+}
+
+#
+check_template() {
+  [ -d "$TEMPLATE_DIR" ] || die "template not found at $TEMPLATE_DIR
+Set OPENCODE_TEMPLATE_REPO or clone the template repository."
+}
+
+#
+read_template_version() {
+  if [ -f "$VERSION_FILE" ]; then
+    tr -d '[:space:]' < "$VERSION_FILE"
+  else
+    echo "unknown"
+  fi
+}
+
+#
+write_version_file() {
+  local oc="$1"
+  {
+    echo "version: $(read_template_version)"
+    echo "installed: $(date +%Y-%m-%d)"
+    echo "source: $TEMPLATE_REPO"
+  } > "$oc/.template-version"
+}
+
+# ------------------------------------------------------------------------
+# Commands
+# ------------------------------------------------------------------------
+
+#
+cmd_install() {
+  local target="$1"
+  local analyze="${2:-no}"
+  local oc="$target/.opencode"
+
+  check_template
+
+  if [ -d "$oc" ]; then
+    local backup="$target/.opencode.bak.$(date +%Y%m%d-%H%M%S)"
+    warn "existing .opencode/ found — backing up to $(basename "$backup")"
+    mv "$oc" "$backup"
+  fi
+
+  info "installing into $oc"
+  mkdir -p "$oc"
+  cp -R "$TEMPLATE_DIR/." "$oc/"
+
+  for d in "${EMPTY_DIRS[@]}"; do
+    mkdir -p "$oc/$d"
+  done
+
+  write_version_file "$oc"
+
+  info "done."
+  echo
+  echo "Next steps:"
+  echo "  1. cd $target"
+  echo "  2. open OpenCode in this directory"
+  if [ "$analyze" = "yes" ]; then
+    echo "  3. say: \"Analyze the repository and fill in the template.\""
+  else
+    echo "  3. say: \"Starting a new project — help me fill in the template.\""
+  fi
+}
+
+#
+cmd_update() {
+  local target="$1"
+  local oc="$target/.opencode"
+
+  check_template
+  [ -d "$oc" ] || die "no .opencode/ in $target — run install first"
+
+  local updated=0
+
+  for f in "${ALWAYS_OVERWRITE[@]}"; do
+    [ -f "$TEMPLATE_DIR/$f" ] || continue
+    if ! cmp -s "$TEMPLATE_DIR/$f" "$oc/$f" 2>/dev/null; then
+      cp "$TEMPLATE_DIR/$f" "$oc/$f"
+      info "updated $f"
+      updated=$((updated + 1))
+    fi
+  done
+
+  if [ "$updated" -eq 0 ]; then
+    info "nothing to update — bundle is at version $(read_template_version)"
+  else
+    write_version_file "$oc"
+    info "$updated file(s) updated"
+  fi
+}
+
+#
+cmd_diff() {
+  local target="$1"
+  local oc="$target/.opencode"
+
+  check_template
+  [ -d "$oc" ] || die "no .opencode/ in $target"
+
+  local found=0
+  for f in "${ALWAYS_OVERWRITE[@]}"; do
+    [ -f "$TEMPLATE_DIR/$f" ] || continue
+    if ! cmp -s "$TEMPLATE_DIR/$f" "$oc/$f" 2>/dev/null; then
+      echo
+      echo "=== $f ==="
+      diff -u "$oc/$f" "$TEMPLATE_DIR/$f" || true
+      found=$((found + 1))
+    fi
+  done
+
+  if [ "$found" -eq 0 ]; then
+    info "no differences"
+  else
+    echo
+    info "$found file(s) would change"
+  fi
+}
+
+# ------------------------------------------------------------------------
+# Main
+# ------------------------------------------------------------------------
+
+#
+main() {
+  local mode="install"
+  local analyze="no"
+  local target=""
+
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --help|-h)  usage; exit 0 ;;
+      --analyze)  analyze="yes"; shift ;;
+      --update)   mode="update"; shift ;;
+      --diff)     mode="diff"; shift ;;
+      --)         shift; break ;;
+      -*)         die "unknown option: $1" ;;
+      *)          target="$1"; shift ;;
+    esac
+  done
+
+  [ -n "$target" ] || { usage; exit 1; }
+  [ -d "$target" ] || die "directory not found: $target"
+
+  case "$mode" in
+    install) cmd_install "$target" "$analyze" ;;
+    update)  cmd_update "$target" ;;
+    diff)    cmd_diff "$target" ;;
+  esac
+}
+
+main "$@"

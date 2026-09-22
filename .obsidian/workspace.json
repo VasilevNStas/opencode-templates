@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "543d67df0d56b119",
+        "id": "d602a272a8e4b476",
         "type": "tabs",
         "children": [
           {
-            "id": "eedf4c9de3190dee",
+            "id": "8062b2ced21173fe",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -188,11 +188,11 @@
       "bases:Create new base": false
     }
   },
-  "active": "eedf4c9de3190dee",
+  "active": "8062b2ced21173fe",
   "lastOpenFiles": [
+    "README_ru.md",
     "README_en.md",
     "README.md",
-    "README_ru.md",
     "template/log.md",
     "template/index.md",
     "template/_meta.md",

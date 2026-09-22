@@ -471,6 +471,75 @@ init-opencode --analyze ~/Projects/existing-repo
 заполни шаблон». Агент изучит код, CI, структуру и заполнит все
 шаблоны.
 
+### Переменные окружения
+
+| Переменная | По умолчанию | Назначение |
+|------------|--------------|------------|
+| `OPENCODE_TEMPLATE_REPO` | `~/Projects/opencode-templates` | Путь к репозиторию шаблонов |
+
+Переопределите, если клон шаблона лежит в другом месте:
+
+```bash
+OPENCODE_TEMPLATE_REPO=~/work/opencode-templates \
+  init-opencode ~/Projects/my-app
+```
+
+### Файл версии
+
+В корне репозитория шаблонов лежит файл `VERSION` (например,
+`v0.1.0`). `init-opencode` читает его и пишет
+`.opencode/.template-version` с метаданными:
+
+```
+version: v0.1.0
+installed: 2026-09-21
+source: /home/user/Projects/opencode-templates
+```
+
+`--diff` и `--update` используют этот файл для обнаружения расхождений.
+
+### Что перезаписывается
+
+`--update` трогает только файлы из списка «always overwritten».
+Полные списки:
+
+**Никогда не перезаписываются** (ваши данные):
+
+- `WORK_LOG.md`
+- `_concepts.md`
+- `_setup.md`
+- `_decisions.md`
+- `_backlog.md`
+- `_meta.md`
+- Всё содержимое `analysis/`, `runbooks/`, `issue/`, `playbook/`,
+  `pr/`, `archive/`
+
+**Всегда перезаписываются** (шаблонные):
+
+- `AGENTS.md`, `index.md`, `log.md`, `SPEC_REFERENCE.md`
+- `_codestyle.md`, `_ci.md`, `_commands.md`, `_files.md`,
+  `_glossary.md`, `_security.md`, `_troubleshooting.md`,
+  `_templates.md`, `_env.md`, `_worklog.md`
+
+Если вы кастомизировали файл из «always overwritten» — скопируйте
+его под другим именем (например, `_codestyle.local.md`) или перенесите
+в список «never» в скрипте.
+
+### Проверка установки
+
+```bash
+# Проверить, что скрипт доступен
+which init-opencode
+
+# Пробный прогон в тестовой директории
+mkdir -p /tmp/test-project
+init-opencode /tmp/test-project
+ls -la /tmp/test-project/.opencode/
+
+# Сразу после установки update должен ничего не менять
+init-opencode --update /tmp/test-project
+# → nothing to update
+```
 ### Обновление
 
 ```bash

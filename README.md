@@ -16,6 +16,23 @@ never committed to your project.
 Result: instead of one 500-line `AGENTS.md`, you get a focused ~60-line
 core plus 15+ topical files the agent reads only when needed
 
+## Installation
+Clone the template repository and link the installer:
+```bash
+git clone <repo-url> ~/Projects/opencode-templates
+ln -s ~/Projects/opencode-templates/bin/init-opencode \
+      ~/.local/bin/init-opencode
+```
+Ensure `~/.local/bin` is in `$PATH`. Then verify:
+```bash
+init-opencode --help
+```
+If you prefer a copy over a symlink:
+```bash
+cp ~/Projects/opencode-templates/bin/init-opencode ~/.local/bin/
+chmod +x ~/.local/bin/init-opencode
+```
+
 ## Quick start
 
 ```bash
@@ -75,6 +92,9 @@ opencode-templates/
     ├── analysis/
     └── runbooks/
 ```
+
+The installer lives in `bin/init-opencode`. See
+[Installation](#installation) above.
 
 Only the contents of `template/` are copied — no `.git`, no READMEs, no
 installer. See [README_en.md](README_en.md#how-it-works) for details.
