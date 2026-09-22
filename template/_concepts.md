@@ -3,7 +3,7 @@ type: architecture
 title: "<project-name> — Architecture"
 description: "<one-line summary of system architecture>"
 timestamp: <YYYY-MM-DD>
-tags: [architecture, <language>]
+tags: [architecture, language]
 ---
 
 # Architecture

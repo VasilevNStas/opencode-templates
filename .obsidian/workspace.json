@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "1d0537404dead48a",
+        "id": "85897ade61f123a7",
         "type": "tabs",
         "children": [
           {
-            "id": "c60439fceebb6001",
+            "id": "a119caa252fb71c2",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "template/_concepts.md",
-                "mode": "preview",
+                "file": "template/_files.md",
+                "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "_concepts"
+              "title": "_files"
             }
           }
         ]
@@ -55,7 +55,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "tag:#Reference",
+                "query": "",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -83,7 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 200
+    "width": 235.3006591796875
   },
   "right": {
     "id": "4e0a5eb68a0a268b",
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "template/_concepts.md",
+                "file": "template/_files.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "template/_concepts.md",
+                "file": "template/_files.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "template/_concepts.md",
+                "file": "template/_files.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -188,10 +188,16 @@
       "bases:Create new base": false
     }
   },
-  "active": "c60439fceebb6001",
+  "active": "a119caa252fb71c2",
   "lastOpenFiles": [
-    "template/_setup.md",
+    "template/_templates.md",
+    "template/_commands.md",
+    "template/_glossary.md",
+    "template/_testing.md",
+    "template/_codestyle.md",
     "template/_concepts.md",
+    "template/_decisions.md",
+    "template/_setup.md",
     "template/AGENTS.md",
     "template/analysis/index.md",
     "template/analysis/_finding.md",
@@ -203,22 +209,16 @@
     "WORK_LOG.md",
     "template/_release.md",
     "template/_performance.md",
-    "template/_testing.md",
     "template/_api.md",
     "template/_meta.md",
     "template/runbooks",
     "template/archive",
     "template/_worklog.md",
     "README.md",
-    "template/_glossary.md",
-    "template/_templates.md",
     "template/_security.md",
-    "template/_commands.md",
     "template/_backlog.md",
     "template/_runbooks",
     "template/_runbooks:",
-    "template/_env.md",
-    "_meta.md.md",
-    "_meta.md"
+    "template/_env.md"
   ]
 }

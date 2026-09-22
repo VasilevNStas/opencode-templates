@@ -8,9 +8,9 @@ tags: [adr, architecture, decisions]
 
 # Architecture Decisions
 
-Каждое значимое решение — отдельная секция. **Новые — сверху.**
-Мелкие решения остаются в WORK_LOG, здесь — только те, что влияют на
-архитектуру, публичный API или процесс разработки.
+Each significant decision gets its own entry. **Newest first.**
+Small decisions stay in [WORK_LOG.md](WORK_LOG.md); this file is for
+choices that affect architecture, public API, or development process.
 
 ## Index
 
@@ -30,20 +30,27 @@ tags: [adr, architecture, decisions]
 - **Deciders:** <@who>
 
 ### Context
-<что вынудило принять решение — проблема, ограничения, силы>
+<What forced this decision — problem, constraints, forces at play>
 
 ### Decision
-<что именно решили, одной-двумя фразами>
+<What was decided, one or two sentences>
 
 ### Alternatives considered
-- **<alt 1>** — <почему отклонили>
-- **<alt 2>** — <почему отклонили>
+- **<alt 1>** — <why rejected>
+- **<alt 2>** — <why rejected>
 
 ### Consequences
-- **Positive:** <что стало лучше>
-- **Negative:** <что стало хуже, какие компромиссы>
-- **Follow-up:** <что нужно сделать в связи с решением>
+- **Positive:** <what got better>
+- **Negative:** <what got worse, trade-offs>
+- **Follow-up:** <what needs to happen because of this>
 
 ### References
 - [1] [Related issue](<url>)
 - [2] [Related PR](<url>)
+
+---
+## ADR-002: <title>
+<same structure>
+---
+## ADR-001: <title>
+<same structure>
