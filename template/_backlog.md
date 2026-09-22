@@ -7,27 +7,27 @@ tags: [backlog, planning]
 ---
 
 # Backlog
-
-Единый список того, что **ещё не сделано**. Хронология сделанного — в
-`_worklog.md`/`WORK_LOG.md`. Когда пункт выполнен — удаляется отсюда и
-попадает в WORK_LOG.
+Future work — **not yet** started. For work already done, see
+[WORK_LOG.md](WORK_LOG.md). For confirmed tasks, use the project's issue
+tracker (GitHub Issues, GitLab Issues, etc.).
+Backlog is a **local draft**, not an official tracker. Cheap to write,
+cheap to delete. Promote items to real issues when you decide to act.
 
 ## Priorities
-
 | Priority | Meaning |
 |----------|---------|
-| P0 | Критично — ломает prod/CI, делаем сейчас |
-| P1 | Важно — в текущем цикле |
-| P2 | Желательно — когда будет время |
-| P3 | Идея / tech debt / nice-to-have |
+| P0 | Critical — breaks prod/CI, do now |
+| P1 | Important — current cycle |
+| P2 | Desirable — when there's time |
+| P3 | Idea / tech debt / nice-to-have |
 
 ## Items
 
 | # | Priority | Item | Issue | Blocked by | Next action |
 |---|----------|------|-------|------------|-------------|
-| 1 | P1 | <short title> | #123 | — | <first step> |
-| 2 | P2 | <short title> | — | #123 | <first step> |
-| 3 | P3 | <short title> | — | — | <first step> |
+| B-001 | P1 | <short title> | #123 | — | <first step> |
+| B-002 | P2 | <short title> | — | #123 | <first step> |
+| B-003 | P3 | <short title> | — | — | <first step> |
 
 ## Ideas (not yet prioritized)
 

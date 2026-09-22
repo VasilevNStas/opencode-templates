@@ -5,17 +5,17 @@ description: "<one-line>"
 severity: high | medium | low
 status: open | in-progress | addressed | wontfix
 timestamp: <YYYY-MM-DD>
-tags: [finding, <area>]
+tags: [finding, area]
 ---
 # Finding: <title>
 ## Summary
-<одно-два предложения: что нашли>
+<One or two sentences: what was found>
 ## Evidence
-<файлы, строки, метрики, ссылки на код>
+<Files, line numbers, metrics, links to code>
 ## Impact
-<что будет, если не чинить — баги, производительность, безопасность>
+<What happens if not fixed — bugs, performance, security>
 ## Recommendation
-<что делать>
+<What to do>
 ## Effort estimate
 <S / M / L>
 ## Related

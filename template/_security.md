@@ -7,10 +7,11 @@ tags: [security, secrets]
 ---
 # Security & Secrets
 ## Hard rules
-- **Никогда не коммитить** реальные секреты, ключи, токены, пароли.
-- **Никогда не логировать** PII / credentials.
-- Секреты — только через env vars или secret manager (`<vault / AWS SM / GCP SM>`).
-- Файлы с секретами перечислены в `.gitignore` и `.git/info/exclude`.
+- **Never commit** real secrets, keys, tokens, or passwords
+- **Never log** PII or credentials
+- **Never paste** secrets into issues, PRs, or chat
+- Secrets come from environment variables or a secret manager
+- Files with secrets are listed in `.gitignore` and `.git/info/exclude`
 ## Where secrets live
 | Environment | Source | How to get |
 |-------------|--------|-----------|
@@ -19,22 +20,28 @@ tags: [security, secrets]
 | Staging | <vault path> | <access request> |
 | Prod | <vault path> | <on-call only> |
 ## What's safe to commit
-- `.env.example` — с placeholder-значениями
-- Публичные ключи (не приватные)
-- Конфиги без секретов
+- `.env.example` with placeholder values only
+- Public keys (never private keys)
+- Configuration without secrets
 ## What must NEVER be committed
-- `.env`
-- `*.pem`, `*.key`, `id_rsa*`
-- <project-specific patterns>
-- Дампы БД с реальными данными
+- `.env`, `.env.*` (except `.env.example`)
+- `*.pem`, `*.key`, `id_rsa*`, `*.p12`
+- Database dumps with real data
+- Credentials in test fixtures or docs
+- Screenshots containing credentials or tokens
+- directory `.opencode`
 ## If a secret leaked
-1. Немедленно **отозвать / ротировать** секрет в источнике.
-2. Уведомить <security contact / lead>.
-3. Не пытаться «спрятать» через `git rebase` — история уже утекла.
-4. Зафиксировать инцидент в `_decisions.md` (ADR) с follow-up.
+1. **Revoke/rotate** the secret at its source immediately
+2. Notify <security contact>
+3. Do not try to hide it with `git rebase` — history is already out
+4. Record the incident in [_decisions.md](_decisions.md) as an ADR
+Full procedure: see [runbooks/](runbooks/index.md)
 ## Reporting vulnerabilities
+<Internal channel — email, Slack, ticket system.>
+For public reporting (external researchers), see `SECURITY.md` in the
+repository root if present.
 - <contact / security@ / bug bounty>
-- Не открывайте публичный issue — используйте <private channel>.
+- Don`t open public issue — use <private channel>.
 ## References
 - [1] [OWASP Secrets Management](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html)
 - [2] [GitHub: removing sensitive data](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)

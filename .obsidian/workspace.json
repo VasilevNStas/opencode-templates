@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "template/_files.md",
+                "file": "template/runbooks/_runbook.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "_files"
+              "title": "_runbook"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "template/_files.md",
+                "file": "template/runbooks/_runbook.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "template/_files.md",
+                "file": "template/runbooks/_runbook.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "template/_files.md",
+                "file": "template/runbooks/_runbook.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -190,21 +190,26 @@
   },
   "active": "a119caa252fb71c2",
   "lastOpenFiles": [
+    "template/runbooks/index.md",
+    "template/runbooks/_runbook.md",
+    "template/_glossary.md",
+    "template/_troubleshooting.md",
+    "template/analysis/_finding.md",
+    "template/analysis/index.md",
+    "template/_security.md",
+    "template/_backlog.md",
+    "template/_worklog.md",
+    "template/_files.md",
     "template/_templates.md",
     "template/_commands.md",
-    "template/_glossary.md",
     "template/_testing.md",
     "template/_codestyle.md",
     "template/_concepts.md",
     "template/_decisions.md",
     "template/_setup.md",
     "template/AGENTS.md",
-    "template/analysis/index.md",
-    "template/analysis/_finding.md",
-    "template/runbooks/index.md",
     "template/index.md",
     "template/log.md",
-    "template/_troubleshooting.md",
     "template/WORK_LOG.md",
     "WORK_LOG.md",
     "template/_release.md",
@@ -213,12 +218,7 @@
     "template/_meta.md",
     "template/runbooks",
     "template/archive",
-    "template/_worklog.md",
-    "README.md",
-    "template/_security.md",
-    "template/_backlog.md",
     "template/_runbooks",
-    "template/_runbooks:",
-    "template/_env.md"
+    "template/_runbooks:"
   ]
 }
