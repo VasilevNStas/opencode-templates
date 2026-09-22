@@ -1,0 +1,10 @@
+# Local-only data — never commit
+WORK_LOG.md
+.template-version
+archive/
+tmp/
+
+# Analysis results are usually local
+analysis/*.md
+!analysis/index.md
+!analysis/_finding.md

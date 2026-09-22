@@ -4,49 +4,24 @@
     "type": "split",
     "children": [
       {
-        "id": "240c1d29b463ff4b",
+        "id": "1d0537404dead48a",
         "type": "tabs",
         "children": [
           {
-            "id": "056d30257a7e4a51",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "README.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "README"
-            }
-          },
-          {
-            "id": "7823a2a6a8ed2b6f",
+            "id": "c60439fceebb6001",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
                 "file": "template/_concepts.md",
-                "mode": "source",
-                "source": false,
-                "backlinks": true,
-                "backlinkOpts": {
-                  "collapseAll": false,
-                  "extraContext": false,
-                  "sortOrder": "alphabetical",
-                  "showSearch": false,
-                  "searchQuery": "",
-                  "backlinkCollapsed": false,
-                  "unlinkedCollapsed": true
-                }
+                "mode": "preview",
+                "source": true
               },
               "icon": "lucide-file",
               "title": "_concepts"
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -80,7 +55,7 @@
             "state": {
               "type": "search",
               "state": {
-                "query": "",
+                "query": "tag:#Reference",
                 "matchingCase": false,
                 "explainSearch": false,
                 "collapseAll": false,
@@ -108,7 +83,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300
+    "width": 200
   },
   "right": {
     "id": "4e0a5eb68a0a268b",
@@ -213,26 +188,37 @@
       "bases:Create new base": false
     }
   },
-  "active": "866b718c41725b7a",
+  "active": "c60439fceebb6001",
   "lastOpenFiles": [
+    "template/_setup.md",
+    "template/_concepts.md",
+    "template/AGENTS.md",
+    "template/analysis/index.md",
+    "template/analysis/_finding.md",
+    "template/runbooks/index.md",
+    "template/index.md",
+    "template/log.md",
+    "template/_troubleshooting.md",
+    "template/WORK_LOG.md",
+    "WORK_LOG.md",
+    "template/_release.md",
+    "template/_performance.md",
+    "template/_testing.md",
+    "template/_api.md",
+    "template/_meta.md",
+    "template/runbooks",
+    "template/archive",
+    "template/_worklog.md",
+    "README.md",
+    "template/_glossary.md",
+    "template/_templates.md",
+    "template/_security.md",
+    "template/_commands.md",
+    "template/_backlog.md",
     "template/_runbooks",
     "template/_runbooks:",
-    "template/_concepts.md",
-    "template/_meta.md",
     "template/_env.md",
     "_meta.md.md",
-    "_meta.md",
-    "_env.md.md",
-    "_env.md",
-    "README.md",
-    "template/AGENTS.md",
-    "template/analysis/_finding.md",
-    "template/analysis/index.md",
-    "template/_security.md",
-    "template/_glossary.md",
-    "template/_troubleshooting.md",
-    "template/_setup.md",
-    "template/_decisions.md",
-    "template/_backlog.md"
+    "_meta.md"
   ]
 }
