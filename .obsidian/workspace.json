@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README_en.md",
-                "mode": "preview",
+                "file": "README.md",
+                "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "README_en"
+              "title": "README"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README_en.md",
+                "file": "README.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README_en.md",
+                "file": "README.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README_en.md",
+                "file": "README.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -190,8 +190,9 @@
   },
   "active": "eedf4c9de3190dee",
   "lastOpenFiles": [
-    "README_ru.md",
     "README_en.md",
+    "README.md",
+    "README_ru.md",
     "template/log.md",
     "template/index.md",
     "template/_meta.md",
@@ -215,7 +216,6 @@
     "template/_concepts.md",
     "template/_decisions.md",
     "template/_setup.md",
-    "template/AGENTS.md",
     "template/runbooks",
     "template/archive",
     "template/_runbooks",
