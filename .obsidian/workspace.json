@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "bin/instructions.md",
                 "mode": "preview",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "README"
+              "title": "instructions"
             }
           }
         ]
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README.md",
+                "file": "bin/instructions.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +118,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README.md",
+                "file": "bin/instructions.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +161,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README.md",
+                "file": "bin/instructions.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -190,8 +190,10 @@
   },
   "active": "41e3da84ff2bf1d9",
   "lastOpenFiles": [
-    "template/SPEC_REFERENCE.md",
     "README.md",
+    "bin/instructions.md",
+    "VERSION",
+    "template/SPEC_REFERENCE.md",
     "template/_templates.md",
     "template/WORK_LOG.md",
     "template/_setup.md",
@@ -216,7 +218,6 @@
     "README_en.md",
     "template/index.md",
     "template/_ci.md",
-    "template/runbooks/_runbook.md",
     "template/runbooks",
     "template/archive",
     "template/_runbooks",

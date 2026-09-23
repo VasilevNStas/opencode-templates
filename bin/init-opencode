@@ -13,62 +13,79 @@ set -euo pipefail
 
 # Path to the template repository. Override with OPENCODE_TEMPLATE_REPO.
 TEMPLATE_REPO="${OPENCODE_TEMPLATE_REPO:-$HOME/Projects/opencode-templates}"
+
+# Where all .md templates live inside the repo
 TEMPLATE_DIR="$TEMPLATE_REPO/template"
+
+# Version number of this template (used for tracking what's installed)
 VERSION_FILE="$TEMPLATE_REPO/VERSION"
 
 # Files that must NEVER be overwritten by --update (user-owned).
+# These files accumulate project-specific content as work progresses, so
+# updating them would lose the user's history and customizations.
 NEVER_OVERWRITE=(
-  "WORK_LOG.md"
-  "_backlog.md"
-  "_concepts.md"
-  "_decisions.md"
-  "_meta.md"
-  "_setup.md"
+  "WORK_LOG.md"          # chronological session records — user fills over time
+  "_backlog.md"          # future work & tech debt — user maintains
+  "_concepts.md"         # architecture docs — user fills on first pass
+  "_decisions.md"        # ADR log — grows as team makes choices
 )
 
 # Files that are ALWAYS overwritten by --update (template-owned).
+# These are either pure templates (no user data yet) or structural helpers
+# whose purpose is to stay synchronized with the current template version.
 ALWAYS_OVERWRITE=(
-  "AGENTS.md"
-  "index.md"
-  "log.md"
-  "SPEC_REFERENCE.md"
-  "_api.md"
-  "_ci.md"
-  "_codestyle.md"
-  "_commands.md"
-  "_env.md"
-  "_files.md"
-  "_glossary.md"
-  "_meta.md"
-  "_performance.md"
-  "_release.md"
-  "_security.md"
-  "_setup.md"
-  "_templates.md"
-  "_testing.md"
-  "_troubleshooting.md"
-  "_worklog.md"
+  "AGENTS.md"            # project entry point + workflow — template guides structure
+  "index.md"             # bundle TOC — mirrors AGENTS.md layout
+  "log.md"               # pointer to changelog sources
+  "SPEC_REFERENCE.md"    # OKF spec extract — must track latest OKF version
+  "_api.md"              # API reference template
+  "_ci.md"               # CI failure diagnostics template
+  "_codestyle.md"        # linting & conventions template
+  "_commands.md"         # build/test/run command reference template
+  "_env.md"              # environment map template
+  "_files.md"            # navigation guide template
+  "_glossary.md"         # domain terms template
+  "_meta.md"             # bundle organization info — kept current
+  "_performance.md"      # profiling & SLA template
+  "_release.md"          # versioning & rollback template
+  "_security.md"         # secrets policy — security-critical, keep updated
+  "_setup.md"            # local setup instructions — keep aligned with tooling
+  "_templates.md"        # issue/pr/playbook templates — must stay sync'd
+  "_testing.md"          # testing strategy template
+  "_troubleshooting.md"  # diagnostic runbook template
+  "_worklog.md"          # work-log entry format rules
+  "analysis/_finding.md" # individual finding template — same lifecycle as _templates.md
+  "analysis/index.md"    # findings index — regenerated when new findings created
+  "runbooks/_runbook.md" # incident response template — stays template-owned
+  "runbooks/index.md"    # runbook index — regenerated when new runbooks created
 )
 
 # Directories that are created empty during install.
+# Their contents are generated dynamically by agents during issue resolution,
+# not stored in git (they're gitignored), and reset on each install.
 EMPTY_DIRS=(
-  "issue"
-  "playbook"
-  "pr"
-  "analysis"
-  "runbooks"
-  "archive"
+  "issue"           # PROJECT_SUMMARY_<N>.md — issue snapshots
+  "playbook"        # PLAYBOOK_<N>.md — solution strategies
+  "pr"              # PR_<N>.md — pull request descriptions
+  "analysis"        # Deep analysis findings (F-001-xxx.md)
+  "runbooks"        # Incident response procedures (db-failover.md)
+  "archive"         # Completed issue artifacts moved here after merge
 )
 
 # ------------------------------------------------------------------------
 # Helpers
 # ------------------------------------------------------------------------
 
+# Print error message to stderr and exit immediately.
 die()  { printf 'error: %s\n' "$*" >&2; exit 1; }
+
+# Print status/info line with arrow prefix (→).
 info() { printf '→ %s\n' "$*"; }
+
+# Print warning line with exclamation prefix (!) to stderr.
 warn() { printf '! %s\n' "$*" >&2; }
 
-#
+# Show usage information and exit.
 usage() {
   cat <<'EOF'
 Usage: init-opencode [options] <project-dir>
@@ -93,13 +110,14 @@ Examples:
 EOF
 }
 
-#
+# Verify that the template directory exists.
 check_template() {
   [ -d "$TEMPLATE_DIR" ] || die "template not found at $TEMPLATE_DIR
 Set OPENCODE_TEMPLATE_REPO or clone the template repository."
 }
 
-#
+# Read the VERSION file from the template repo, stripping whitespace.
+# Returns "unknown" if the file doesn't exist (graceful fallback).
 read_template_version() {
   if [ -f "$VERSION_FILE" ]; then
     tr -d '[:space:]' < "$VERSION_FILE"
@@ -108,7 +126,9 @@ read_template_version() {
   fi
 }
 
-#
+# Write .template-version inside the target's .opencode/ directory.
+# Tracks which template version was installed, when, and where it came from.
+# This lets users verify their bundle is up-to-date later.
 write_version_file() {
   local oc="$1"
   {
@@ -122,7 +142,8 @@ write_version_file() {
 # Commands
 # ------------------------------------------------------------------------
 
-#
+# Install the full template bundle into the target project.
+# If .opencode/ already exists, back it up before installing fresh copy.
 cmd_install() {
   local target="$1"
   local analyze="${2:-no}"
@@ -130,6 +151,7 @@ cmd_install() {
 
   check_template
 
+  # Back up existing bundle to preserve user work during reinstall
   if [ -d "$oc" ]; then
     local backup="$target/.opencode.bak.$(date +%Y%m%d-%H%M%S)"
     warn "existing .opencode/ found — backing up to $(basename "$backup")"
@@ -138,12 +160,17 @@ cmd_install() {
 
   info "installing into $oc"
   mkdir -p "$oc"
+
+  # Copy ALL files from template/ — including never-overwrite ones
+  # During initial install we want everything, even WORK_LOG.md etc.
   cp -R "$TEMPLATE_DIR/." "$oc/"
 
+  # Create empty directories that will be populated by agents later
   for d in "${EMPTY_DIRS[@]}"; do
     mkdir -p "$oc/$d"
   done
 
+  # Record installation metadata for version tracking
   write_version_file "$oc"
 
   info "done."
@@ -158,7 +185,9 @@ cmd_install() {
   fi
 }
 
-#
+# Update only the "always overwrite" files in an existing bundle.
+# Skips user-owned files (WORK_LOG.md, _backlog.md, etc.) to preserve history.
+# Uses cmp to skip files that haven't changed since last install.
 cmd_update() {
   local target="$1"
   local oc="$target/.opencode"
@@ -168,6 +197,9 @@ cmd_update() {
 
   local updated=0
 
+  # For each template-owned file, compare with current bundle.
+  # If different, replace with fresh template version.
+  # Skip entries that don't exist as files (e.g., directory names).
   for f in "${ALWAYS_OVERWRITE[@]}"; do
     [ -f "$TEMPLATE_DIR/$f" ] || continue
     if ! cmp -s "$TEMPLATE_DIR/$f" "$oc/$f" 2>/dev/null; then
@@ -185,7 +217,8 @@ cmd_update() {
   fi
 }
 
-#
+# Show differences between template files and installed bundle without changing anything.
+# Useful to preview what cmd_update would do.
 cmd_diff() {
   local target="$1"
   local oc="$target/.opencode"
@@ -216,7 +249,6 @@ cmd_diff() {
 # Main
 # ------------------------------------------------------------------------
 
-#
 main() {
   local mode="install"
   local analyze="no"

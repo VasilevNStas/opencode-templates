@@ -24,6 +24,6 @@ See the full list in [AGENTS.md](AGENTS.md#reference-files-lazy-loaded). New top
 ## Work log
 - [WORK_LOG.md](WORK_LOG.md) — chronological sessions (local only)
 ## OKF spec
-- [SPEC_REFERENCE.md](SPEC_REFERENCE.md) — extract of OKF v0.1
+- [SPEC_REFERENCE.md](SPEC_REFERENCE.md) — extract of OKF v0.2
 ## Log
 - [log.md](log.md) — pointers to chronological records
