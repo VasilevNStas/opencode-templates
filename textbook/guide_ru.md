@@ -938,36 +938,1806 @@ Part I закончен. Мы разобрали:
 - OKF как формат.
 - Bundle как единицу знания.
 - Lazy loading как механизм.
+==============================================================================================================================================
 
-В Part II — **файлы bundle** по одному. Начнём с `AGENTS.md` — точки
-входа.
+# Part II — The files
+
+_В Part I мы разобрали, зачем нужен bundle, что такое OKF и как работает ленивая загрузка. В Part II — каждый файл bundle по отдельности. Не как справочник «что писать», а как объяснение «почему так»._
+
+_Порядок глав следует логике first-day reading order: от точки входа к служебным файлам._
+
+## Chapter 5. AGENTS.md — the entry point
+## Глава 5. AGENTS.md - точка входа
+
+
+### 5.1 Почему этот файл существует
+
+`AGENTS.md` — **единственный** файл, который агент читает при старте сессии, до того как узнает что-либо о проекте. Это точка входа в bundle.
+
+Три роли, которые он выполняет:
+
+1. **Идентификация** Что это за проект? Тип, стек, назначение
+    
+2. **Навигация** Какой файл читать при какой задаче
+    
+3. **Контракт** Какие правила действуют (build, CI, license, workflow)
+    
+
+Если `AGENTS.md` плохой — всё остальное в bundle теряет смысл. Агент не будет читать `_concepts.md`, если не поймёт по `AGENTS.md`, на пример что проект — Ruby-gem и в нём есть архитектура.
+
+### 5.2 Что AGENTS.md — НЕ ...
+
+Пять соблазнов, которых надо избежать.
+
+**Соблазн 1: энциклопедия** «Давайте опишем всё, чтобы агент точно знал». Результат — 500 строк, из которых 50 нужны. Мы уже разбирали эту проблему в главе 1.
+
+**Соблазн 2: дублирование reference files** «Положу-ка я сюда краткое содержание `_concepts.md`». Результат — рассинхрон. Обновляете `_concepts.md`, забываете про AGENTS.md. Через месяц они противоречат друг другу.
+
+**Соблазн 3: changelog** «Добавлю сюда, что мы сделали в последней сессии». Для этого есть `WORK_LOG.md`, не путайте.
+
+**Соблазн 4: правила кодирования** «Пишем тесты с RSpec, SPDX headers обязательны». Это в `_codestyle.md`. Правила нужны, только когда пишете код.
+
+**Соблазн 5: TODO-список** «Надо сделать X, Y, Z». Это в `_backlog.md`.
+
+**Правило:** если информацию можно вынести в тематический файл — выносите. В AGENTS.md остаётся только то, что нужно **всегда**, вне зависимости от задачи.
+
+### 5.3 Анатомия
+
+Минимальный `AGENTS.md` состоит из пяти частей:
+
+```markdown
+
+1. Frontmatter              ← метаданные
+2. Overview                 ← что за проект
+3. Key components           ← краткая карта
+4. Issue workflow           ← как работать с задачами
+5. Reference files          ← навигация по bundle
+6. Footer                   ← наследование правил
+```
+
+Разберём каждую.
+
+### 5.4 Frontmatter
+
+```yaml
+
+---
+type: project-context
+title: "<org>/<repo>"
+description: "<one-line description>"
+resource: "<repo-url>"
+timestamp: <YYYY-MM-DD>
+tags: [<language>, <type>]
+---
+```
+
+**Почему `type: project-context`:** это значение из нашего словаря. Оно говорит агенту: «перед тобой контекст проекта, а не что-то другое». Если вы назовёте тип иначе — `agents`, `context`, `project` — тоже сработает, но потеряется консистентность с другими файлами bundle.
+
+**Почему `title` в формате `<org>/<repo>`:** это универсальный идентификатор проекта. Работает и для GitHub, и для GitLab, и для приватных хостингов. Плюс — сразу видно, о чём речь.
+
+**Почему `resource`:** это ссылка на канонический источник. Полезно, если bundle уедет из проекта — можно будет вернуться к первоисточнику.
+
+**Почему `timestamp`:** агент по нему понимает актуальность. Если файл не менялся год — возможно, устарел.
+
+**Почему `tags`:** для фильтрации. Если у вас несколько проектов, можно искать «все Ruby-gem'ы».
+
+### 5.5 Overview
+
+```markdown
+
+## Overview
+- **Type:** gem
+- **Stack:** Ruby 3.3, RSpec, RuboCop
+- **Build:** bundle exec rake
+- **CI:** 3 CI workflows (GitHub Actions)
+- **License:** MIT
+**First time here?** Start with [_setup.md](_setup.md) to get running locally.
+```
+
+
+Пять строк — квинтэссенция проекта. Разберём каждую.
+
+**`Type`** — тип проекта. Универсальные значения: `gem`, `app`, `cli`, `library`, `service`, `doc`, `action`. Можно добавить свой. От типа зависят многие решения: как собирать, как публиковать, какие конвенции применять.
+
+**`Stack`** — технологии. Языки, фреймворки, базы данных. Одна строка через запятую. Не «Ruby on Rails 7.1 with PostgreSQL 16 and Redis 7.2» — это уже описание. Просто: «Ruby 3.3, Rails 7.1, PostgreSQL 16, Redis 7.2».
+
+**`Build`** — одна команда сборки. `bundle exec rake`, `make build`, `npm run build`. Именно **одна**. Если команд несколько — это pipeline, ему место в `_commands.md`.
+
+**`CI`** — количество workflow'ов и платформа. `3 CI workflows (GitHub Actions)`. Число важно: «3» — небольшая проверка, «15» — серьёзный pipeline.
+
+**`License`** — юридическая информация. Влияет на SPDX-шапки в `_codestyle.md`. Если тут `MIT`, а в шапках `Apache-2.0` — баг.
+
+**`**First time here?**`** — callout для новичков. Направляет в `_setup.md`. Мелочь, но экономит время.
+
+### 5.6 Key components
+
+
+```markdown
+
+### Key components
+| Component | What it does |
+|-----------|-------------|
+| `Parser` | Parses input files into AST |
+| `Renderer` | Renders AST back to text |
+| `CLI` | Wraps parsing and rendering |
+```
+
+3–7 компонентов верхнего уровня. Не всех — только главных.
+
+**Что считается «ключевым»:**
+
+- То, что часто меняется
+    
+- То, что определяет архитектуру
+    
+- То, с чем работает большинство задач
+    
+
+**Чего тут быть не должно:**
+
+- Все файлы проекта (это `_files.md`)
+    
+- Утилиты и helpers
+    
+- Тесты
+    
+
+**Почему отдельная секция, а не таблица reference files:** reference files — про **файлы bundle**. Key components — про **компоненты системы**. Это разные вещи.
+
+### 5.7 Issue workflow
+
+```markdown
+
+## Issue workflow
+Every issue follows the same lifecycle. Active files live in `.opencode/`
+| Stage | File | Purpose |
+|-------|------|---------|
+| Start | `issue/PROJECT_SUMMARY_<N>.md` | Issue overview, problem, solution |
+| Start | `playbook/PLAYBOOK_<N>.md` | Strategy, patterns, pitfalls |
+| During | `.opencode/WORK_LOG.md` | Session-by-session progress |
+| During | [_decisions.md](_decisions.md) | Non-obvious choices worth an ADR |
+| End | `pr/PR_<N>.md` | PR description draft |
+| End | `.opencode/archive/` | Move completed files here |
+Templates and full workflow: [_templates.md](_templates.md)
+```
+
+Эта секция — **карта процесса**. Не детали (они в `_templates.md`), а именно карта.
+
+**Почему отдельная секция, а не строка в reference files:** workflow — это **процесс**, а не справочный файл. Агент должен понимать жизненный цикл issue, чтобы правильно создавать артефакты.
+
+**Что тут важно:**
+
+- **Пути** (`issue/`, `playbook/`, `pr/`) — агент должен знать, **куда** что класть
+    
+- **Стадии** (Start/During/End) — когда что создавать
+    
+- **Ссылка на `_templates.md`** — где детали
+    
+
+### 5.8 Reference files table
+
+```markdown
+
+### Reference files (lazy-loaded)
+**Onboarding — understanding the project**
+| File | When to read |
+|------|-------------|
+| [_setup.md](_setup.md) | Getting the project running locally |
+| [_concepts.md](_concepts.md) | Architecture, key patterns, data flow |
+| [_glossary.md](_glossary.md) | Unknown domain term |
+**Daily work — everyday tasks**
+| File | When to read |
+|------|-------------|
+| [_templates.md](_templates.md) | Working on an issue |
+| [_worklog.md](_worklog.md) | Starting/continuing a session |
+| ...
+**When things break — diagnostics**
+| File | When to read |
+|------|-------------|
+| [_ci.md](_ci.md) | CI fails |
+| ...
+**Navigation & safety — navigation and safety**
+| File | When to read |
+|------|-------------|
+| [_files.md](_files.md) | Looking for where things live |
+| ...
+```
+
+**Самая важная секция файла.** Здесь — вся навигация
+
+**Почему группировка, а не плоский список** Плоский список из 15 строк читается плохо. Группировка по **ситуации** (onboarding, daily, break, navigation) соответствует реальному рабочему циклу.
+
+**Почему «When to read», а не «What's inside»:** агент ищет по **ситуации**, а не по содержанию. «Мне нужна архитектура» → ищет «architecture» в колонке «when». «Мне нужно понять, где файл» → ищет «where things live».
+
+**Почему `(lazy-loaded)` в заголовке:** подсказка, что эти файлы **не загружаются автоматически**. Без неё можно подумать, что они уже в контексте.
+
+### 5.9 Footer
+
+```markdown
+
+---
+All shared workflow rules (branch discipline, commits, PR requirements,
+mindset) are inherited from `~/.config/opencode/AGENTS.md`
+```
+
+OpenCode при старте склеивает `AGENTS.md` со всех уровней иерархии: глобальный + организация + репозиторий. Эта строка говорит: «часть правил — не здесь, они в родительском файле».
+
+**Что обычно живёт в родительском:**
+
+- Branch discipline (как называть ветки)
+    
+- Commit conventions (формат сообщений)
+    
+- PR requirements (что должно быть в PR)
+    
+- Mindset (философия работы)
+    
+
+**Почему эту строку не убрать:** без неё читатель удивляется, почему в AGENTS.md нет правил про коммиты. С ней — понимает: «это глобальное, не локальное».
+
+### 5.10 Пример: полный AGENTS.md для gem'а
+
+```markdown
+
+---
+type: project-context
+title: "acme/json-parser"
+description: "A fast JSON parser for Ruby"
+resource: "https://github.com/acme/json-parser"
+timestamp: 2026-09-21
+tags: [ruby, gem, parser]
+---
+# Project Context: acme/json-parser
+## Overview
+- **Type:** gem
+- **Stack:** Ruby 3.3, RSpec, RuboCop, Racc
+- **Build:** bundle exec rake
+- **CI:** 3 CI workflows (GitHub Actions)
+- **License:** MIT
+**First time here?** Start with [_setup.md](_setup.md)
+### Key components
+| Component | What it does |
+|-----------|-------------|
+| `Lexer` | Tokenizes input JSON |
+| `Parser` | Builds AST from tokens |
+| `Renderer` | Converts AST back to JSON |
+---
+## Issue workflow
+Every issue follows the same lifecycle. Active files live in `.opencode/`
+| Stage | File | Purpose |
+|-------|------|---------|
+| Start | `issue/PROJECT_SUMMARY_<N>.md` | Issue overview |
+| Start | `playbook/PLAYBOOK_<N>.md` | Strategy, pitfalls |
+| During | `WORK_LOG.md` | Session progress |
+| End | `pr/PR_<N>.md` | PR description |
+| End | `archive/` | Move completed files |
+Full workflow: [_templates.md](_templates.md).
+---
+### Reference files (lazy-loaded)
+**Onboarding**
+| File | When to read |
+|------|-------------|
+| [_setup.md](_setup.md) | Getting started |
+| [_concepts.md](_concepts.md) | Architecture |
+| [_glossary.md](_glossary.md) | Unknown term |
+**Daily work**
+| File | When to read |
+|------|-------------|
+| [_templates.md](_templates.md) | New issue |
+| [_worklog.md](_worklog.md) | Session log |
+| [_backlog.md](_backlog.md) | Planning |
+| [_decisions.md](_decisions.md) | Why — ADR |
+| [_codestyle.md](_codestyle.md) | Writing code |
+| [_commands.md](_commands.md) | Build/test commands |
+**When things break**
+| File | When to read |
+|------|-------------|
+| [_ci.md](_ci.md) | CI failed |
+| [_troubleshooting.md](_troubleshooting.md) | Local broken |
+**Navigation & safety**
+| File | When to read |
+|------|-------------|
+| [_files.md](_files.md) | Where things are |
+| [_env.md](_env.md) | Environment map |
+| [_security.md](_security.md) | Secrets |
+| [analysis/](analysis/index.md) | Deep analysis |
+| [_meta.md](_meta.md) | Bundle meta |
+---
+All shared workflow rules are inherited from
+`~/.config/opencode/AGENTS.md`
+```
+
+Длина — около 75 строк. Это верхняя граница нормы. Основной объём — таблицы, которые агенту легко сканировать.
+
+### 5.11 Частые ошибки
+
+**Ошибка 1: AGENTS.md вырос до 200+ строк**
+
+Что-то из этого — не место в AGENTS.md. Чаще всего: CI-таблицы, codestyle, полная карта файлов. Проверьте: если информация нужна «только когда пишешь код» — она не в AGENTS.md.
+
+**Ошибка 2: нет секции «When to read»**
+
+Таблица reference files без триггеров — просто список файлов. Агент не знает, когда их читать. Всегда заполняйте колонку.
+
+**Ошибка 3: дублирование `_concepts.md`**
+
+«У нас есть Parser, Renderer и Lexer, которые работают так: Parser парсит...» — это уже concepts. В AGENTS.md — только таблица Key components, без пояснений.
+
+**Ошибка 4: устаревший License**
+
+AGENTS.md говорит `MIT`, а в `LICENSE` — `Apache-2.0`. Баг. Обновляйте при смене.
+
+**Ошибка 5: CI без платформы**
+
+`CI: 3 workflows` — но где? GitHub Actions? GitLab CI? CircleCI? Уточняйте.
+
+**Ошибка 6: `Build` — несколько команд**
+
+`Build: bundle install, bundle exec rake, bundle exec rspec` — это не одна команда, а pipeline. Одна команда: `bundle exec rake`.
+
+**Ошибка 7: нет ссылки на родительский AGENTS.md**
+
+Читатель не понимает, где искать правила про коммиты.
+
+**Ошибка 8: reference files в плоском списке**
+
+15 строк без группировки — каша. Группируйте.
+
+**Ошибка 9: links на несуществующие файлы**
+
+Ссылка на `_api.md`, а файла нет. OKF не падает, но пользы ноль. Проверяйте ссылки.
+
+**Ошибка 10: `timestamp` не обновлён**
+
+Меняли файл месяц назад, дата старая. Агент считает bundle устаревшим.
+
+### 5.12 Упражнение
+
+Откройте свой текущий `AGENTS.md` (или `CLAUDE.md`, или `.cursorrules`). Посчитайте строки.
+
+- **< 40 строк** — отлично, вы уже близко к правильному размеру
+    
+- **40–80 строк** — норма, но проверьте: нет ли дублирования
+    
+- **80–150 строк** — пора резать. Что можно вынести в reference files?
+    
+- **> 150 строк** — вы делаете что-то не так. Разделите на AGENTS.md (ядро) + `_*.md` (детали)
+    
+
+Для каждого блока спросите: «Это нужно **каждой** задаче или только некоторым?» Если только некоторым — это reference file, не AGENTS.md.
+
+### 5.13 Что дальше
+
+`AGENTS.md` — точка входа. Теперь разберём файлы, **куда** он направляет. В следующей главе — три файла onboarding: `_setup.md`, `_concepts.md`, `_glossary.md`.
 
 ---
 
-*Конец Part I.*
+## Chapter 6. Onboarding: `_setup`, `_concepts`, `_glossary`
+## Глава 6.  Введение в: `_setup`, `_concepts`, `_glossary`
+
+### 6.1 Почему три файла в одной главе
+
+`_setup.md`, `_concepts.md`, `_glossary.md` — три файла, которые работают вместе, чтобы **ввести нового человека в проект**
+
+Они связаны общей задачей: дать минимальный контекст для старта. Если вы новый разработчик (или агент, впервые работающий с проектом), вы читаете их в этом порядке:
+
+1. `_setup.md` — как поднять проект у себя
+    
+2. `_concepts.md` — как он устроен
+    
+3. `_glossary.md` — что означают термины
+    
+
+Первые два — обязательны. Третий — только если в проекте есть специфичный жаргон.
+
+### 6.2 `_setup.md` — getting started (приступаем к работе)
+
+#### Зачем
+
+Отвечает на один вопрос: **«Как поднять проект локально с нуля?»**
+
+Сценарий: чистый клон → рабочий dev-стенд.
+
+Кому нужен:
+
+- **Новому разработчику** — первый день в проекте
+    
+- **Агенту** — когда проект не запускается и надо понять, чего не хватает
+    
+- **Вам через полгода** — когда вернётесь к проекту и забудете, какую версию Ruby ставить
+    
+
+#### Границы
+
+**Что `_setup.md` делает:**
+
+- Список prerequisites
+    
+- Пошаговая инструкция: clone → configure → db → run → verify
+    
+
+**Что НЕ делает:**
+
+|Не его задача|Где это|
+|---|---|
+|Архитектура|`_concepts.md`|
+|Карта окружений (staging, prod)|`_env.md`|
+|Управление секретами|`_security.md`|
+|Локальные проблемы|`_troubleshooting.md`|
+|Команды после setup|`_commands.md`|
+
+**Главное правило:** `_setup.md` — **только про local**. Всё про staging и prod — в `_env.md`.
+
+Если `_setup.md` начнёт описывать prod, он превратится в свалку и разъедется с `_env.md`. Границы — единственное, что спасает от деградации.
+
+#### Анатомия
+
+````markdown
+---
+type: setup
+title: "Local Setup"
+description: "How to get the project running locally from scratch"
+timestamp: <YYYY-MM-DD>
+tags: [setup, onboarding, dev-env]
+---
+# Local Setup
+Scenario: fresh clone → working dev environment
+For non-local environments, see [_env.md](_env.md)
+For commands after setup, see [_commands.md](_commands.md)
+## Prerequisites
+| Tool | Version | Install |
+|------|---------|---------|
+| Ruby | >= 3.3 | rbenv / asdf |
+| PostgreSQL | >= 16 | brew install postgresql |
+
+## 1. Clone and install dependencies
+```bash
+git clone <repo-url>
+cd <repo>
+bundle install
+```
+
+## 2. Configuration
+Local secrets live in `.env` — see [_security.md](_security.md)
+| Env var | Purpose | Default | Required |
+|---------|---------|---------|----------|
+| `DATABASE_URL` | PostgreSQL connection | — | yes |
+| `LOG_LEVEL` | Logging verbosity | `info` | no |
+```bash
+cp .env.example .env
+# edit .env with local values
+```
+
+## 3. Database
+```bash
+bundle exec rake db:create
+bundle exec rake db:migrate
+bundle exec rake db:seed
+```
+
+## 4. Run
+```bash
+bundle exec rails server
+```
+Open <http://localhost:3000>
+
+## 5. Verify
+```bash
+bundle exec rspec
+bundle exec rubocop
+```
+If something fails, see [_troubleshooting.md](_troubleshooting.md)
+## First-day reading order
+1. [AGENTS.md](AGENTS.md) — what this project is
+2. [_concepts.md](_concepts.md) — how it's built
+3. [_codestyle.md](_codestyle.md) — how to write code
+4. [_commands.md](_commands.md) — common commands
+5. [_files.md](_files.md) — where things live
+
+````
+
+Разберём ключевые решения
+
+**`Scenario: fresh clone → working dev environment.`** — явная формулировка сценария. Агент читает это как условие применимости.
+
+**Две строки `For ... see ...`** — критичны для дисциплины. Они сразу говорят: «здесь только local, остальное — по ссылкам».
+
+**Prerequisites — таблица с версиями.** «Ruby» без версии сломается на 3.3 vs 3.2 для некоторых gem'ов. Всегда указывайте диапазон.
+
+**Пять шагов, нумерованные H2.** Нумерация подчёркивает: делай по порядку. Шаги: clone → configure → db → run → verify.
+
+**Verify — критичный шаг.** Без него новичок не понимает, всё ли получилось. Всегда добавляйте. Тесты и линт — минимальная проверка.
+
+**First-day reading order.** Новичок, закончив setup, не знает, что читать дальше. Здесь — рекомендуемый порядок.
+
+**Ссылка на `_troubleshooting.md`.** Если verify упал — идём туда. Замыкает логику.
+
+#### Частые ошибки
+
+**Ошибка 1: смешивание local и staging/prod.** Самая частая. Результат — `_setup.md` и `_env.md`дублируют друг друга и разъезжаются. Правило: **в `_setup.md` — только то, что делается на вашей машине**.
+
+**Ошибка 2: `<tool>` без версии.** «Установите PostgreSQL» — не setup, а пожелание. Всегда версия или диапазон.
+
+**Ошибка 3: секреты в примерах.** `.env.example` не должен содержать реальных ключей. Только placeholder'ы.
+
+**Ошибка 4: пропущен шаг Verify.** Без него новичок не понимает, всё ли получилось.
+
+**Ошибка 5: разные окружения в одном блоке кода.** OSX и Linux — либо отдельные блоки, либо сноски.
+
+**Ошибка 6: нет ссылок на `_troubleshooting.md`.** Если verify упал, читатель не знает, куда идти.
+
+#### Варианты для разных типов проектов
+
+|Тип|Что варьируется|
+|---|---|
+|**gem / library**|Обычно нет Database. Verify = `bundle exec rake`|
+|**CLI**|Обычно нет Database. Run = `<binary> --help`|
+|**app / service**|Все шаги присутствуют|
+|**doc**|Prerequisites минимальные, Database нет, Run = `mkdocs serve`|
+
+
+### 6.3 `_concepts.md` — architecture
+
+#### Зачем
+
+Отвечает на вопрос: **«Как устроен проект внутри?»**
+
+Сценарии:
+
+- Перед изменением кода — понять, куда вписаться
+    
+- При баге — понять, какие компоненты задействованы
+    
+- При оценке влияния — какие части затронет правка
+    
+- При онбординге — второй шаг после setup
+    
+
+#### Границы
+
+**Что `_concepts.md` делает:**
+
+- Overview архитектуры
+    
+- Key components
+    
+- Data flow
+    
+- Паттерны, deployment, error handling, testing
+    
+
+**Что НЕ делает:**
+
+|Не его задача|Где это|
+|---|---|
+|Локальный запуск|`_setup.md`|
+|Список файлов|`_files.md`|
+|Соглашения кода|`_codestyle.md`|
+|Публичный API|`_api.md`|
+|Окружения|`_env.md`|
+|Решения «почему так»|`_decisions.md`|
+
+**Ключевое:** `_concepts.md` описывает **что**, а не **почему**. Почему выбрана такая архитектура — в `_decisions.md` (ADR). Здесь — сухая карта.
+
+#### Анатомия
+
+```markdown
 
 ---
+type: architecture
+title: "acme/json-parser — Architecture"
+description: "Lexer-parser-renderer pipeline with streaming support"
+timestamp: 2026-09-21
+tags: [architecture, ruby]
+---
+# Architecture
+## Overview
+Streaming JSON parser built as a three-stage pipeline: lexer tokenizes
+input, parser builds AST, renderer converts AST back to JSON. Supports
+input files of any size via incremental reading.
+## Key components
+| Component | Purpose | Dependencies |
+|-----------|---------|-------------|
+| `Lexer` | Tokenizes input JSON | Uses `StringScanner` |
+| `Parser` | Builds AST from tokens | Uses `Lexer`, `AST::Node` |
+| `Renderer` | Converts AST to JSON | Uses `AST::Node` |
+| `StreamReader` | Reads files incrementally | — |
+## Data flow
 
-## Что дальше
+[File] → [StreamReader] → [Lexer] → [Parser] → [AST] → [Renderer] → [Output]
 
-Это ~10% книги. Продолжение — Part II, где каждая глава — один файл
-bundle, разобранный так же подробно: назначение, границы, структура,
-ключевые секции, типичные ошибки, связи с другими файлами.
+text
 
-Part III — workflows (issue, session, CI, инцидент).
-Part IV — operations (install, update, anti-patterns).
-Part V — appendices (типы, структура, FAQ).
+## Key patterns
+- **Pipeline** — data flows through stages
+- **Decorator** — renderer wraps AST with formatting options
+- **Strategy** — parser selects strategy based on input size
+## Deployment
+- **Type:** RubyGems
+- **Entry:** `require 'json/parser'`
+- **Env vars:** none
+## Error handling
+- Lexer errors → `LexerError` exception with position
+- Parser errors → `ParserError` with token context
+- All errors inherit from `JSON::Parser::Error`
+## Configuration
+- `JSON::Parser.configure { |c| c.strict_mode = true }` — configuration DSL
+- No env vars
+## Testing strategy
+- **Unit:** RSpec, 95% coverage target
+- **Integration:** full pipeline tests on sample files
+- **E2E:** benchmarks on real-world JSON files
+```
 
-Прежде чем продолжать — три вопроса:
+Разберём ключевые решения.
 
-1. **Тон и стиль.** Так подходит? Или нужно что-то менять — больше
-   примеров, меньше теории, другой голос?
-2. **Язык.** Оставляем русский или переключаемся на английский?
-3. **Формат.** Куда положить файл? `opencode-templates/BOOK.md` или
-   отдельный репозиторий? Или это личный материал?
-4. **Длина глав.** Part I — ~10 000 слов на 4 главы. Part II пойдёт
-   быстрее, потому что там уже есть готовый материал из наших
-   обсуждений. Продолжать в том же темпе?
+**Overview — 2–3 предложения** «Лифтовая презентация». Что делает, какой стиль (pipeline, monolith, microservices), как компоненты связаны. Если не укладываетесь в 3 предложения — вы выносите детали в другие секции.
 
-Скажите — и продолжу. Если хотите что-то поменять в структуре или
-стиле — сейчас лучший момент.
+**Key components — 3–7** Три колонки: имя, назначение, зависимости. `Dependencies` показывает граф: по ней можно оценить, что затронет изменение.
+
+**Data flow — ASCII-диаграмма** Не обязательна, но полезна. Показывает путь данных. Особенно важно для pipeline и event-driven.
+
+**Key patterns** 2–5 паттернов. Не все, что есть, а те, что **определяют** архитектуру. `Pipeline`, `Decorator`, `Strategy` — примеры.
+
+**Deployment** — как устроен запуск. Для gem — «публикуется на RubyGems». Для app — «Docker/K8s». Полный процесс релиза — в `_release.md`.
+
+**Error handling** — что происходит при сбое. Retries, fallbacks, типы исключений.
+
+**Configuration** — как настраивается. Env vars, DSL, config files.
+
+**Testing strategy** — **стратегия**: что и зачем. Не тактика. Фреймворк и команды — в `_codestyle.md`.
+
+#### Частые ошибки
+
+**Ошибка 1: слишком много компонентов** Больше 7 — это `_files.md`. В `_concepts.md` — только верхний уровень.
+
+**Ошибка 2: Overview на полстраницы** Overview — 2–3 предложения.
+
+**Ошибка 3: дублирование с `_files.md`** Concepts описывает **логические** компоненты, `_files.md` — **физические** файлы.
+
+**Ошибка 4: нет Data flow** Без неё непонятно, как компоненты связаны во времени. Даже ASCII-стрелки лучше, чем ничего.
+
+**Ошибка 5: Deployment смешан с release** Deployment — «как запускается». Release — «как выпускается новая версия», это разные вещи.
+
+**Ошибка 6: тесты описаны дважды** Здесь — стратегия. В `_codestyle.md` — фреймворк и команды.
+
+#### Варианты для разных типов проектов
+
+|Тип|Особенности|
+|---|---|
+|**gem**|Data flow линейный. Deployment = RubyGems. Секции Deploy/Config можно сократить|
+|**CLI**|Data flow = argv → parse → execute → stdout. Config = flags + env|
+|**app**|Все секции заполнены. Deployment = Docker/K8s|
+|**doc**|Key components = главы/разделы. Data flow не нужна|
+
+### 6.4 `_glossary.md` — domain language
+
+#### Зачем
+
+Отвечает на вопрос: **«Что означает этот термин?»**
+
+Сценарии:
+
+- Читаешь код, встретил `HoC` — не знаешь, что это.
+    
+- В issue упомянули «crawler» — непонятно, компонент это или роль.
+    
+- Новый человек встречает жаргон — теряется.
+    
+
+#### Границы
+
+**Что `_glossary.md` делает:**
+
+- Доменные термины проекта
+    
+- Аббревиатуры
+    
+- Синонимы
+    
+
+**Что НЕ делает:**
+
+|Не его задача|Где это|
+|---|---|
+|Описание компонентов|`_concepts.md`|
+|Технические понятия (HTTP, JSON)|Официальная документация|
+|Правила безопасности|`_security.md`|
+
+**Ключевой принцип:** только **доменные** термины, специфичные для проекта. `HTTP`, `JSON`, `API`— не сюда. Они ищутся в Google за 5 секунд.
+
+**Правило:** если термин ищется в Google за 5 секунд — не включайте.
+
+#### Анатомия
+
+```markdown
+
+---
+type: glossary
+title: "Glossary"
+description: "Domain-specific terms, abbreviations, and internal jargon"
+timestamp: 2026-09-21
+tags: [glossary, domain]
+---
+# Glossary
+Domain terms specific to this project. Not a technical dictionary — for
+general concepts (HTTP, JSON, Ruby), use official docs.
+## Terms
+| Term | Definition | Where it appears |
+|------|-----------|------------------|
+| `Order` | Customer's purchase, stored in DB | `app/models/order.rb`, `POST /orders` |
+| `Invoice` | Billing document generated from an Order | `app/models/invoice.rb` |
+| `Tenant` | Isolated customer workspace | `app/models/tenant.rb` |
+## Abbreviations
+| Abbr | Full form | Meaning |
+|------|-----------|---------|
+| `HoC` | Hits of Code | Metric for git-diff size |
+| `ADR` | Architecture Decision Record | Format for design decisions |
+| `PII` | Personally Identifiable Information | User data requiring protection |
+## Synonyms and aliases
+Same entity is called differently in different contexts.
+| Alias | Canonical | Notes |
+|-------|-----------|-------|
+| `user / client / customer` | `User` | Code: `User`; UI: "client"; API: `customer` |
+| `task / job / worker` | `Job` | Code: `Job`; UI: "task" |
+
+```
+
+Разберём ключевые решения
+
+**Три секции: Terms, Abbreviations, Synonyms** → Обычно все три. Но если какой-то нет — удалите.
+
+**Terms — три колонки** → `Where it appears` критична: связывает термин с кодом. Встретил `HoC` в коде → идёшь в глоссарий → видишь, что это из `hoc` gem.
+
+**Definition — 1–2 фразы** → Не абзац. Больше — превращается в энциклопедию.
+
+**Abbreviations — отдельная секция** → У аббревиатуры есть **расшифровка** (full form) и **значение**(meaning). Две разные вещи.
+
+**Synonyms — если реально есть** → Если в коде `User`, в UI «клиент», в API `customer` — фиксируйте. Иначе никто не поймёт, что это одно и то же.
+
+**Canonical — одно имя на проект** → Все альтернативы в таблице. Канонический — обычно тот, что в коде.
+
+#### Частые ошибки
+
+**Ошибка 1: общеизвестные термины** `HTTP`, `JSON`, `API` — не надо.
+
+**Ошибка 2: дублирование с `_concepts.md`** «Parser — компонент, который парсит входные данные в 5 этапов...» — это concepts. В глоссарии — «Parser — модуль парсинга, см. `_concepts.md`».
+
+**Ошибка 3: длинные определения** Абзац вместо 1–2 фраз.
+
+**Ошибка 4: нет колонки `Where it appears`** Термин без привязки к коду бесполезен.
+
+**Ошибка 5: глоссарий не растёт** Стоит 5 терминов, а в проекте их 50.
+
+**Ошибка 6: аббревиатуры в Terms** `HoC` в Terms, а не в Abbreviations. Разделяйте.
+
+**Ошибка 7: Synonyms без Canonical** Перечислили синонимы, но не указали, какой канонический.
+
+**Ошибка 8: определения устарели** Термин поменял значение — глоссарий не обновлён.
+
+### 6.5 Как они связаны
+
+
+```text
+
+_setup.md ─────→ _concepts.md ─────→ _glossary.md
+   │                  │                    │
+   │                  │                    │
+   ▼                  ▼                    ▼
+"как запустить"   "как устроено"    "что значит"
+```
+
+Три последовательных шага. Не параллельных — **именно последовательных**.
+
+**Первый**: подними проект.
+**Второй**: пойми, как он устроен. 
+**Третий**: разберись с терминами.
+
+**Связи с другими файлами:**
+
+```text
+
+_setup.md ─────→ _env.md            (non-local environments)
+_setup.md ─────→ _security.md       (secrets rules)
+_setup.md ─────→ _troubleshooting.md (if verify fails)
+_concepts.md ──→ _decisions.md      (why — ADR)
+_concepts.md ──→ _files.md          (where files live)
+_concepts.md ──→ _release.md        (how releases work)
+_concepts.md ──→ _api.md            (public API)
+_glossary.md ──→ _concepts.md       (term → component)
+_glossary.md ──→ _files.md          (term → file)
+
+```
+
+### 6.6 First-day reading order
+
+Порядок, рекомендованный новому разработчику (или агенту, впервые работающему с проектом):
+
+1. **`AGENTS.md`** — что за проект
+    
+2. **`_setup.md`** — как запустить
+    
+3. **`_concepts.md`** — как устроен
+    
+4. **`_codestyle.md`** — как писать код
+    
+5. **`_commands.md`** — основные команды
+    
+6. **`_files.md`** — где что лежит
+    
+
+`_glossary.md` не в списке — его читают **по мере необходимости**, когда встречают незнакомый термин.
+
+Этот порядок зафиксирован в `_setup.md` (секция First-day reading order). Почему именно так:
+
+- **AGENTS.md** — сначала понять, о чём вообще речь
+    
+- **`_setup.md`** — потом поднять проект, без рабочего окружения остальное бессмысленно
+    
+- **`_concepts.md`** — потом понять архитектуру
+    
+- **`_codestyle.md`** — потом узнать, как писать код в этом проекте
+    
+- **`_commands.md`** — потом освоить команды
+    
+- **`_files.md`** — потом разобраться, где что лежит
+    
+
+`_glossary.md` — не в линейном порядке. Это **справочник**, а не учебник.
+
+### 6.7 Частые ошибки (все три файла)
+
+**Ошибка 1: `_setup.md` смешан с `_env.md`** Local и staging/prod в одном файле — рассинхрон.
+
+**Ошибка 2: `_concepts.md` без Data flow** Компоненты перечислены, но как они связаны — неясно.
+
+**Ошибка 3: `_glossary.md` с `HTTP` и `JSON`** Общеизвестные термины.
+
+**Ошибка 4: дублирование между файлами** `_concepts.md` описывает компоненты, `_glossary.md` тоже. Разделяйте: concepts — «что и как», glossary — «что значит».
+
+**Ошибка 5: слишком длинные** `_setup.md` — 100 строк норма. 300 — уже руководство. `_concepts.md` — 80 строк норма. `_glossary.md` — 40 строк норма.
+
+**Ошибка 6: `timestamp` не обновляется** Файлы устаревают.
+
+**Ошибка 7: ссылки на несуществующие файлы** Проверяйте.
+
+### 6.8 Упражнение
+
+Возьмите свой проект. Ответьте на вопросы:
+
+1. **Может ли новый человек поднять проект за час**, имея только `_setup.md` и репозиторий? Если нет — что пропущено?
+    
+2. **Можете ли вы объяснить архитектуру за 2 минуты**, не открывая код? Если нет — `_concepts.md` слабый.
+    
+3. **Есть ли в проекте жаргон**, который вы объясняете каждому новому человеку? Если да — этому место в `_glossary.md`.
+    
+4. **Все три файла обновлены за последние 3 месяца?** Если нет — проверьте `timestamp`.
+    
+5. **Ссылки между файлами работают?** Кликните по каждой.
+    
+
+
+### 6.9 Что дальше
+
+Мы разобрали три файла onboarding. В следующей главе — **daily work**: `_templates`, `_worklog`, `_backlog`, `_decisions`, `_codestyle`, `_commands`. Это шесть файлов, которые вы используете каждый день.
+
+
+## Chapter 7. Daily work: `_templates`, `_worklog`, `_backlog`, `_decisions`, `_codestyle`, `_commands`
+## Глава 7. Ежедневная работа: `_templates`, `_worklog`, `_backlog`, `_decisions`, `_codestyle`, `_commands`
+
+
+### 7.1 Почему шесть файлов в одной главе
+
+Эти шесть файлов объединены одним признаком: **вы открываете их почти каждый день**.
+
+- Начинаете issue → `_templates.md`
+    
+- Пишете сессию → `_worklog.md`
+    
+- Планируете → `_backlog.md`
+    
+- Принимаете решение → `_decisions.md`
+    
+- Пишете код → `_codestyle.md`
+    
+- Нужна команда → `_commands.md`
+    
+
+Это не onboarding (один раз) и не diagnostics (когда что-то сломалось). Это **ежедневный рабочий цикл**.
+
+Порядок разбора — по логике issue lifecycle: как начинается работа, как ведётся, как завершается.
+
+### 7.2 `_templates.md` — issue and PR forms
+
+#### Зачем
+
+Отвечает на вопрос: **«В каком формате оформлять работу над issue?»**
+
+Сценарии:
+
+- Начинаете новую issue — берёте шаблон `PROJECT_SUMMARY` и `PLAYBOOK`
+    
+- Пишете PR — берёте шаблон описания
+    
+- Завершаете issue — знаете, куда перемещать файлы
+    
+
+`_templates.md` — **каталог форм**, а не инструкция по процессу. Процесс — в `AGENTS.md` (секция Issue workflow).
+
+#### Границы
+
+|Не его задача|Где это|
+|---|---|
+|Жизненный цикл issue|`AGENTS.md`, секция Issue workflow|
+|Хронология сессий|`_worklog.md`|
+|Значимые решения|`_decisions.md`|
+|Правила ревью|`~/.config/opencode/AGENTS.md`|
+|Список будущих задач|`_backlog.md`|
+
+**Ключевое разграничение:**
+
+|`AGENTS.md`|`_templates.md`|
+|---|---|
+|**Карта**: какие файлы, в каком порядке|**Формы**: что писать в каждом|
+|«Создай `issue/PROJECT_SUMMARY_123.md`»|«Вот что должно быть внутри»|
+
+#### Три шаблона
+
+`_templates.md` содержит три формы:
+
+1. **PROJECT_SUMMARY** — фиксация issue: что, зачем, как
+    
+2. **PLAYBOOK** — стратегия решения
+    
+3. **PR description** — описание pull request
+    
+
+Плюс секцию **Lifecycle** — краткое напоминание, куда что класть.
+
+#### Анатомия PROJECT_SUMMARY
+
+```markdown
+
+---
+type: project-summary
+issue: "#123"
+title: "Add JSON parser"
+status: draft | in-progress | completed
+timestamp: 2026-09-21
+tags: [feature, parser]
+---
+
+# Project Summary: #123 Add JSON parser
+
+## Issue Overview
+[Issue link], one-line description
+
+## Problem
+What needs to be done and why. The problem statement matters more than
+its solution — a well-formulated problem is half the fix.
+
+## Solution
+How it was resolved, which files changed
+
+## Verification
+- [ ] `bundle exec rubocop` — 0 offenses
+- [ ] `bundle exec rspec` — all pass
+- [ ] `bundle exec rake build` — passes
+- [ ] Manual: parse 10MB file, measure time
+      
+## Key Discoveries
+What was learned, insights worth remembering
+
+## Files Changed
+| File | Change |
+|------|--------|
+| `lib/parser.rb` | Added streaming mode |
+| `spec/parser_spec.rb` | 5 new tests |
+
+## References
+- [1] [Issue #123](url)
+```
+
+Разберём ключевые решения.
+
+**Frontmatter с `issue: "#123"`** `#` в YAML — комментарий, поэтому номер в кавычках. Это типичная ошибка.
+
+**`status`** — три состояния: `draft`, `in-progress`, `completed`. Меняется по ходу.
+
+**`Problem` важнее `Solution`** Хорошо сформулированная проблема — половина решения. Плохо сформулированная — источник переделок.
+
+**`Key Discoveries`** — что узнали в процессе. Не «что сделали» (Solution), а «какие знания приобрели». Через полгода эти заметки сэкономят время. Также — материал для `_decisions.md`.
+
+**`Verification` — чекбоксы** `- [ ]` рендерится как checkbox. Визуально показывает статус. GitHub тоже поддерживает.
+
+**`Files Changed` дублирует `git diff`** Да, но с пояснениями. `git diff` показывает **что**, но не **зачем**.
+
+#### Анатомия PLAYBOOK
+
+````markdown
+
+---
+type: playbook
+issue: "#123"
+title: "Add JSON parser"
+status: draft | in-progress | completed
+timestamp: 2026-09-21
+tags: [feature, parser]
+---
+
+# Playbook #123: Add JSON parser
+
+## Context
+Brief problem description, why this approach
+
+## Strategy
+Step-by-step plan:
+1. Write Lexer for tokenization
+2. Build Parser on top of Lexer
+3. Add streaming mode for large files
+4. Write benchmarks
+   
+## Patterns Used
+Which patterns applied: pipeline, decorator, strategy
+
+## Known Pitfalls
+What to watch out for:
+- Streaming requires buffering — don't load whole file
+- AST nodes must be immutable
+  
+## Verification Commands
+```bash
+bundle exec rspec spec/parser_spec.rb
+bundle exec rake benchmark
+```
+## References
+- [1] [Design doc](url)
+
+````
+
+**`Context` ≠ `Problem`** → Context — «почему такой подход». Problem (в PROJECT_SUMMARY) — «что болит». Разные углы.
+
+**`Strategy` — 3–7 шагов** → Больше — вы декомпозируете задачу, а не описываете стратегию.
+
+**`Patterns Used`** — конкретные паттерны для этой задачи. Связь с `_concepts.md`, где общие паттерны проекта.
+
+**`Known Pitfalls` — самая ценная секция** → Если её нет — вы либо не думали о рисках, либо не знаете проект
+
+**`Verification Commands`** — команды для проверки **этой задачи**. Не общие (они в `_commands.md`), а специфичные.
+
+#### Анатомия PR description
+
+```markdown
+
+---
+type: pr
+issue: "#123"
+title: "Add JSON parser"
+status: draft | ready-for-review | in-review | merged
+---
+
+## Description
+What was changed and why, 2-3 sentences
+
+## Related Issue
+Fixes #123
+
+## Changes
+| File | Change |
+|------|--------|
+| `lib/parser.rb` | Added streaming mode |
+
+## Verification
+- [ ] Build passes
+- [ ] Tests pass
+- [ ] Lint passes
+- [ ] No unrelated changes
+      
+## Notes for Reviewers
+What to check especially carefully
+
+## References
+- [1] [Related discussion](url)
+```
+
+**`Fixes #123`** — магическое слово GitHub. При мерже PR автоматически закроет issue #123. Для GitLab — `Closes #N`. Если PR не закрывает issue полностью — `Related to #N`.
+
+**Checklist без HoC** В старых версиях был `HoC ≤ 133`. Это мнение, не универсальная практика, оставлено как пример.
+
+**`No unrelated changes`** — критично, ревьюер сразу видит, что PR атомарный.
+
+**Frontmatter на GitHub** Если копируете шаблон прямо в GitHub PR — YAML будет виден как текст. Убирайте вручную или оборачивайте в `<!-- -->`.
+
+#### Lifecycle
+
+Краткая секция в конце файла:
+
+```markdown
+
+## Lifecycle
+1. **Start** — create `issue/PROJECT_SUMMARY_<N>.md` and
+   `playbook/PLAYBOOK_<N>.md` from templates above
+2. **During** — update both as work progresses; log sessions in
+   `WORK_LOG.md`; record significant decisions in `_decisions.md`
+3. **End** — create `pr/PR_<N>.md`; open the PR with the description;
+   after merge, move all three files to `archive/`
+```
+
+Почему дублирует `AGENTS.md`? Потому что `_templates.md` должен быть **самодостаточным**. Читатель не должен прыгать между файлами.
+
+#### Частые ошибки
+
+**Ошибка 1: слишком длинный PROJECT_SUMMARY** Description на полстраницы — это не summary. Стремитесь к 30–50 строкам.
+
+**Ошибка 2: PLAYBOOK без Known Pitfalls** Если не указали грабли — либо не думали, либо задача тривиальна
+
+**Ошибка 3: `Fixes #N` для PR, который не закрывает issue** Используйте `Related to #N`
+
+**Ошибка 4: Frontmatter в GitHub PR** Убирайте вручную
+
+**Ошибка 5: HoC в checklist** Мнение, не универсально
+
+### 7.3 `_worklog.md` — session memory
+
+#### Зачем
+
+Отвечает на вопрос: **«Что мы делали в прошлой сессии?»**
+
+Это **мета-файл**: инструкция для `WORK_LOG.md`, которого в шаблоне ещё нет — он создаётся при первой сессии.
+
+#### `_worklog.md` vs `WORK_LOG.md`
+
+|`_worklog.md`|`WORK_LOG.md`|
+|---|---|
+|Шаблон и правила|Сами записи|
+|В git-репозитории шаблонов|Локально, никогда не коммитится|
+|Не меняется|Растёт с каждой сессией|
+|Копируется во все проекты|Уникален для проекта|
+
+#### Анатомия записи
+
+```markdown
+
+## 2026-09-21
+### Session 47 — Add streaming mode
+| # | What | Files | Status | Complexity |
+|---|------|-------|--------|-----------|
+| 123 | Streaming parser | `lib/parser.rb`, `spec/` | merged | medium |
+**Decision:** Used decorator for renderer. Alternative — separate class,
+but would duplicate formatting logic.
+**Problem:** Streaming required buffering; initial approach loaded whole
+file. Fixed with `Enumerator`.
+**Next:** Benchmark on 100MB file, then open PR.
+---
+```
+
+**Структура:**
+
+- **`## YYYY-MM-DD`** — H2 для даты
+    
+- **`### Session N — title`** — H3 для сессии, номер сквозной
+    
+- **Таблица** — что делали
+    
+- **`Decision`** — неочевидные решения
+    
+- **`Problem`** — что пошло не так и как решили
+    
+- **`Next`** — что делать дальше
+    
+- **`---`** — разделитель
+    
+
+**Три обязательные секции:** Decision, Problem, Next. Даже если пишете `—`, оставляйте секцию — она напоминает, что нужно подумать.
+
+#### Trivial sessions
+
+Для мелких сессий таблица избыточна. Упрощённый формат:
+
+
+```markdown
+
+## 2026-09-21
+### Session 48 — Typo fix
+Fixed typo in README.
+**Next:** Continue issue #123.
+---
+```
+
+Без таблицы,  просто параграф.
+
+#### Правила
+
+Из `_worklog.md`:
+
+> - **Newest first** Insert new entries right after the intro, before  
+>     the first `## <date>` heading
+>     
+> - **One entry per session**
+>     
+> - **Log:** PRs, CI fixes, discoveries, blockers, decisions
+>     
+> - **Note WHY,** not just what
+>     
+> - **Link, don't duplicate**
+>     
+>     - Significant decisions → `_decisions.md`
+>         
+>     - Future tasks → `_backlog.md`
+>         
+>     - Issue details → `issue/PROJECT_SUMMARY_<N>.md`
+>         
+> - **Local only** Never committed
+>     
+
+**Правило «Newest first»** — самое важное. Нарушение = каша. Вставка идёт **после intro, перед первым `## <date>`**. Не в конец файла.
+
+**Правило «Link, don't duplicate»** — против разъезда. Если что-то дублируется — ставьте ссылку.
+
+#### Частые ошибки
+
+**Ошибка 1: `cat >> WORK_LOG.md`** Добавляет в **конец**. Правило — «newest first». Нужно вставлять после intro.
+
+**Ошибка 2: разнобой в `type`** `worklog` vs `work-log`. Приводите к одному.
+
+**Ошибка 3: нет `Next`** Через месяц непонятно, где остановились.
+
+**Ошибка 4: таблица для тривиальной сессии** «Исправил опечатку» в таблице с колонками Files/Complexity — абсурд.
+
+**Ошибка 5: значимые решения только в WORK_LOG** Если решение архитектурное — оно в `_decisions.md`. В WORK_LOG — короткая ссылка.
+
+**Ошибка 6: WORK_LOG в git** Это локальный файл. `.gitignore` внутри `.opencode/` должен его содержать.
+
+### 7.4 `_backlog.md` — future work (будущая работа)
+
+#### Зачем
+
+Отвечает на вопрос: **«Что делать дальше?»**
+
+Это **inbox** для будущих задач. Не GitHub Issues — они для подтверждённых. Backlog — для черновиков.
+
+#### Ключевой нюанс: backlog ≠ GitHub Issues
+
+|`_backlog.md`|GitHub Issues|
+|---|---|
+|Локальный|Публичный|
+|Личный|Командный|
+|Черновик|Официальный|
+|Дёшев для записи|Требует формулировки|
+|Inbox для идей|Трекер для задач|
+
+**Workflow:**
+
+
+```text
+
+Идея → backlog (черновик) → [решение делать] → GitHub Issue → работа
+```
+
+Backlog — **буфер** между «пришло в голову» и «официально взял в работу».
+
+#### Анатомия
+
+```markdown
+
+---
+type: backlog
+title: "Backlog — Future Work"
+description: "Planned and unplanned work items, ideas, and tech debt"
+timestamp: 2026-09-21
+tags: [backlog, planning]
+---
+
+# Backlog
+Future work — **not yet** started. For work already done, see
+`WORK_LOG.md`. For confirmed tasks, use GitHub Issues.
+Backlog is a **local draft**, not an official tracker. Cheap to write,
+cheap to delete. Promote items to real issues when you decide to act.
+
+## Priorities
+| Priority | Meaning |
+|----------|---------|
+| P0 | Critical — breaks prod/CI, do now |
+| P1 | Important — current cycle |
+| P2 | Desirable — when there's time |
+| P3 | Idea / tech debt / nice-to-have |
+
+## Items
+| ID | Priority | Item | Issue | Blocked by | Next action |
+|----|----------|------|-------|------------|-------------|
+| B-001 | P1 | Add streaming mode | #123 | — | Read Enumerator docs |
+| B-002 | P2 | Refactor Lexer | — | B-001 | Wait for B-001 |
+
+## Ideas (unprioritized)
+- Try Elixir for a small service.
+- What if we used GraphQL instead of REST?
+  
+## Tech debt
+| Item | Why it hurts | Effort | Priority |
+|------|--------------|--------|----------|
+| Duplicate validators | Fixes applied twice; drift inevitable | S | P2 |
+
+## References
+- [1] [Project board](url)
+```
+
+#### Три секции
+
+**Priorities** — расшифровка P0–P3. P0 = «горит». Если у вас 5 P0-задач — приоритезация сломана.
+
+**Items** — главная таблица. Шесть колонок:
+
+- `ID` — стабильный, не переиспользуется. `B-001`, `B-002`
+    
+- `Priority` — P0–P3
+    
+- `Item` — 3–7 слов
+    
+- `Issue` — ссылка на GitHub Issue (`#123`) или `—`
+    
+- `Blocked by` — что мешает
+    
+- `Next action` — первый конкретный шаг
+    
+
+**Почему `Blocked by` и `Next action` критичны:** без них пункты «висят». Через месяц непонятно, с чего начать.
+
+**Ideas** — сырые идеи без приоритета. Список, не таблица. Приоритет пока не нужен.
+
+**Tech debt** — отдельная категория. У него своя метрика: насколько больно. `Why it hurts` — самая важная колонка.
+
+#### Частые ошибки
+
+**Ошибка 1: дублирование с GitHub Issues** → Если задача уже там — удалите из backlog.
+
+**Ошибка 2: backlog как свалка** → Записываете всё, никогда не удаляете. Правило: **cheap to write, cheap to delete**. Раз в месяц чистите.
+
+**Ошибка 3: P0 слишком много** → P0 = «горит». Больше 2-3 одновременно — сломанная приоритезация.
+
+**Ошибка 4: нет `Next action`** → Через месяц непонятно, с чего начать.
+
+**Ошибка 5: Tech debt без `Why it hurts`** → «Refactor User model» — не задача. «Refactor User model: 800 строк, тесты идут 2 минуты» — задача.
+
+**Ошибка 6: Backlog коммитится** → Нет, локальный файл. В `.gitignore`.
+
+**Ошибка 7: Backlog = roadmap** → Backlog — не roadmap. Roadmap — отдельный документ.
+
+### 7.5 `_decisions.md` — ADR log
+
+#### Зачем
+
+Отвечает на вопрос: **«Почему система устроена именно так?»**
+
+Это **журнал архитектурных решений (ADR)**
+
+#### Ключевой принцип: иммутабельность
+
+Принятое ADR **не редактируется**. Если устарело — создаётся новое, а старое помечается `superseded by ADR-XXX`.
+
+**Почему:** если можно редактировать старые ADR, история теряется. Через год никто не поймёт, почему решение менялось.
+
+**Аналогия:** git-коммиты. Вы не редактируете старые — вы делаете новые.
+
+#### Что попадает в ADR
+
+**Значимые решения**, влияющие на:
+
+- Архитектуру
+    
+- Публичный API
+    
+- Процесс разработки
+    
+
+**НЕ попадают:**
+
+- Мелкие решения в рамках сессии (→ `WORK_LOG.md`)
+    
+- Баг-фиксы
+    
+- Рефакторинг без изменения поведения
+    
+
+**Правило:** если решение повлияет на других через полгода — ADR. Если «локальное решение в сессии» — WORK_LOG.
+
+#### Анатомия
+
+```markdown
+
+---
+type: decision-log
+title: "Architecture Decision Records"
+description: "Chronological log of significant decisions and rationale"
+timestamp: 2026-09-21
+tags: [adr, architecture, decisions]
+---
+
+# Architecture Decisions
+Each significant decision gets its own entry. **Newest first.**
+Small decisions stay in `WORK_LOG.md`; this file is for choices that
+affect architecture, public API, or development process.
+
+## Index
+| # | Date | Decision | Status |
+|---|------|----------|--------|
+| [ADR-003](#adr-003-use-clickhouse) | 2026-09-21 | Use ClickHouse | accepted |
+| [ADR-002](#adr-002-drop-ruby-2) | 2026-08-15 | Drop Ruby 2.x | accepted |
+| [ADR-001](#adr-001-choose-rspec) | 2026-07-01 | Choose RSpec | accepted |
+---
+
+## ADR-003: Use ClickHouse for event storage
+- **Date:** 2026-09-21
+- **Status:** accepted
+- **Issue:** #215
+- **Deciders:** @team
+  
+### Context
+Service writes ~10k events/sec. PostgreSQL in single-node mode can't
+keep up. Need a DB with horizontal sharding. Team has experience with
+Cassandra and ClickHouse, not MongoDB.
+
+### Decision
+We will use ClickHouse for event storage. PostgreSQL remains for
+transactional data.
+
+### Alternatives considered
+- **Cassandra** — team has experience, but no SQL aggregations for
+  reports
+- **MongoDB** — has sharding, but team has no experience; high risk
+- **PostgreSQL + Citus** — works, but requires separate infra and
+  training
+  
+### Consequences
+- **Positive:** up to 100k events/sec per node; built-in aggregation
+- **Negative:** no transactions, no foreign keys; needs new migration
+  tooling
+- **Follow-up:** train team on ClickHouse; add task to `_backlog.md` to
+  migrate existing events
+  
+### References
+- [1] [Issue #215](url)
+- [2] [PR #220](url)
+---
+```
+
+#### Ключевые секции
+
+**Index** — сводная таблица. При 5+ ADR без него невозможно ориентироваться. Anchor-ссылки: `#adr-003-title`. GitHub создаёт их автоматически из заголовков.
+**`## ADR-XXX: title`** — H2. Заголовок никогда не меняется после публикации, иначе ломаются anchor-ссылки.
+**Метаданные записи:** Date, Status, Issue, Deciders. Только `Status` можно менять после публикации.
+**Context** — что вынудило принять решение. 2–5 предложений.
+**Decision** — что решили. Одна-две фразы. Не смешивать с Context.
+**Alternatives considered** — что отвергли и **почему**. Без «почему» — бесполезно.
+**Consequences** — **обязательно** Positive, Negative, Follow-up. Если Negative пустой — плохо искали. Решений без минусов не бывает.
+**Follow-up → `_backlog.md`.** ADR порождает задачи.
+
+#### Триггеры для ADR
+- Выбор технологии (БД, фреймворк)
+- Изменение публичного API
+- Изменение процесса (деплой, ревью)
+- Отказ от технологии/паттерна
+- Структурное изменение (monolith → microservices)
+- Изменение схемы данных (breaking changes)
+
+#### Частые ошибки
+**Ошибка 1: пихать сюда всё** «Использовал `each` вместо `map`» — не ADR.
+**Ошибка 2: редактировать принятые ADR** Единственное, что можно менять — `Status`.
+**Ошибка 3: пустой Negative** «У решения нет минусов» — самообман.
+**Ошибка 4: Alternatives без объяснения** «Отвергли Cassandra» без причины — бесполезно.
+**Ошибка 5: нет Index** При 5+ ADR невозможно ориентироваться.
+**Ошибка 6: ADR описывает состояние, а не решение** «Мы используем PostgreSQL» — факт. «Выбрали PostgreSQL вместо MongoDB, потому что...» — ADR.
+
+### 7.6 `_codestyle.md` — code conventions
+
+#### Зачем
+Отвечает на вопрос: **«Как писать код в этом проекте?»**
+
+#### Две тонкие границы
+**Граница 1: `_codestyle.md` vs `_commands.md`**
+Оба содержат команды. Разница:
+- `_codestyle.md` — команда линта нужна, потому что это **верификация стиля**
+- `_commands.md` — все команды вместе, для быстрого доступа
+
+**Решение:** команда линта живёт в `_codestyle.md` (по смыслу). В `_commands.md` — короткая ссылка или дублирование одной строкой.
+
+**Граница 2: `_codestyle.md` vs `_concepts.md` (тесты)**
+- `_concepts.md` — **стратегия**: что тестируем (unit, integration, e2e), зачем.
+- `_codestyle.md` — **тактика**: фреймворк, как запустить один тест, паттерны.
+
+**Правило:** «почему и что» — в concepts, «чем и как» — в codestyle
+
+#### Анатомия
+
+````markdown
+---
+type: codestyle
+title: "Code Style Conventions"
+description: "SPDX headers, linting, language conventions, testing setup"
+timestamp: 2026-09-21
+tags: [codestyle, ruby]
+---
+
+# Code Style
+
+## SPDX headers
+Required on all **source code** files. Markdown, YAML, JSON, and
+generated files are exempt unless the project explicitly requires
+otherwise.
+
+```ruby
+# SPDX-FileCopyrightText: Copyright (c) 2026 Acme Inc.
+# SPDX-License-Identifier: MIT
+```
+
+`<SPDX-ID>` must match the license declared in `AGENTS.md`
+
+## Lint — 0 offenses
+```bash
+bundle exec rubocop
+```
+Lint must pass with **zero offenses** before any commit
+
+## Language conventions
+- Frozen string literals in every file
+- Prefer `each` over `for`
+- No global variables
+- Maximum method length: 15 lines
+- Double quotes for strings
+  
+## Testing
+- **Framework:** RSpec
+- **Run all:** `bundle exec rspec`
+- **Single test:** `bundle exec rspec spec/foo_spec.rb:42`
+- **Patterns:** FactoryBot for fixtures, VCR for HTTP, stubbed Time
+  
+Testing **strategy** — see `_concepts.md`
+
+## References
+- [1] [Ruby Style Guide](url)
+- [2] [RuboCop config](.rubocop.yml)
+````
+
+
+#### Ключевые решения
+
+**SPDX — только на source code.** Markdown, YAML, JSON — exempt. Иначе SPDX-комментарий сломает frontmatter.
+
+**«Lint must pass with zero offenses»** — правило, не рекомендация. Связь с PR checklist в `_templates.md`.
+
+**Language conventions — только то, что линтер не ловит.** «Use `each` instead of `for`» — если RuboCop это ловит, не пишите здесь. Пишите только то, что линтер **не может** проверить.
+
+**Testing — тактика.** Framework, команды (all/single), паттерны. Стратегия — не здесь.
+
+**Single test обязателен.** Без него разработка замедляется.
+
+#### Частые ошибки
+
+**Ошибка 1: «SPDX required on ALL files».** Буквально. Markdown/YAML с frontmatter ломаются.
+
+**Ошибка 2: дублирование `_commands.md`.** Полный build, test, lint — это копия.
+
+**Ошибка 3: дублирование `_concepts.md` (тесты).** «Unit тесты покрывают 80%» — это стратегия.
+
+**Ошибка 4: правила, которые линтер уже проверяет.** Не пишите их.
+
+**Ошибка 5: нет команды для одного теста.** Критично.
+
+**Ошибка 6: SPDX без соответствия License в AGENTS.md.** Баг.
+
+### 7.7 `_commands.md` — command cheat sheet
+
+#### Зачем
+
+Отвечает на вопрос: **«Какую команду запустить прямо сейчас?»**
+
+Это **шпаргалка**, не обучение, читается за 10 секунд
+
+#### Границы
+
+**Граница 1: `_commands.md` vs `_setup.md`**
+
+|`_setup.md`|`_commands.md`|
+|---|---|
+|Пошаговая инструкция|Каталог команд|
+|Порядок важен|Порядок не важен|
+|Первый запуск|Постоянное использование|
+
+**Граница 2: `_commands.md` vs `_ci.md`**
+
+`_commands.md` — общие команды
+`_ci.md` — команды для воспроизведения CI-проверок локально
+
+#### Анатомия
+
+````markdown
+
+---
+type: commands
+title: "Quick Commands"
+description: "Build, test, run, and utility command reference"
+timestamp: 2026-09-21
+tags: [commands, reference]
+---
+
+# Quick Commands
+Copy-paste ready. For setup order, see `_setup.md`. For lint rules,
+see `_codestyle.md`
+
+## Build
+```bash
+bundle exec rake
+```
+
+## Test
+```bash
+# All tests
+bundle exec rspec
+# Single test
+bundle exec rspec spec/foo_spec.rb:42
+# With coverage
+COVERAGE=true bundle exec rspec
+```
+
+## Lint
+```bash
+bundle exec rubocop
+```
+
+## Run locally
+```bash
+bundle exec rails server
+```
+
+## Branch for an issue
+Adjust to your workflow (GitHub flow, GitFlow, trunk-based).
+```bash
+git checkout master
+git pull
+git checkout -b <issue-number>
+```
+## References
+- [1] [Project contributing guide](url)
+````
+
+
+#### Ключевые решения
+
+**Copy-paste ready** → Команды можно скопировать без редактирования. Единственное исключение — `<issue-number>`.
+
+**Один блок с комментариями** → для Test. `# All tests`, `# Single test` — разделители. Не три отдельных блока.
+
+**`Adjust to your workflow`** → Не диктуем workflow. Branch discipline может быть разной.
+
+**Никаких HoC** Это мнение, не универсально. Если используете — добавьте локально.
+
+**Секции удаляются, если не нужны** → Для gem'а нет Database, для doc'а нет Build.
+
+#### Частые ошибки
+
+**Ошибка 1: дублирование `_setup.md`** → «Шаг 1, шаг 2, шаг 3» — это setup.
+
+**Ошибка 2: дублирование правил `_codestyle.md`** → «Lint must pass 0 offenses» — правило, ему место там.
+
+**Ошибка 3: нет single test** Критично.
+
+**Ошибка 4: команды без комментариев** → Неочевидные команды — с пояснением.
+
+**Ошибка 5: устаревшие команды** Проект перешёл с `rake` на `make` — `_commands.md` не знает.
+
+### 7.8 Как они связаны
+
+
+```text
+
+                        issue lifecycle
+                              │
+        ┌─────────────────────┼─────────────────────┐
+        ▼                     ▼                     ▼
+      Start                 During                 End
+        │                     │                     │
+   _templates            _worklog              _templates
+   (SUMMARY,             (session)             (PR)
+    PLAYBOOK)                │
+        │                    ├─→ _decisions     ─→ archive/
+        │                    │   (significant)
+        │                    ├─→ _backlog
+        │                    │   (Next → task)
+        │                    │
+        └────────────────────┴───→ _codestyle
+                                    (writing code)
+                                         │
+                                         ▼
+                                    _commands
+                                    (run/test/lint)
+
+```
+
+Ключевые связи:
+
+- **`_worklog.md` → `_decisions.md`**: значимые решения из сессии
+    
+- **`_worklog.md` → `_backlog.md`**: «Next» становится задачей
+    
+- **`_templates.md` → `_codestyle.md`**: PR checklist ссылается на lint
+    
+- **`_templates.md` → `_commands.md`**: verify-команды
+    
+- **`_decisions.md` → `_backlog.md`**: Follow-up → задача
+    
+
+**Правило «link, don't duplicate»** — ключевое для всех шести файлов.
+
+### 7.9 Частые ошибки (все шесть файлов)
+
+**Ошибка 1: дублирование** → Одна и та же информация в двух файлах. Расинхрон неизбежен. Ссылайтесь.
+
+**Ошибка 2: не обновляется `timestamp`** → Файл менялся — дата старая. Обновляйте.
+
+**Ошибка 3: нет границ** → Файлы разрастаются, пересекаются. Проверяйте: «это в другом файле?».
+
+**Ошибка 4: секции, которые не используются** → Пустые заголовки хуже отсутствующих. Удаляйте.
+
+**Ошибка 5: cross-links не работают** → Ссылки на несуществующие файлы. Проверяйте.
+
+**Ошибка 6: файлы не растут** → `_troubleshooting.md` пополняется после каждой проблемы. `_backlog.md` — после каждой идеи. Если файл не растёт — вы им не пользуетесь.
+
+**Ошибка 7: файлы растут бесконтрольно** → `_decisions.md` с 100+ ADR — пора чистить. `_backlog.md` с 50+ пунктами — свалка.
+
+### 7.10 Упражнение
+
+Возьмите свой проект. Пройдитесь по шести файлам:
+
+1. **`_templates.md`** — есть ли шаблон для PROJECT_SUMMARY, PLAYBOOK, PR? Попробуйте заполнить по одной текущей задаче.
+    
+2. **`_worklog.md`** — ведёте ли `WORK_LOG.md`? Если нет — почему?
+    
+3. **`_backlog.md`** — сколько пунктов? Есть ли P0? Есть ли `Next action` для каждого?
+    
+4. **`_decisions.md`** — есть ли ADR? Какие решения вы принимали за последние 3 месяца, которые заслуживают ADR?
+    
+5. **`_codestyle.md`** — есть ли команда single test? Есть ли SPDX-шаблон?
+    
+6. **`_commands.md`** — все команды работают? Copy-paste ready?
+    
+
+Для каждого файла: **«Если я не пользуюсь этим файлом — он мне нужен?»** Если нет — удалите. Пустой файл хуже отсутствующего.
+
+### 7.11 Что дальше
+
+В следующей главе — **diagnostics**: `_ci.md`, `_troubleshooting.md`, `runbooks/`. Это файлы, которые читаются, когда что-то сломалось.
+
+
+
+==------=============================================================
+=======================================================================---
+
+## Что дальше в книге
+
+Мы прошли:
+
+- **Part I — Foundations** (главы 1–4).
+    
+- **Part II** — начали. Главы 5 (AGENTS.md) и 6 (Onboarding) готовы.
+    
+
+Осталось в Part II:
+
+- **Chapter 7.** Daily work: `_templates`, `_worklog`, `_backlog`, `_decisions`, `_codestyle`, `_commands`.
+    
+- **Chapter 8.** Diagnostics: `_ci`, `_troubleshooting`, `runbooks/`.
+    
+- **Chapter 9.** Navigation: `_files`, `_env`, `_security`, `analysis/`, `_meta`.
+    
+- **Chapter 10.** Utility: `index.md`, `log.md`, `SPEC_REFERENCE.md`, `.gitignore`, `.template-version`.
+    
+
+Потом:
+
+- **Part III — Workflows** (главы 11–16).
+    
+- **Part IV — Operations** (главы 17–20).
+    
+- **Part V — Appendices** (A–D).
+    
+
+Продолжаем с Chapter 7 или хотите что-то поменять в темпе/структуре?
