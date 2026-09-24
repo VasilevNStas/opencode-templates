@@ -4007,7 +4007,617 @@ _env.md           analysis/        _meta.md
 **Тест:** покажите `_security.md` коллеге. Спросите: «Если ты случайно закоммитил токен — что делать?» Если ответ не совпадает с разделом «If a secret leaked» — перепишите.
 
 
+## Chapter 10. Utility: `index.md`, `log.md`, `SPEC_REFERENCE.md`, `.gitignore`, `.template-version`
+## Глава 10.  Польза: `index.md`, `log.md`, `SPEC_REFERENCE.md`, `.gitignore`, `.template-version`
 
+### 10.1 Почему пять файлов в одной главе
+
+Эти пять файлов объединены одним признаком: **их никто не читает при обычной работе**
+
+- `index.md` — OKF-индекс, читается редко
+    
+- `log.md` — указатель на логи
+    
+- `SPEC_REFERENCE.md` — выдержка из OKF
+    
+- `.gitignore` — защита от коммита
+    
+- `.template-version` — машинные метаданные
+
+
+Ни один из них не участвует в повседневном цикле «issue → работа → PR». Но **без них bundle неполный**:
+
+- Без `index.md` и `log.md` — не OKF-конформный
+    
+- Без `SPEC_REFERENCE.md` — нет офлайн-доступа к спеке
+    
+- Без `.gitignore` — риск утечки
+    
+- Без `.template-version` — `init-opencode --update` не работает
+
+
+Это **фундамент**, на котором стоят остальные файлы. Невидимый, но необходимый.
+
+### 10.2 `index.md` — OKF entry point
+
+#### Зачем
+
+`index.md` — **резервированное имя в OKF**. Это точка входа в bundle.
+
+В чистом OKF `index.md` — оглавление директории. В нашем шаблоне его роль выполняет `AGENTS.md` (потому что OpenCode читает именно его). Но `index.md` всё равно нужен — для OKF-конформности и как формальная точка входа.
+
+#### Анатомия
+
+```markdown
+---
+type: index
+title: "Knowledge Bundle Index"
+description: "Entry point for the .opencode/ OKF bundle"
+timestamp: 2026-09-21
+tags: [index, okf]
+---
+
+# Index
+This directory is an OKF bundle. See `_meta.md` for what it is and how
+to work with it
+
+## Entry point
+- **Project context:** `AGENTS.md` — start here
+  
+## Reference files
+See the full list in `AGENTS.md` (section "Reference files")
+
+## Dynamic artifacts
+- **Issues:** `issue/`
+- **Playbooks:** `playbook/`
+- **Pull requests:** `pr/`
+- **Analysis findings:** `analysis/index.md`
+- **Runbooks:** `runbooks/index.md`
+- **Archive:** `archive/`
+  
+## Work log
+- `WORK_LOG.md` — chronological sessions (local only)
+  
+## OKF spec
+- `SPEC_REFERENCE.md` — extract of OKF v0.1
+  
+## Log
+- `log.md` — pointers to chronological records
+```
+
+**Длина — ~35 строк** Это **оглавление**, не энциклопедия
+
+#### Ключевые решения
+
+**`type: index`** — из словаря. OKF-резервированное имя
+
+**Вводная строка `This directory is an OKF bundle.`** — что это
+
+**Ссылка на `_meta.md`** — для тех, кто хочет понять bundle глубже
+
+**Секция `Entry point`** — `AGENTS.md` как главный файл. Явно сказано «start here»
+
+**Секция `Reference files`** — не дублирует таблицу из `AGENTS.md`, а **ссылается** на неё. Это правило «link, don't duplicate»
+
+**Секция `Dynamic artifacts`** — шесть директорий. Каждая с описанием в одну фразу
+
+**Секция `Work log`** — `WORK_LOG.md`, локальный
+
+**Секция `OKF spec`** — ссылка на `SPEC_REFERENCE.md`
+
+**Секция `Log`** — ссылка на `log.md`
+
+#### Частые ошибки
+
+**Ошибка 1: дублирование `AGENTS.md`** Список reference files в `index.md` и `AGENTS.md` — рассинхрон неизбежен. Только ссылка.
+
+**Ошибка 2: `index.md` содержит контент** Это оглавление, не энциклопедия
+
+**Ошибка 3: нет `type: index`** Используйте резервированное значение
+
+**Ошибка 4: `index.md` слишком длинный** Больше 50 строк — вы что-то не то туда положили
+
+**Ошибка 5: нет ссылки на `_meta.md`** Читатель не поймёт, что за bundle
+
+### 10.3 `log.md` — OKF log pointer
+
+#### Зачем
+
+`log.md` — **второе резервированное имя в OKF**. По спеке — история изменений bundle.
+
+Но у нас уже есть **четыре лога**:
+
+|Файл|Что содержит|
+|---|---|
+|`WORK_LOG.md`|Хронология рабочих сессий|
+|`_decisions.md`|Хронология архитектурных решений|
+|`_meta.md`|Версия bundle, дата установки|
+|`_worklog.md`|Шаблон и правила для WORK_LOG|
+
+Пятый лог (`log.md`) добавил бы ещё один слой. Поэтому наш `log.md` — **указатель** на существующие логи, а не самостоятельный журнал.
+
+#### Анатомия
+
+```markdown
+---
+type: log
+title: "Change Log"
+description: "Pointers to chronological records in this bundle"
+timestamp: 2026-09-21
+tags: [log, okf]
+---
+
+# Log
+This bundle does not maintain a single changelog. Chronological records
+live in specialized files:
+- **Work sessions:** `WORK_LOG.md` — local only
+- **Architectural decisions:** `_decisions.md` — ADR log
+- **Bundle version:** `_meta.md` — install/update history
+  
+## What this file is for
+OKF reserves `log.md` for change history. In this bundle, that role is
+split across the files above. This file exists to make the OKF structure
+explicit — its content is a pointer, not a log
+```
+
+**Длина — ~20 строк** Минимально возможный файл, выполняющий роль.
+
+#### Ключевые решения
+
+**`type: log`** — OKF-резервированное значение
+
+**Явное признание: `This bundle does not maintain a single changelog.`** — не притворяемся, что ведём лог, говорим как есть.
+
+**Ссылки на три лога** — WORK_LOG, decisions, meta
+
+**Секция `What this file is for`** — объясняет, почему файл существует и почему он почти пустой. Без этого объяснения читатель удивляется
+
+#### Что если не хотите пятый файл
+
+**Вариант A: создать указатель** (как выше). OKF-конформно, файл есть.
+
+**Вариант B: не создавать** Тогда признаём, что bundle — OKF-вдохновлённый, а не строго конформный. Уберите упоминания `log.md` из `index.md` и `_meta.md`.
+
+**Моя рекомендация — A** 20 строк — небольшая цена за OKF-структуру.
+
+#### Частые ошибки
+
+**Ошибка 1: `log.md` как реальный changelog** Кто будет его вести вручную? Забросите через неделю
+
+**Ошибка 2: дублирование `_meta.md`** История версий уже там
+
+**Ошибка 3: нет объяснения, почему файл почти пуст** Читатель удивляется
+
+**Ошибка 4: нет ссылок на реальные логи** Файл повисает в воздухе
+
+### 10.4 `SPEC_REFERENCE.md` — OKF extract
+
+#### Зачем
+
+Отвечает на вопрос: **«Что такое OKF?»** — не выходя в Интернет
+
+Полная спецификация — в Google Cloud. Но:
+
+- Не всегда есть доступ к интернету
+    
+- Полная спека — 500+ строк
+    
+- В нашей спеке есть особенности (расширения), которых нет в оригинале
+
+
+Поэтому — **локальная выдержка** с пометками о наших расширениях
+
+#### Анатомия
+
+````markdown
+---
+type: spec-reference
+title: "OKF v0.1 — Open Knowledge Format (Google)"
+description: "Extract of the Google spec for representing knowledge as markdown files"
+resource: "https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md"
+timestamp: 2026-09-21
+tags: [okf, meta, spec]
+---
+
+# OKF v0.1 — Open Knowledge Format (extract)
+
+> **This is an extract, not the full specification.** Original:
+> [SPEC.md](https://github.com/...)
+> For how this bundle uses OKF, see `_meta.md`
+
+## What OKF is
+
+An open format from Google Cloud for representing knowledge — metadata,
+context, and analytics around data and systems. Designed to be created
+by humans, generated by agents, exchanged across organizations, and
+consumed by both.
+
+**Key principle:** minimalism. No central schema registry, no mandatory
+tooling. If you can `cat` a file, you can read OKF. If you can `git
+clone`, you can distribute it.
+
+## Bundle structure
+bundle/
+├── index.md           # table of contents
+├── log.md             # change history
+├── <concept>.md       # concept document
+└── <subdirectory>/
+    ├── index.md
+    └── <concept>.md
+    
+## Reserved names
+| File | Purpose |
+|------|---------|
+| `index.md` | Directory table of contents |
+| `log.md` | Change history |
+
+**In this bundle:** the role of `index.md` is played by `AGENTS.md` plus
+`index.md` as a pointer. The role of `log.md` is played by `WORK_LOG.md`
+(local-only) plus `log.md` as a pointer.
+
+## Concept document
+Each concept is a UTF-8 markdown file with two parts.
+
+### 1. YAML frontmatter (required)
+```yaml
+---
+type: <Type name>                  # REQUIRED
+title: <Optional display name>
+description: <Optional one-line summary>
+resource: <Optional canonical URI>
+tags: [<tag>, <tag>]
+timestamp: <ISO 8601 datetime>
+---
+```
+
+**Required field:** `type`. Values are not centrally registered.
+Consumers must tolerate unknown `type` values.
+**Extensions:** producers may add any additional keys. Consumers must
+preserve unknown keys and not reject documents with unrecognized fields.
+
+### 2. Body (markdown)
+Standard markdown. Structural markdown recommended over free text
+**In this bundle:** we use `## References` and `## Citations`
+interchangeably
+
+## Cross-linking
+Links between concepts are standard markdown links. Absolute (from
+bundle root) or relative
+**In this bundle:** we use relative links, because the bundle is
+embedded in a project
+
+## Conformance
+A bundle conforms to OKF v0.1 if:
+1. Every `.md` file (except `index.md`, `log.md`) contains parseable
+   YAML frontmatter
+2. Every frontmatter contains a non-empty `type` field
+3. `index.md` and `log.md` follow the described structure
+Consumers **must not** reject a bundle because of:
+- Missing optional frontmatter fields
+- Unknown `type` values
+- Unknown additional keys
+- Broken cross-links
+- Missing `index.md`
+  
+## OKF goals
+1. Define a universal format that enrichment agents can write to
+2. Tell consumption agents how to read the knowledge
+3. Make knowledge exchangeable across systems and organizations
+4. Standardize a minimal set of required fields
+   
+## Non-goals
+- Defining a fixed taxonomy of concept types
+- Prescribing storage or query infrastructure
+- Replacing domain-specific schemas (Avro, Protobuf, OpenAPI)
+  
+## Citations
+[1] [OKF SPEC.md — full text](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
+````
+
+#### Ключевые решения
+
+**Blockquote в начале** Сразу говорит: «это выдержка, не оригинал». Ссылка на полный текст.
+
+**Пометки «In this bundle: ...»** — три места, где наши расширения отличаются от чистого OKF:
+
+- Reserved names — `AGENTS.md` вместо `index.md`
+    
+- Conventional sections — `## References` vs `## Citations`
+    
+- Cross-linking — относительные ссылки вместо абсолютных
+
+
+Это делает выдержку **не просто переводом спеки**, а **гидом по нашим особенностям**.
+
+**`resource` в frontmatter** — ссылка на оригинал. Стандартное поле OKF
+
+**`type: spec-reference`** — уникальный тип. Не `spec`, не `okf`. `spec-reference` точнее.
+
+**Английский язык.** Консистентность с остальным bundle. LLM-агентам английский родной.
+
+#### Частые ошибки
+
+**Ошибка 1: полная копия спеки** 500+ строк. Не надо — выдержка.
+
+**Ошибка 2: нет пометок «In this bundle»** Читатель не понимает, где OKF, а где наши расширения.
+
+**Ошибка 3: нет ссылки на оригинал** Если читатель хочет глубже — куда идти?
+
+**Ошибка 4: другой язык, чем остальной bundle** Смешение языков.
+
+**Ошибка 5: не обновляется при изменении OKF** Google выпустит v0.2 — выдержка устареет.
+
+### 10.5 `.gitignore` — commit protection
+
+#### Зачем
+
+Защита от случайного коммита. `.opencode/` — локальный, никогда не должен попасть в репозиторий.
+
+Основная защита — `.git/info/exclude` на уровне репозитория. Но есть **два уровня защиты**:
+
+1. **Внешний**: `.git/info/exclude` в репозитории проекта
+    
+2. **Внутренний**: `.gitignore` внутри `.opencode/`
+
+
+Первый защищает директорию целиком. Второй — на случай, если директория всё-таки попала в git.
+
+#### Анатомия
+
+```gitignore
+
+# Local-only data — never commit
+
+# Work log is personal memory
+WORK_LOG.md
+
+# Template version marker
+.template-version
+
+# Active issue artifacts
+issue/
+playbook/
+pr/
+
+# Archive
+archive/
+
+# Temporary files
+tmp/
+
+# Analysis is usually local
+analysis/*.md
+!analysis/index.md
+!analysis/_finding.md
+```
+
+#### Ключевые решения
+
+**Комментарий в начале** — объясняет, зачем файл
+
+**`WORK_LOG.md`** — самый важный игнор. Это личная память, не часть bundle.
+
+**`.template-version`** — машинный маркер, не нужен в git
+
+**Директории `issue/`, `playbook/`, `pr/`, `archive/`** — динамические, локальные
+
+**`tmp/`** — временные файлы
+
+**`analysis/*.md` с исключениями.** Конкретные findings — локальные
+Но `index.md` и `_finding.md` (шаблон) — часть bundle, не игнорируются
+
+**Pattern `!`** — восстановление файла из игнора
+
+#### Что НЕ игнорировать
+
+- `AGENTS.md`, `_*.md`, `index.md`, `log.md` — часть bundle
+    
+- `SPEC_REFERENCE.md` — часть bundle
+    
+- `analysis/index.md`, `analysis/_finding.md` — часть bundle
+    
+- `runbooks/index.md`, `runbooks/_runbook.md` — часть bundle
+
+
+Только **пользовательские данные** игнорируются
+
+#### Частые ошибки
+
+**Ошибка 1: игнорировать всё в `.opencode/`** `*` — слишком грубо. Bundle — часть проекта, его шаблонные файлы полезны. Но иногда лучше содержимое хранить локально.
+
+**Ошибка 2: не игнорировать `WORK_LOG.md`** Личная память, не для git
+
+**Ошибка 3: не игнорировать `.template-version`**
+
+**Ошибка 4: игнорировать `analysis/index.md`** Это часть bundle
+
+**Ошибка 5: нет комментария в начале** Читатель не понимает, зачем файл
+
+### 10.6 `.template-version` — machine-readable version
+
+#### Зачем
+
+Машинный файл для `init-opencode --update`. Без него скрипт не знает, от какой версии отталкиваться.
+
+#### Отличие от `_meta.md`
+
+|`.template-version`|`_meta.md`|
+|---|---|
+|Machine-readable|Human-readable|
+|Простой текст|Markdown с frontmatter|
+|Читают скрипты|Читают люди|
+|Без frontmatter|С frontmatter|
+|Скрытый (`.` в начале)|Видимый|
+
+Оба содержат одну и ту же информацию — версию шаблона. Но в разных форматах.
+
+#### Анатомия
+
+```text
+version: v0.1.0
+installed: 2026-09-15
+source: /home/user/Projects/opencode-templates
+```
+
+**Три строки.** Простой `key: value` формат. Парсится любым скриптом.
+
+#### Ключевые решения
+
+**Не markdown** Файл без расширения — просто `.template-version`. Потому что это не концепт OKF, а служебный маркер.
+
+**Не содержит frontmatter** Frontmatter — для OKF-концептов. Это не концепт.
+
+**Скрытый файл** `.` в начале — не отображается в обычном `ls`. Не отвлекает.
+
+**Обновляется автоматически** `init-opencode` перезаписывает при `--update`.
+
+#### Создание
+
+При `init-opencode` (install):
+
+```bash
+
+{
+  echo "version: $(read_template_version)"
+  echo "installed: $(date +%Y-%m-%d)"
+  echo "source: $TEMPLATE_REPO"
+} > "$oc/.template-version"
+```
+При `--update`:
+
+```bash
+
+write_version_file "$oc"
+```
+
+#### Частые ошибки
+
+**Ошибка 1: `.template-version` в git** Не должен — это локальный маркер
+
+**Ошибка 2: `.template-version` с frontmatter** Это не концепт OKF
+
+**Ошибка 3: версия не совпадает с `_meta.md`** Проверяйте
+
+**Ошибка 4: нет поля `source`** Непонятно, откуда установлен
+
+**Ошибка 5: формат не парсится** Используйте `key: value`, не свободный текст
+
+### 10.7 Как они связаны
+
+```text
+
+                    index.md
+                        │
+                        │  ссылается на
+        ┌───────────────┼───────────────┐
+        ▼               ▼               ▼
+    AGENTS.md       _meta.md        SPEC_REFERENCE.md
+        │               │
+        │               │  ссылается на
+        │               ▼
+        │           log.md
+        │               │
+        │               │  ссылается на
+        │               ▼
+        │       WORK_LOG.md / _decisions.md
+        │
+        │  защищён
+        ▼
+    .gitignore
+        │
+        │  игнорирует
+        ▼
+    .template-version
+```
+
+**Связи:**
+
+- `index.md` → `AGENTS.md`, `_meta.md`, `SPEC_REFERENCE.md`
+    
+- `index.md` → `log.md`
+    
+- `log.md` → `WORK_LOG.md`, `_decisions.md`, `_meta.md`
+    
+- `_meta.md` → `SPEC_REFERENCE.md`
+    
+- `_meta.md` → `.template-version` (совпадение версий)
+    
+- `.gitignore` → `.template-version` (игнорирует)
+- 
+
+### 10.8 Общие принципы
+
+**Принцип 1: utility-файлы не читаются при обычной работе.** Но без них bundle неполный.
+
+**Принцип 2: OKF-резервированные имена.** `index.md` и `log.md` — по спеке.
+
+**Принцип 3: указатели, не дубли.** `log.md` не хранит лог, а ссылается. `index.md` не дублирует AGENTS.md.
+
+**Принцип 4: два уровня защиты.** `.gitignore` + `.git/info/exclude`.
+
+**Принцип 5: два представления версии.** `.template-version` для скриптов, `_meta.md` для людей.
+
+### 10.9 Частые ошибки (все пять)
+
+**Ошибка 1: utility-файлы содержат контент.** `index.md` — оглавление. `log.md` — указатель. Не энциклопедия.
+
+**Ошибка 2: файлы устаревают.** `index.md` не обновляется при добавлении новых директорий. `_meta.md` версия не совпадает.
+
+**Ошибка 3: `.gitignore` не покрывает всё.** `WORK_LOG.md` попадает в git.
+
+**Ошибка 4: `.template-version` не парсится скриптом.** Формат сломан.
+
+**Ошибка 5: `SPEC_REFERENCE.md` устарел.** OKF выпустил новую версию — выдержка старая.
+
+**Ошибка 6: `index.md` не упоминает новые директории.** Добавили `runbooks/` — `index.md` не знает.
+
+### 10.10 Упражнение
+
+Возьмите свой проект. Пройдитесь по пяти файлам:
+
+1. **`index.md`** — содержит ли ссылку на `_meta.md`? Не дублирует ли `AGENTS.md`?
+    
+2. **`log.md`** — есть ли объяснение, почему файл почти пуст? Ссылки на три лога?
+    
+3. **`SPEC_REFERENCE.md`** — есть ли blockquote «This is an extract»? Пометки «In this bundle»? Ссылка на оригинал?
+    
+4. **`.gitignore`** — игнорирует `WORK_LOG.md`? `.template-version`? Директории `issue/`, `playbook/`, `pr/`? Не игнорирует ли слишком много?
+    
+5. **`.template-version`** — версия совпадает с `_meta.md`? Формат `key: value`?
+
+
+**Тест:** удалите `.template-version` и попробуйте `init-opencode --update`. Если падает — вы поняли, зачем файл.
+
+### 10.11 Что дальше
+
+Part II закончен. Мы разобрали все файлы bundle:
+
+- `AGENTS.md` — точка входа.
+    
+- `_setup`, `_concepts`, `_glossary` — onboarding.
+    
+- `_templates`, `_worklog`, `_backlog`, `_decisions`, `_codestyle`, `_commands` — daily work.
+    
+- `_ci`, `_troubleshooting`, `runbooks/` — diagnostics.
+    
+- `_files`, `_env`, `_security`, `analysis/`, `_meta` — navigation & safety.
+    
+- `index.md`, `log.md`, `SPEC_REFERENCE.md`, `.gitignore`, `.template-version` — utility.
+    
+
+В **Part III** — workflows. Сценарии: issue lifecycle, session lifecycle, CI failure, prod incident, deep analysis, planning. Не файлы, а **процессы**.
+
+---
+
+## Что дальше в книге
+
+Part II готов. Осталось:
+
+- **Part III — Workflows** (главы 11–16).
+    
+- **Part IV — Operations** (главы 17–20).
+    
+- **Part V — Appendices** (A–D).
 
 
 
