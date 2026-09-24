@@ -2706,7 +2706,1363 @@ git checkout -b <issue-number>
 
 В следующей главе — **diagnostics**: `_ci.md`, `_troubleshooting.md`, `runbooks/`. Это файлы, которые читаются, когда что-то сломалось.
 
+## Chapter 8. Diagnostics: `_ci`, `_troubleshooting`, `runbooks/`
+## Глава 8. Диагностики: `_ci`, `_troubleshooting`, `runbooks/`
 
+### 8.1 Почему три файла в одной главе
+
+Эти три файла объединены одним признаком: **их открывают, когда что-то сломалось**.
+
+- CI красный → `_ci.md`
+    
+- Локально не работает → `_troubleshooting.md`
+    
+- Прод упал → `runbooks/`
+
+
+Но различаются они **характером проблемы**: где сломалось, насколько критично, кто чинит.
+
+**Спектр диагностики:**
+
+```text
+
+локально  →  CI  →  prod
+  │           │       │
+  │           │       └─ runbooks/       (P0, on-call, под давлением)
+  │           └───────── _ci.md          (P2, разработчик, спокойно)
+  └───────────────────── _troubleshooting.md (P3, разработчик, спокойно)
+```
+
+Слева направо:
+
+- **Растёт критичность**
+    
+- **Растёт срочность**
+    
+- **Меняется аудитория**: от разработчика к on-call
+    
+- **Меняется стиль**: от «поищи похожий симптом» к «следуй пошаговой процедуре»
+
+
+### 8.2 Три границы
+
+**Граница 1: `_troubleshooting.md` vs `_ci.md`**
+
+|`_troubleshooting.md`|`_ci.md`|
+|---|---|
+|Локально|На CI|
+|«У меня не работает»|«CI красный»|
+|Личное окружение|Платформенное окружение|
+|Порт занят, миграции не накатываются|Workflow упал, timeout|
+|Вы решаете|Вы диагностируете|
+
+Тест: «Проблема воспроизводится, если запустить команду локально?» Да → `_troubleshooting.md`. Только на CI → `_ci.md`. И там, и там → в оба, но с разных углов.
+
+**Граница 2: `_ci.md` vs `runbooks/`**
+
+|`_ci.md`|`runbooks/`|
+|---|---|
+|Падение CI|Инцидент в prod|
+|Влияет на разработку|Влияет на пользователей|
+|Чинит разработчик|Чинит on-call|
+|Не срочно|Срочно|
+|P2–P3|P0–P1|
+
+Тест: «Пользователи заметят?» Да → runbook. Только разработчики → `_ci.md`.
+
+**Граница 3: `_troubleshooting.md` vs `runbooks/`**
+
+|`_troubleshooting.md`|`runbooks/`|
+|---|---|
+|«У меня локально что-то сломалось»|«Прод горит»|
+|Много мелких проблем в одном файле|Один инцидент = один файл|
+|Симптом-first|Процедура-first|
+|Пишет любой разработчик|Пишет тот, кто разбирал инцидент|
+
+Тест: «Серьёзность P0?» Да → runbook. Нет → troubleshooting.
+
+### 8.3 `_ci.md` — CI diagnostics
+
+#### Зачем
+
+Отвечает на вопрос: **«CI упал — почему и что делать?»**
+
+`_ci.md` — инструмент **диагностики**, не документация платформы. Как `_troubleshooting.md`, но для CI.
+
+#### Анатомия
+
+````markdown
+
+---
+type: ci
+title: "CI Workflows"
+description: "CI workflow reference and common failure patterns"
+timestamp: 2026-09-21
+tags: [ci, workflows]
+---
+
+# CI Workflows
+Diagnostics for CI failures. For local problems, see
+`_troubleshooting.md`
+
+**All workflows must pass** before a PR can be merged
+## Workflows
+| Workflow | What it checks | Reproduce locally |
+|----------|----------------|-------------------|
+| `test.yml` | Unit and integration tests | `bundle exec rspec` |
+| `lint.yml` | RuboCop style, 0 offenses | `bundle exec rubocop` |
+| `build.yml` | Gem builds without warnings | `gem build *.gemspec` |
+
+## Common failures
+| Failure | Likely cause | Fix |
+|---------|-------------|-----|
+| `Lint: 3 offenses` | Style violations | `bundle exec rubocop -a` |
+| `Could not find 'bundler'` | CI cache stale | Clear cache in CI settings |
+| `Timeout: job exceeded 60 min` | Slow test or infinite loop | Reproduce locally with `--timeout` |
+
+## Local reproduction
+Full CI simulation:
+```bash
+act -j <job-name>          # GitHub Actions
+gitlab-runner exec shell <job-name>   # GitLab CI
+```
+Faster: run individual commands from `Workflows` above.
+## When CI passes locally but fails remotely
+1. **Check versions** Local may differ from CI (Ruby, Node, PostgreSQL)
+2. **Check environment variables** CI has its own set
+3. **Check parallelism** CI may run tests in parallel — race conditions
+4. **Check caching** Stale cache causes strange errors
+5. **Re-run with debug logging**
+   
+## References
+- [1] [CI platform documentation](url)
+- [2] [Repository workflow files](url)
+````
+
+#### Ключевые решения
+
+**`title: "CI Workflows"`, не «CI/CD»** Внутри — только CI. CD (deploy) — в `_env.md` и runbooks.
+
+**Колонка `Reproduce locally`** — критична. Без неё `_ci.md` — просто список. С ней — actionable: «CI проверяет X → проверю X локально».
+
+**Таблица `Common failures`** — **растёт** по мере решения проблем. Правило: CI упал → нашёл причину → добавил строку. Через полгода большинство проблем решаются за 30 секунд.
+
+**`Failure` — точное сообщение** Не «Lint failed», а `Lint: 3 offenses`. Пользователь ищет через Ctrl+F.
+
+**Секция «When CI passes locally but fails remotely»** Самая частая боль. Пять проверок покрывают 95% случаев.
+
+**Правило «All workflows must pass»** Gate для PR. Связь с `_templates.md` (PR checklist).
+
+#### Частые ошибки
+
+**Ошибка 1: дублирование YAML.** Копирование `.github/workflows/*.yml` в `_ci.md`. Не надо — YAML источник правды.
+
+**Ошибка 2: нет `Reproduce locally`.** Без неё диагностика — это push-and-wait.
+
+**Ошибка 3: слишком общие `Failures`.** «Tests failed» без конкретики. Уточняйте.
+
+**Ошибка 4: смешивание с `runbooks/`.** «Прод упал» — не здесь.
+
+**Ошибка 5: не обновляется после изменения workflows.** Через месяц описывает то, чего нет.
+
+### 8.4 `_troubleshooting.md` — local problems
+
+#### Зачем
+
+Отвечает на вопрос: **«Проект не работает локально — что делать?»**
+
+#### Ключевой принцип: симптом-first
+
+Люди приходят **с симптомом**, а не с диагнозом.
+
+- Плохо: «Port conflicts» → «Решение: kill процесс»
+    
+- Хорошо: «`Address already in use`» → «Причина: порт занят. Фикс: kill»
+    
+
+В `_troubleshooting.md` секции называются **симптомами**, потому что именно их ищет человек. Причина — внутри секции.
+
+#### Особенность: файл растёт
+
+В отличие от `_concepts.md` (пишется один раз), `_troubleshooting.md` **обогащается** после каждой решённой проблемы.
+
+**Правило:** решил проблему — добавь её сюда. Если проблема заняла больше 10 минут — она заслуживает записи.
+
+Число **10 минут** — не догма, но полезный ориентир. Меньше — не стоит записи. Больше — заслуживает.
+
+#### Анатомия
+
+````markdown
+
+---
+type: troubleshooting
+title: "Troubleshooting"
+description: "Local (non-CI) problems and their fixes"
+timestamp: 2026-09-21
+tags: [troubleshooting, dev-env]
+---
+
+# Troubleshooting
+Local development problems. For CI failures, see `_ci.md`. For initial
+setup, see `_setup.md`.
+
+**Rule:** every time you spend more than 10 minutes solving a local
+problem, add it here. Future you will thank present you
+
+## Quick index
+| Symptom | Section |
+|---------|---------|
+| `Address already in use` | [Port already in use](#port-already-in-use) |
+| `database does not exist` | [Database errors](#database-errors) |
+| `bundle install` fails | [Dependency install fails](#dependency-install-fails) |
+
+---
+## Port already in use
+**Symptom:**
+```
+Error: listen EADDRINUSE: address already in use :::3000
+```
+**Cause:** another process (or previous run) is holding the port
+**Fix:**
+```bash
+# Find the process
+lsof -i :3000
+# Kill it
+kill -9 <PID>
+# Or change the port
+PORT=3001 <run command>
+```
+---
+
+## Database errors
+**Symptom:**
+```
+PG::ConnectionBad: FATAL: database "myapp_dev" does not exist
+```
+**Cause:** database hasn't been created, or connection config points to
+the wrong database
+**Fix:**
+```bash
+bundle exec rake db:create
+bundle exec rake db:migrate
+```
+If still fails, check `.env` — `DATABASE_URL` might be wrong
+---
+
+## Still stuck?
+1. Check `_setup.md` — maybe a step was skipped
+2. Check `_ci.md` — maybe it's not a local problem
+3. Search the project issue tracker
+4. **After solving — add the fix here**
+````
+
+
+
+#### Ключевые решения
+
+**Quick index** — таблица симптомов в начале. При 5+ секциях обязателен. Симптом в первой колонке, потому что пользователь ищет **по симптому**.
+
+**Три части в каждой секции: Symptom, Cause, Fix** Единый формат.
+
+**Symptom — буквальный текст ошибки** Не «ошибка про порт», а точный текст. Пользователь копирует текст из терминала и ищет через Ctrl+F.
+
+**Cause — почему** Одна-две фразы. Без понимания причины пользователь не сможет адаптировать фикс.
+
+**Fix — что делать** Блок кода, с комментариями.
+
+**Секция «Still stuck?»** — для случая «ничего не помогло». Четыре шага: `_setup.md` → `_ci.md` → issue tracker → **записать решение**.
+
+**Правило 10 минут** — в вводной, жирным. Без него файл не растёт.
+
+#### Частые ошибки
+
+**Ошибка 1: секции по причине, а не по симптому** «Проблемы с портами» вместо `Address already in use`.
+
+**Ошибка 2: нет буквального текста ошибки** «Ошибка про порт» не помогает.
+
+**Ошибка 3: нет секции Cause.** Только фикс. Если проблема повторится в другой форме — растеряетесь.
+
+**Ошибка 4: нет Quick index** При 10+ секциях файл нечитаем.
+
+**Ошибка 5: правило «записать решение» не прописано** Файл не растёт.
+
+**Ошибка 6: записано слишком много** «Исправил опечатку» не заслуживает записи.
+
+**Ошибка 7: смешано с `_ci.md`** «CI упал с ошибкой X» — не здесь.
+
+**Ошибка 8: устаревшие решения** Если фикс больше не работает — обновите или удалите.
+
+### 8.5 `runbooks/` — incident response
+
+#### Зачем
+
+Отвечает на вопрос: **«Прод упал — что делать?»**
+
+Runbook — процедура реагирования на конкретный инцидент. Не «что делать, если что-то не работает», а «что делать, если прод упал с ошибкой X».
+
+#### Ключевой принцип: под давлением
+
+Автор runbook должен представить: **человек в 3 часа ночи, разбуженный алертом, с трудом соображает**.
+
+Все решения — из этого состояния:
+
+- Нумерованные шаги, а не абзацы
+    
+- Копипастные команды, а не «используйте что-то вроде»
+    
+- Проверки после каждого шага
+    
+- Что делать, если не сработало
+    
+- Кого звать
+    
+
+**Правило:** если шаг требует «подумать» — он сформулирован плохо
+
+#### Структура директории
+
+
+```text
+
+runbooks/
+├── index.md              ← индекс
+├── _runbook.md           ← шаблон
+├── db-failover.md        ← конкретные процедуры
+├── rollback-release.md
+└── rotate-api-key.md
+
+#### `runbooks/index.md`
+```
+
+```markdown
+
+---
+type: runbook-index
+title: "Runbooks"
+description: "Incident response procedures"
+timestamp: 2026-09-21
+tags: [runbooks, index, incidents]
+---
+
+# Runbooks
+Step-by-step procedures for production and infrastructure incidents
+For local development problems, see `_troubleshooting.md`
+**If you're in the middle of an incident:** find the matching runbook
+below, open it, follow the steps in order
+
+## Index
+| Scenario | Runbook | Severity | Last tested |
+|----------|---------|----------|-------------|
+| DB failover | [db-failover.md](db-failover.md) | P0 | 2026-09-15 |
+| Rollback release | [rollback-release.md](rollback-release.md) | P0 | 2026-09-01 |
+| Rotate API key | [rotate-api-key.md](rotate-api-key.md) | P1 | 2026-08-20 |
+
+## Creating a new runbook
+1. Copy `_runbook.md` to `<scenario>.md`
+2. Fill in all sections
+3. Test the procedure (in staging if possible)
+4. Add a row to the Index above
+```
+
+**Режим тревоги** Строка `**If you're in the middle of an incident:**` — жирная, прямое обращение. В момент инцидента человек не читает вводные абзацы. Он должен сразу знать: «вот сюда, вот так».
+
+**Колонка `Last tested`** — критична. Runbooks устаревают. «Не тестировали год» — красный флаг. Правило: раз в квартал — тестовый прогон в staging.
+
+#### `runbooks/_runbook.md`
+
+````markdown
+---
+type: runbook
+title: "<scenario>"
+description: "<one-line summary of when to use this runbook>"
+severity: P0 | P1 | P2
+last-tested: <YYYY-MM-DD>
+timestamp: <YYYY-MM-DD>
+tags: [runbook, area]
+---
+
+# Runbook: <scenario>
+
+## When to use
+<Exact trigger — what alert, error, or event means this runbook applies>
+
+## Prerequisites
+- <Access / credentials needed>
+- <Tools that must be installed>
+- <People to notify before starting>
+  
+## Steps
+1. **<Step title>**
+   ```bash
+   <command>
+   ```
+   Expected: <what you should see>.
+2. **<Step title>**
+   ...
+   
+## Verification
+- [ ] <check 1>
+- [ ] <check 2>
+- [ ] <check 3>
+      
+## If it doesn't work
+1. **Stop.** Do not improvise
+2. Escalate to <contact / channel>
+3. Capture logs: `<command>`
+   
+## Rollback
+<How to undo the changes made by this runbook, if needed>
+
+## Post-incident
+- Record the incident in `_decisions.md` if it changed a process
+- Update this runbook if the procedure differed
+- Add follow-up tasks to `_backlog.md`
+  
+## References
+- [1] [Related dashboard](url)
+````
+
+#### Ключевые секции
+
+**`last-tested` в frontmatter** — отдельно от `timestamp`.
+`timestamp` — когда файл менялся.
+`last-tested` — когда проверяли процедуру
+
+**`When to use` — точный триггер.** Не «если что-то не работает», а «если пришёл alert `DBLatencyHigh`». В 3 часа ночи on-call должен мгновенно понять, что этот runbook подходит.
+
+**`Prerequisites` — три типа:** Access, Tools, People to notify. «People to notify» — критична: если операция затрагивает прод, команда должна знать.
+
+**Каждый шаг: команда + Expected**
+
+- Команда — копипастная
+- `Expected: <value>` — что должно быть в выводе. Не «правильно» / «ок», а точное значение или диапазон
+
+**`If it doesn't work` — правило №1: `Stop. Do not improvise.`**
+
+Это **самое важное правило** runbook. Под давлением хочется «попробовать ещё что-то». Не надо. Импровизация в проде без понимания — путь к ещё большей аварии. Runbook даёт «официальное разрешение» остановиться.
+
+**`Verification` — чекбоксы** Под давлением легко забыть проверить критерии. Чекбоксы — визуальная память.
+
+**`Rollback`** — как откатить. Если процедура не помогла или ухудшила — вернуться в исходное состояние.
+
+**`Post-incident`** — обязательная секция. Инцидент — источник знаний. Без post-incident runbook не улучшается.
+
+#### Когда создавать runbook
+
+Три триггера:
+
+1. **Произошёл инцидент** Решили — записали процедуру. **Обязательно**
+    
+2. **Планируется операция** Миграция, релиз, ротация ключа. Пишем **до** операции.
+    
+3. **Есть регулярная процедура** Бэкап, restore, failover. Пишем один раз.
+
+**Правило:** если операция требует больше двух шагов и её выполняют вручную — это runbook.
+
+#### Частые ошибки
+
+**Ошибка 1: runbook в свободной форме** Абзацы вместо шагов
+
+**Ошибка 2: нет `Expected`** Запустил команду, не понял вывод
+
+**Ошибка 3: нет `If it doesn't work`** Runbook, который работает только в идеальных условиях — не runbook
+
+**Ошибка 4: нет `Do not improvise`** On-call начнёт экспериментировать
+
+**Ошибка 5: нет `Rollback`** On-call застревает в полусостоянии
+
+**Ошибка 6: нет `Last tested`** Runbook устарел, никто не заметил
+
+**Ошибка 7: смешано с `_troubleshooting.md`** «Порт занят» — не runbook
+
+**Ошибка 8: runbook слишком длинный** 500 строк, нечитаемо под давлением, дробите
+
+**Ошибка 9: нет конкретных контактов** `<contact>` — плейсхолдер, не заменён
+
+### 8.6 Как они связаны
+
+```text
+
+              _troubleshooting.md         _ci.md              runbooks/
+                     │                       │                    │
+                     │                       │                    │
+   Локально ─────────┤                       │                    │
+                     │                       │                    │
+   CI ───────────────┼───────────────────────┤                    │
+                     │                       │                    │
+   Prod ─────────────┼───────────────────────┼────────────────────┤
+                     │                       │                    │
+                     ▼                       ▼                    ▼
+              "симптом-first"         "workflow-first"      "процедура-first"
+
+```
+**Цикл эскалации:**
+
+```text
+
+Локальная проблема
+    │
+    ├─→ troubleshooting.md
+    │       │
+    │       └─ не решается ─→ ci.md (если это CI)
+    │                            │
+    │                            └─ не решается ─→ runbook (если prod)
+    │
+    └─→ решается ─→ записать в troubleshooting.md
+```
+
+**Связи:**
+
+- `_setup.md` → `_troubleshooting.md`: если verify упал
+    
+- `_troubleshooting.md` → `_ci.md`: если проблема не локальная
+    
+- `_ci.md` → `runbooks/`: если CI деплоит в prod и там инцидент
+    
+- `runbooks/` → `_decisions.md`: post-incident ADR
+    
+- `runbooks/` → `_backlog.md`: follow-up tasks
+
+
+### 8.7 Что общего у трёх файлов
+
+Несмотря на различия, три файла разделяют **общие принципы**:
+
+**Принцип 1: симптом/триггер-first** Не «тема», а «что видит пользователь»
+
+**Принцип 2: единый формат секции** У troubleshooting — Symptom/Cause/Fix. У runbook — When/Prerequisites/Steps/Verification. У CI — Failure/Cause/Fix.
+
+**Принцип 3: файлы растут** `troubleshooting.md` после каждой проблемы. `_ci.md` после каждого CI-провала. `runbooks/` после каждого инцидента
+
+**Принцип 4: ссылки на смежные** Troubleshooting → `_ci.md`. `_ci.md` → `runbooks/`, Runbook → `_backlog.md`
+
+**Принцип 5: буквальные тексты** Точные сообщения об ошибках. Точные команды. Точные expected values.
+
+### 8.8 Частые ошибки (все три файла)
+
+**Ошибка 1: смешение уровней** «Локально упало» в `_ci.md`, «CI упал» в `runbooks/`
+
+**Ошибка 2: не растут** Файл создан и не пополняется
+
+**Ошибка 3: нет точных текстов** «Ошибка про X» — не диагностика
+
+**Ошибка 4: нет fix** Проблема описана, решения нет
+
+**Ошибка 5: нет post-incident** Инцидент разобрали, забыли
+
+**Ошибка 6: устаревают** Инфра меняется, файлы нет
+
+**Ошибка 7: не тестируются** Особенно runbooks
+
+**Ошибка 8: смешение аудиторий** Runbook пишется для on-call. Если он непонятен on-call — плохой runbook
+
+### 8.9 Упражнение
+
+Возьмите свой проект. Пройдитесь по трём файлам:
+
+1. **`_ci.md`** — сколько workflow'ов? Для каждого есть `Reproduce locally`? Запишите 2-3 типичные ошибки в `Common failures`.
+    
+2. **`_troubleshooting.md`** — когда вы последний раз решали локальную проблему дольше 10 минут? Запишите её по формату Symptom/Cause/Fix.
+    
+3. **`runbooks/`** — какие инциденты были за последний год? Для каждого есть runbook? Какой runbook самый важный — начните с него.
+
+
+**Тест:** покажите `_troubleshooting.md` коллеге. Спросите: «Если у тебя проблема X, найдёшь ли ты решение за минуту?»
+
+### 8.10 Что дальше
+
+В следующей главе — **navigation & safety**: `_files.md`, `_env.md`, `_security.md`, `analysis/`, `_meta.md`. Это файлы для ориентации и защиты.
+
+
+
+## Chapter 9. Navigation & safety: `_files`, `_env`, `_security`, `analysis/`, `_meta`
+## Глава 9. Навигация и безопасность: `_files`, `_env`, `_security`, `analysis/`, `_meta`
+
+### 9.1 Почему пять файлов в одной главе
+
+Эти пять файлов объединены **навигацией и защитой**. Их открывают, чтобы:
+
+- **Ориентироваться** — где что лежит (`_files.md`)
+    
+- **Понять окружения** — dev, staging, prod (`_env.md`)
+    
+- **Обезопасить** — не навредить, не утечь (`_security.md`)
+    
+- **Оценить состояние** — что нашли при анализе (`analysis/`)
+    
+- **Понять сам bundle** — что это и как устроено (`_meta.md`)
+
+
+**Три роли:**
+
+|Файл|Роль|
+|---|---|
+|`_files.md`|Карта проекта|
+|`_env.md`|Карта окружений|
+|`_security.md`|Правила безопасности|
+|`analysis/`|Архив находок|
+|`_meta.md`|Паспорт bundle|
+
+Первые два — **география**
+Третий — **правила**
+Четвёртый — **архив**
+Пятый — **мета**
+
+### 9.2 `_files.md` — file map
+
+#### Зачем
+
+Отвечает на вопрос: **«Где искать X и какой файл менять для Y?»**
+
+#### Ключевой принцип: curated, не полный
+
+`_files.md` — это **карта верхнего уровня**, не телефонная книга. Полный список файлов всегда можно получить:
+
+```bash
+
+git ls-files
+find . -name '*.rb' -not -path './vendor/*'
+```
+
+`_files.md` — **curated** список: только то, что важно знать. **Правило 15–30 файлов.**
+
+#### Три ключевые границы
+
+**Граница 1: `_files.md` vs `_concepts.md`**
+
+|`_concepts.md`|`_files.md`|
+|---|---|
+|**Что** за компоненты|**Где** они лежат|
+|Логический уровень|Физический уровень|
+|«Есть парсер»|«Парсер в `lib/parser.rb`»|
+|3–7 компонентов|15–30 файлов|
+
+**Граница 2: `_files.md` vs полный список.** Curated vs `git ls-files`
+
+**Граница 3: `_files.md` vs `_codestyle.md`**
+
+- `_codestyle.md` — **как** называть файлы.
+    
+- `_files.md` — **какие** файлы есть.
+
+
+#### Анатомия
+
+```markdown
+---
+type: files
+title: "Key Files Map"
+description: "Navigation guide to the codebase — what lives where"
+timestamp: 2026-09-21
+tags: [files, navigation]
+---
+
+# Key Files
+Curated map, not an exhaustive listing. For the full list, use
+`git ls-files`. For logical components, see `_concepts.md`
+
+## Entry points
+| File | Purpose | When to touch |
+|------|---------|---------------|
+| `bin/json-parser` | CLI entry point | Adding CLI commands |
+| `lib/json/parser.rb` | Library entry point | Public API changes |
+
+## Core modules
+| File | Purpose | When to touch |
+|------|---------|---------------|
+| `lib/json/lexer.rb` | Tokenizes input | New token types |
+| `lib/json/parser.rb` | Builds AST | Grammar changes |
+| `lib/json/renderer.rb` | AST → JSON | Output format changes |
+| `lib/json/stream_reader.rb` | Incremental file reading | Buffer tuning |
+
+## Configuration
+| File | Purpose | When to touch |
+|------|---------|---------------|
+| `json-parser.gemspec` | Gem metadata | Dependencies, version |
+| `.rubocop.yml` | Lint rules | Style changes |
+| `Rakefile` | Build tasks | New tasks |
+
+## Tests
+| File | Purpose | When to touch |
+|------|---------|---------------|
+| `spec/spec_helper.rb` | Test config | Global test setup |
+| `spec/support/` | Test helpers | Shared test utilities |
+| `spec/json/` | Test suites | New tests |
+
+## References
+- [1] [Repository tree](url)
+```
+
+#### Ключевые решения
+
+**Вводная строка — критична** `Curated map, not an exhaustive listing` — сразу говорит: это не всё. `For the full list, use git ls-files` — куда идти за полным. `For logical components, see _concepts.md` — разграничение.
+
+**Группировка** Entry points / Core modules / Configuration / Tests. Универсальный скелет. Для проектов с БД добавляется Data layer. Для больших — группировка по фичам.
+
+**Три колонки: File, Purpose, When to touch**
+
+Третья колонка — **критична**. Без неё таблица — просто список. С ней — actionable: «Мне нужно добавить парсинг JSON → ищу в `When to touch` слово parsing → нахожу `lib/json/parser.rb`».
+
+**Backticks в первой колонке** Пути — код, визуально отличаются от текста.
+
+**Проверка:** «Если я новый контрибьютор, поможет ли мне это найти нужный файл за 30 секунд?»
+
+#### Частые ошибки
+
+**Ошибка 1: полный список файлов** 200 строк — это `git ls-files`
+
+**Ошибка 2: нет колонки `When to touch`** Без неё таблица — просто список
+
+**Ошибка 3: группировка по алфавиту** Глаз не найдёт нужное
+
+**Ошибка 4: дублирование с `_concepts.md`** «Parser — парсит входные данные» в обоих
+
+**Ошибка 5: устаревшие пути** Файл переехал — карта не обновилась
+
+**Ошибка 6: все тесты по списку** 50 тестовых файлов. Не надо — указывайте структуру
+
+**Ошибка 7: generated файлы** `dist/bundle.js` — там нет логики
+
+**Ошибка 8: имена классов/методов в описании** `_files.md` не описывает содержимое, только роль
+
+### 9.3 `_env.md` — environment map
+
+#### Зачем
+
+Отвечает на вопросы: «Какой URL у staging?», «Кто владелец prod-базы?», «Как задеплоить в staging?»
+
+#### Ключевой принцип: карта, не руководство
+
+`_env.md` — **карта окружений**. Говорит **что где**, но не **как устроено** (это `_concepts.md`) и не **как локально настроить** (это `_setup.md`).
+
+#### Три границы
+
+**Граница 1: `_env.md` vs `_setup.md`**
+
+|`_setup.md`|`_env.md`|
+|---|---|
+|**Локальная** машина|**Удалённые** окружения|
+|Один сценарий: clone → run|Много окружений|
+|`localhost:3000`|`staging.example.com`|
+
+**Граница 2: `_env.md` vs `_security.md`**
+
+- `_env.md` — **что** где развёрнуто
+    
+- `_security.md` — **как** обращаться с секретами
+
+
+**Граница 3: `_env.md` vs `runbooks/`**
+
+- `_env.md` — **что где находится**
+    
+- `runbooks/` — **что делать** при инциденте
+
+
+#### Анатомия
+
+```markdown
+---
+type: env
+title: "Environments"
+description: "Map of deployment environments — URLs, ownership, access"
+timestamp: 2026-09-21
+tags: [env, infrastructure]
+---
+
+# Environments
+Non-local environments. For local setup, see `_setup.md`. For secrets
+handling, see `_security.md`
+
+## Overview
+| Environment | Purpose | URL | Owner |
+|-------------|---------|-----|-------|
+| Staging | Pre-prod testing | https://staging.example.com | @backend |
+| Prod | Live users | https://example.com | @backend |
+
+## Where things live
+| Component | Staging | Prod |
+|-----------|---------|------|
+| Database | AWS RDS eu-west-1 | AWS RDS eu-west-1 + replicas |
+| Cache | Shared Redis | Dedicated Redis cluster |
+| Logs | Datadog | Datadog |
+| Monitoring | Datadog | Datadog |
+| Error tracking | Sentry | Sentry |
+
+## Access
+| Environment | How to get access |
+|-------------|-------------------|
+| Staging | SSO group `devs@example.com`, VPN auto |
+| Prod | On-call only. Request via `#access`, approval from @lead |
+
+## Deploy
+| Environment | How to deploy | Trigger |
+|-------------|---------------|---------|
+| Staging | `deploy-staging.yml` | Push to `master` |
+| Prod | `deploy-prod.yml` | Tag `v*` + manual approval |
+For incident procedures, see `runbooks/`
+
+## Prod restrictions
+- **Never** modify prod data directly — use migrations or scripts
+- **Never** deploy outside the process — see Deploy above
+- **Never** share prod credentials — see `_security.md`
+- **Always** announce changes in `#prod-changes` before running
+```
+
+#### Ключевые решения
+
+**`Non-local environments`** в вводной — сразу определяет область
+
+**Overview — четыре колонки** Environment, Purpose, URL, Owner. `Owner` — критичен: кто отвечает за окружение
+
+**Where things live — компоненты × окружения** Позволяет сравнивать staging vs prod. Легко добавлять новые окружения
+
+**Пять компонентов по умолчанию:** Database, Cache, Logs, Monitoring, Error tracking. Плюс — Object storage, Queue, Search по мере необходимости.
+
+**Access — конкретные каналы** Не «свяжитесь с командой», а «SSO group `devs@example.com`, VPN auto»
+
+**Deploy — workflow + триггер** Детали — в `runbooks/` или `_release.md`
+
+**Prod restrictions — 4 правила**
+
+- **Never modify prod data directly**
+    
+- **Never deploy outside the process**
+    
+- **Never share prod credentials**
+    
+- **Always announce changes**
+
+
+Это **самая важная секция**. Без неё прод уязвим.
+
+#### Частые ошибки
+
+**Ошибка 1: дублирование `_setup.md`** «Как установить Ruby» — не здесь
+
+**Ошибка 2: секреты в `_env.md`** Токены, пароли — никогда. Только URL'ы и провайдеры
+
+**Ошибка 3: нет Access** Пользователь видит URL, но не знает, как получить доступ
+
+**Ошибка 4: нет Prod restrictions** Без правил кто-то сломает прод
+
+**Ошибка 5: устаревшие URL'ы** Окружение переехало — env не обновлён
+
+**Ошибка 6: нет Owner** Непонятно, к кому идти
+
+**Ошибка 7: Access без конкретики** «Обратитесь к команде» — не инструкция
+
+**Ошибка 8: Prod restrictions общие** «Будьте осторожны» — не правило
+
+### 9.4 `_security.md` — secrets & safety
+
+#### Зачем
+
+Отвечает на вопросы: «Где взять секреты?», «Что нельзя коммитить?», «Куда сообщать об уязвимости?», «Что делать, если секрет утёк?»
+
+#### Главная ловушка: файл НЕ для секретов
+
+**`_security.md` не содержит секретов** Никогда. Это **правила** работы с секретами, не хранилище.
+
+Правило: **`_security.md` = «что делать», не «что хранить»**
+
+#### Ключевое разграничение: `_security.md` vs `SECURITY.md` в корне
+
+|`.opencode/_security.md`|`SECURITY.md` (корень)|
+|---|---|
+|**Внутренний**|**Публичный**|
+|Не коммитится|Коммитится|
+|Правила: где секреты, что нельзя|Как сообщить об уязвимости|
+|Содержит внутренние контакты|Публичные контакты|
+
+#### Анатомия
+
+
+```markdown
+---
+type: security
+title: "Security & Secrets"
+description: "How secrets are handled and what must never be committed"
+timestamp: 2026-09-21
+tags: [security, secrets]
+---
+
+# Security & Secrets
+
+## Hard rules
+- **Never commit** real secrets, keys, tokens, or passwords
+- **Never log** PII or credentials
+- **Never paste** secrets into issues, PRs, or chat
+- Secrets come from environment variables or a secret manager
+- Files with secrets are listed in `.gitignore` and `.git/info/exclude`
+  
+## Where secrets live
+| Environment | Source | How to get |
+|-------------|--------|------------|
+| Local dev | `.env` (not committed) | From teammate / vault |
+| CI | GitHub Secrets | Repo settings |
+| Staging | AWS Secrets Manager | Request access |
+| Prod | AWS Secrets Manager | On-call only |
+For environment details, see `_env.md`
+
+## What's safe to commit
+- `.env.example` with placeholder values only
+- Public keys (never private keys)
+- Configuration without secrets
+  
+## What must NEVER be committed
+- `.env`, `.env.*` (except `.env.example`)
+- `*.pem`, `*.key`, `id_rsa*`, `*.p12`
+- Database dumps with real data
+- Credentials in test fixtures or docs
+- Screenshots containing credentials or tokens
+  
+## If a secret leaked
+1. **Revoke/rotate** the secret at its source immediately
+2. Notify `<security contact>`
+3. Do not try to hide it with `git rebase` — history is already out
+4. Record the incident in `_decisions.md` as an ADR
+Full procedure: see `runbooks/`
+
+## Reporting vulnerabilities
+<Internal channel — email, Slack, ticket system>
+For public reporting (external researchers), see `SECURITY.md` in the
+repository root if present
+
+## References
+- [1] [OWASP Secrets Management](https://cheatsheetseries.owasp.org/cheatsheets/Secrets_Management_Cheat_Sheet.html)
+- [2] [GitHub: removing sensitive data](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/removing-sensitive-data-from-a-repository)
+```
+
+#### Ключевые решения
+
+**Hard rules — 5 правил** Четыре с «Never», одно про источник
+
+- **Never commit** — самое частое нарушение
+    
+- **Never log** — логи утекают (Sentry, Datadog)
+    
+- **Never paste** — Slack тоже публичное
+    
+- **Secrets from env/vault** — не хардкодить
+    
+- **`.gitignore` + `.git/info/exclude`** — где защита
+
+
+**Where secrets live — 4 окружения** local / CI / staging / prod
+
+**Белый список + красный список** Первый разрешает, второй запрещает, оба нужны
+
+**If a secret leaked — 4 шага**
+
+- **Порядок критичен.** Первый шаг — **revoke**, не «удалить коммит».
+    
+- **`Do not try to hide with git rebase`** — самая частая ошибка, история уже утекла
+    
+- **`runbooks/`** — полная процедура
+
+
+**Reporting vulnerabilities — два канала** Внутренний + публичный (`SECURITY.md`)
+
+#### Частые ошибки
+
+**Ошибка 1: секреты в `_security.md`** Абсурдно, но встречается
+
+**Ошибка 2: `_security.md` коммитится** Локальный файл
+
+**Ошибка 3: нет «If a secret leaked»** При инциденте — паника и `git rebase`
+
+**Ошибка 4: неправильный порядок при утечке** «Сначала rebase, потом revoke» — ошибка
+
+**Ошибка 5: `.env.example` с реальными ключами**
+
+**Ошибка 6: нет контакта для уязвимостей** `<security contact>` — плейсхолдер
+
+**Ошибка 7: слишком много правил** 50 пунктов никто не прочитает
+
+### 9.5 `analysis/` — analysis findings
+
+#### Зачем
+
+Отвечает на вопрос: **«Что мы узнали при глубоком анализе проекта?»**
+
+#### Отличие от других файлов
+
+`analysis/` — **архив находок**, а не журнал работы или список задач
+
+|`analysis/`|`_backlog.md`|`_decisions.md`|`WORK_LOG.md`|
+|---|---|---|---|
+|Что **нашли**|Что **сделать**|Что **решили**|Что **делали**|
+|Отчёт|Задача|Обоснование|Хронология|
+
+**Связь:** finding → задача в `_backlog.md` → работа → решение в `_decisions.md`
+
+#### Структура
+
+```text
+
+analysis/
+├── index.md              ← сводная таблица
+├── _finding.md           ← шаблон
+├── F-001-slow-parser.md  ← конкретные находки
+├── F-002-n-plus-one.md
+└── ...
+```
+
+
+#### `analysis/index.md`
+
+```markdown
+---
+type: analysis-index
+title: "Analysis Results"
+description: "Index of analysis findings for this project"
+timestamp: 2026-09-21
+tags: [analysis, index]
+---
+
+# Analysis
+Results of deep analysis: findings, risks, refactoring ideas
+Analysis is **not** a task list. Findings describe current state; to act
+on one, create an entry in `_backlog.md`
+
+## Reports
+| Date | Report | Scope | Status |
+|------|--------|-------|--------|
+| 2026-09-15 | [Security audit](./security-audit.md) | Auth module | open |
+
+## Findings summary
+| ID | Severity | Finding | Report | Status |
+|----|----------|---------|--------|--------|
+| F-001 | high | Slow JSON parser | [link](./F-001.md) | todo |
+| F-002 | medium | N+1 in User#posts | [link](./F-002.md) | in-progress |
+| F-003 | low | Duplicate validators | [link](./F-003.md) | wontfix |
+```
+
+#### `analysis/_finding.md`
+
+
+```markdown
+---
+type: finding
+title: "<short title>"
+description: "<one-line>"
+severity: high | medium | low
+status: todo | in-progress | addressed | wontfix | duplicate
+timestamp: <YYYY-MM-DD>
+tags: [finding, <area>]
+---
+
+# Finding: <title>
+
+## Summary
+<One or two sentences: what was found>
+
+## Evidence
+<Files, line numbers, metrics, links to code>
+
+## Impact
+<What happens if not fixed — bugs, performance, security>
+
+## Recommendation
+<What to do>
+
+## Effort estimate
+<S / M / L>
+
+## Related
+- Issue: #<number>
+- ADR: ADR-<number>
+- Report: [<parent report>](./<file>.md)
+```
+
+#### Ключевые решения
+
+**`analysis/` — не task list.** Явно прописано в `index.md`. Findings описывают **состояние**, не действие.
+
+**Severity vs Priority**
+
+- **Severity** — насколько серьёзна проблема (объективно).
+    
+- **Priority** — когда её чинить (субъективно).
+
+
+Finding может быть severity=high, но priority=P3
+
+**Evidence — критично** Без него finding — гипотеза. С ним — доказанный факт. Files, line numbers, metrics, links.
+
+**Impact — «что будет если не чинить»** Без impact finding — «ну, нашли что-то».
+
+**Recommendation — конкретное действие** Не «надо подумать», а «добавить `.includes(:posts)`».
+
+**S/M/L — оценка усилий.** Не часы (фикция), а порядок величины.
+
+**ID стабильные, не переиспользуются** `F-001`, `F-002`, ... Удалили F-003 — следующий F-004.
+
+#### Частые ошибки
+
+**Ошибка 1: finding без evidence** «Похоже, тут медленно» — не finding
+
+**Ошибка 2: finding без impact**
+
+**Ошибка 3: finding без recommendation**
+
+**Ошибка 4: Recommendation — «надо подумать»**
+
+**Ошибка 5: Severity = Priority**
+
+**Ошибка 6: все findings — high** Приоритезация не работает
+
+**Ошибка 7: нет ID** Невозможно сослаться
+
+**Ошибка 8: ID переиспользуются**
+
+**Ошибка 9: findings в `index.md`, а не в отдельных файлах**
+
+**Ошибка 10: дублирование с `_backlog.md`**
+
+**Ошибка 11: статус не обновляется**
+
+**Ошибка 12: нет `timestamp`**
+
+### 9.6 `_meta.md` — bundle meta
+
+#### Зачем
+
+Отвечает на вопрос: **«Что это за `.opencode/`, откуда он взялся и как им пользоваться?»**
+
+#### Ключевое отличие от AGENTS.md
+
+|`AGENTS.md`|`_meta.md`|
+|---|---|
+|Про **проект**|Про **bundle**|
+|«Этот проект — Ruby gem»|«Этот bundle — OKF v0.1»|
+|Уникален для проекта|Одинаков во всех проектах|
+
+Тест: «Это про код проекта или про файлы `.opencode/`?» → код → `AGENTS.md`, файлы → `_meta.md`
+
+#### Анатомия
+
+````markdown
+---
+type: meta
+title: "Bundle Meta"
+description: "What this .opencode/ bundle is and how to work with it"
+timestamp: 2026-09-21
+tags: [meta, okf]
+---
+
+# Bundle Meta
+This `.opencode/` directory is an OKF bundle with extensions. It is
+**local only** — never committed to the project repository.
+
+## What's here
+- **Project context** — `AGENTS.md`, entry point
+- **Reference files** — `_*.md`, lazy-loaded
+- **Dynamic artifacts** — `issue/`, `playbook/`, `pr/`, `analysis/`,
+  `runbooks/`, `archive/`
+- **Work log** — `WORK_LOG.md`, local only
+  
+Full index: `index.md`
+
+## Template version
+- **Version:** v0.1.0
+- **Installed:** 2026-09-15
+- **Last updated:** 2026-09-21
+- **Source:** https://github.com/you/opencode-templates
+Version details also in `.template-version` (machine-readable)
+
+## OKF base + extensions
+This bundle follows OKF v0.1 with the following extensions:
+| Extension | What we added |
+|-----------|---------------|
+| `AGENTS.md` as entry point | OKF uses `index.md`; we use `AGENTS.md` |
+| `_*.md` naming | Prefix `_` marks reference files |
+| `WORK_LOG.md` | Local work log, analogous to OKF's `log.md` |
+| Subdirectories | `issue/`, `playbook/`, `pr/`, `analysis/`, `runbooks/`, `archive/` |
+| Custom `type` values | `project-context`, `setup`, `worklog`, etc. |
+Full spec: [OKF SPEC.md](url).
+Local extract: `SPEC_REFERENCE.md`
+
+## How to update
+If this bundle was installed via `init-opencode`:
+```bash
+init-opencode --update <project-dir>
+```
+
+- **Never overwritten:** `WORK_LOG.md`, `_decisions.md`, `_backlog.md`,  
+    `_concepts.md`, `_setup.md`, `analysis/*`, `runbooks/*`, `issue/*`,  
+    `playbook/*`, `pr/*`, `archive/*`
+    
+- **Always overwritten:** `_codestyle.md`, `_ci.md`, `_commands.md`,  
+    `_files.md`, `_glossary.md`, `_security.md`, `_troubleshooting.md`,  
+    `_templates.md`, `AGENTS.md`, `index.md`, `log.md`, `_meta.md`
+    
+- **Diff preview:**
+    
+    ```bash
+    init-opencode --diff <project-dir>
+    ```
+    
+
+## Rules
+
+- **Never commit** this directory
+    
+- **Never put secrets** in any file here
+    
+- **Update `timestamp`** whenever you edit a file
+
+
+## References
+
+- [1] [OKF spec](https://url/)
+    
+- [2] [Template repository](https://url/)
+    
+- [3] [OpenCode docs](https://url/)
+````
+
+#### Ключевые решения
+**`What's here` — четыре категории** Не перечисляем каждый файл, только категории. Полный список — в `index.md`;
+**`Template version` — четыре поля** Version, Installed, Last updated, Source. `Last updated` отдельно от `Installed` — обновление и установка разные события;
+**`OKF base + extensions` — самая важная секция** Таблица: что стандартное → что наше. Список должен **обновляться** при добавлении расширений;
+**`How to update` — три категории** Never / Always / Diff. Критично, чтобы `--update` не затирал пользовательские данные;
+**`Rules` — 3 правила** Never commit, never secrets, update timestamp;
+**`_meta.md` почти не меняется.** При первичной установке — заполняется. При обновлении — версия. В остальное время — статичен;
+
+#### Частые ошибки
+**Ошибка 1: дублирование с AGENTS.md** «Этот проект — Ruby gem» — это в AGENTS.md.
+**Ошибка 2: нет версии** Непонятно, что за bundle.
+**Ошибка 3: версия не совпадает с `.template-version`**
+**Ошибка 4: нет списка расширений над OKF**
+**Ошибка 5: расширения устарели**
+**Ошибка 6: нет правил обновления**
+**Ошибка 7: `_meta.md` редактируется слишком часто** Должен меняться редко.
+**Ошибка 8: `_meta.md` содержит секреты**
+**Ошибка 9: нет `timestamp`**
+
+### 9.7 Как они связаны
+
+```text
+навигация          защита  
+─────────          ──────  
+_files.md        _security.md  
+│                     │  
+│                     │  
+▼                     ▼  
+«где что»         «что можно»  
+│                     │  
+├─────────────────────┬───────────────┤  
+│                     │               │  
+▼                     ▼               ▼  
+_env.md           analysis/        _meta.md  
+«где развёрнуто»  «что нашли»       «что это»
+```
+
+**Связи:**
+- `_setup.md` → `_env.md`: local vs non-local
+- `_setup.md` → `_security.md`: правила `.env`
+- `_security.md` → `_env.md`: где какие секреты
+- `_files.md` → `_concepts.md`: файлы vs компоненты
+- `_files.md` → `_codestyle.md`: какие файлы vs как называть
+- `analysis/` → `_backlog.md`: finding → задача
+- `_meta.md` → `AGENTS.md`: bundle vs проект
+- `_meta.md` → `.template-version`: human vs machine
+
+### 9.8 Общие принципы
+
+**Принцип 1: разграничение уровней**
+- `_files.md` — где файлы
+- `_concepts.md` — что за компоненты
+- `_env.md` — где окружения
+- `_meta.md` — что за bundle
+- 
+**Принцип 2: карты, не энциклопедии** `_files.md` и `_env.md` — curated. 15–30 записей, не 200.
+
+**Принцип 3: безопасность — правила, не хранилище** `_security.md` не содержит секретов
+
+**Принцип 4: находки — состояние, не задачи** `analysis/` описывает **что нашли**, не **что делать**
+
+**Принцип 5: мета — отдельно от контента** `_meta.md` — про bundle, не про проект
+
+### 9.9 Частые ошибки (все пять)
+
+**Ошибка 1: смешение уровней** Файлы vs компоненты. Окружения vs setup. Bundle vs проект.
+**Ошибка 2: файлы не растут** `_files.md` устарел. `analysis/` пуст. `_env.md` не обновлён.
+**Ошибка 3: файлы растут бесконтрольно** `_files.md` с 100+ файлов.
+**Ошибка 4: секреты в неправильном месте** В `_security.md`, `_env.md`, `_meta.md`.
+**Ошибка 5: нет границ** `_files.md` дублирует `_concepts.md`. `_env.md` дублирует `_setup.md`.
+**Ошибка 6: нет ссылок на связанные** `_security.md` без ссылки на `_env.md`. `analysis/` без ссылки на `_backlog.md`.
+
+### 9.10 Упражнение
+
+Возьмите свой проект. Пройдитесь по пяти файлам:
+1. **`_files.md`** — сколько файлов? 15–30 или 100+? Каждый имеет `When to touch`?
+2. **`_env.md`** — сколько окружений? Есть ли `Prod restrictions`? Все URL'ы рабочие?
+3. **`_security.md`** — есть ли реальные секреты (проверьте срочно)? Порядок шагов при утечке правильный (revoke первым)?
+4. **`analysis/`** — есть ли findings? Каждый имеет evidence, impact, recommendation?
+5. **`_meta.md`** — версия совпадает с `.template-version`? Список расширений актуален?
+6. 
+**Тест:** покажите `_security.md` коллеге. Спросите: «Если ты случайно закоммитил токен — что делать?» Если ответ не совпадает с разделом «If a secret leaked» — перепишите.
+
+
+
+
+
+
+
+
+===----------------------------================================
+
+### 9.11 Что дальше
+В следующей главе — **utility**: `index.md`, `log.md`, `SPEC_REFERENCE.md`, `.gitignore`, `.template-version`. Пять служебных файлов, которые не читаются при работе, но обеспечивают OKF-конформность и защиту.
+---
+## Что дальше в книге
+Part II — почти готов:
+- **Chapter 5.** AGENTS.md ✅
+- **Chapter 6.** Onboarding ✅
+- **Chapter 7.** Daily work ✅
+- **Chapter 8.** Diagnostics ✅
+- **Chapter 9.** Navigation & safety ✅
+- **Chapter 10.** Utility — следующий, последний в Part II
+Потом:
+- **Part III — Workflows** (главы 11–16).
+- **Part IV — Operations** (главы 17–20).
+- **Part V — Appendices** (A–D).
+Продолжаем с Chapter 10?
+
+
+
+===-================================================================
+
+## Что дальше в книге
+
+Part II — на 80% готов:
+
+- **Chapter 5.** AGENTS.md ✅
+    
+- **Chapter 6.** Onboarding ✅
+    
+- **Chapter 7.** Daily work ✅
+    
+- **Chapter 8.** Diagnostics ✅
+    
+- **Chapter 9.** Navigation & safety — следующий
+    
+- **Chapter 10.** Utility
+    
+
+Потом:
+
+- **Part III — Workflows** (главы 11–16).
+    
+- **Part IV — Operations** (главы 17–20).
+    
+- **Part V — Appendices** (A–D).
+    
+
+Продолжаем с Chapter 9?
 
 ==------=============================================================
 =======================================================================---
