@@ -13,12 +13,26 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "textbook_ru/guide_ru.md",
+                "file": "textbook_ru/guide_ru_part_I.md",
+                "mode": "preview",
+                "source": true
+              },
+              "icon": "lucide-file",
+              "title": "guide_ru_part_I"
+            }
+          },
+          {
+            "id": "22749af89fc911d1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "textbook_ru/guide_ru_part_V.md",
                 "mode": "source",
                 "source": true
               },
               "icon": "lucide-file",
-              "title": "guide_ru"
+              "title": "guide_ru_part_V"
             }
           }
         ]
@@ -99,7 +113,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "textbook_ru/guide_ru.md",
+                "file": "textbook_ru/guide_ru_part_I.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -118,7 +132,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "textbook_ru/guide_ru.md",
+                "file": "textbook_ru/guide_ru_part_I.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -161,7 +175,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "textbook_ru/guide_ru.md",
+                "file": "textbook_ru/guide_ru_part_I.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -190,8 +204,23 @@
   },
   "active": "cb2c3afd9952d4ae",
   "lastOpenFiles": [
-    "README.md",
+    "textbook_ru/guide_ru_part_III.md",
+    "textbook_ru/guide_ru_part_IV.md",
+    "textbook_ru/guide_ru_part_I.md",
+    "textbook_ru/guide_ru_part_V.md",
+    "template/AGENTS.md",
+    "guide_ru_part_V.md",
+    "guide_ru_part_IV copy.md",
+    "guide_ru_part_IV.md",
+    "guide_ru.md",
+    "textbook_ru/guide_ru_part_II.md",
     "textbook_ru/guide_ru.md",
+    "guide_ru_part_III.md",
+    "guide_ru_part_II copy.md",
+    "guide_ru_part_II.md",
+    "guide_ru_part_I copy.md",
+    "guide_ru_part_I.md",
+    "README.md",
     "template/_release.md",
     "textbook_en/guide_en.md",
     "textbook_en",
@@ -207,21 +236,6 @@
     "VERSION",
     "template/SPEC_REFERENCE.md",
     "template/_templates.md",
-    "template/WORK_LOG.md",
-    "template/_setup.md",
-    "template/_security.md",
-    "template/_performance.md",
-    "template/_meta.md",
-    "template/_glossary.md",
-    "template/_env.md",
-    "template/_decisions.md",
-    "template/_concepts.md",
-    "template/_commands.md",
-    "template/_backlog.md",
-    "template/_api.md",
-    "template/_codestyle.md",
-    "template/log.md",
-    "template/AGENTS.md",
     "template/_placeholder_removals.log",
     "template/runbooks",
     "template/archive",
