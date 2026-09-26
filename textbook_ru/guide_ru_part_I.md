@@ -56,14 +56,14 @@ YAML frontmatter.
 
 Книга линейная, но её можно читать по частям:
 
-- **[[guide_ru_part_I|Part I (Foundations/Основы)]]** — обязательно для всех. Объясняет, зачем
+- **[Part I (Foundations/Основы)](../guide_ru_part_I)** — обязательно для всех. Объясняет, зачем
   всё это и почему работает.
-- **[[guide_ru_part_II|Part II (The files/Файлы)]]*** — справочник по каждому файлу. Можно
+- **[Part II (The files/Файлы)](../guide_ru_part_II)*** — справочник по каждому файлу. Можно
   читать выборочно.
-- **[[guide_ru_part_III|Part III (Workflows/Рабочие процессы)]]** — сценарии. Полезно после понимания основ.
-- **[[guide_ru_part_IV|Part IV (Operations/Процедуры)]]** — про эксплуатацию bundle: установку,
+- **[Part III (Workflows/Рабочие процессы)](../guide_ru_part_III)** — сценарии. Полезно после понимания основ.
+- **[Part IV (Operations/Процедуры)](../guide_ru_part_IV)** — про эксплуатацию bundle: установку,
   обновление, расширение.
-- **[[guide_ru_part_V|Part V (Appendices/Приложения)]]** — справочники: словарь типов, полная
+- **[Part V (Appendices/Приложения)](../guide_ru_part_V)** — справочники: словарь типов, полная
   структура, выдержка из [OKF](https://cloud.google.com/blog/products/data-analytics/okf-v0-2-adds-trust-signals).
 
 Если вы новичок — начните с Part I, потом Part III, потом возвращайтесь
