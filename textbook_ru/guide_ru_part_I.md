@@ -57,14 +57,14 @@ YAML frontmatter.
 Книга линейная, но её можно читать по частям:
 
 - **[Part I (Foundations/Основы)](../textbook_ru/guide_ru_part_I.md)** — обязательно для всех. Объясняет, зачем
-  всё это и почему работает.
-- **[Part II (The files/Файлы)](../textbook_ru/guide_ru_part_II.md)* — справочник по каждому файлу. Можно
-  читать выборочно.
-- **[Part III (Workflows/Рабочие процессы)](../textbook_ru/guide_ru_part_III.md)** — сценарии. Полезно после понимания основ.
+  всё это и почему работает
+- **[Part II (The files/Файлы)](../textbook_ru/guide_ru_part_II.md)** — справочник по каждому файлу. Можно
+  читать выборочно
+- **[Part III (Workflows/Рабочие процессы)](../textbook_ru/guide_ru_part_III.md)** — сценарии. Полезно после понимания основ
 - **[Part IV (Operations/Процедуры)](../textbook_ru/guide_ru_part_IV.md)** — про эксплуатацию bundle: установку,
-  обновление, расширение.
+  обновление, расширение
 - **[Part V (Appendices/Приложения)](../textbook_ru/guide_ru_part_V.md)** — справочники: словарь типов, полная
-  структура, выдержка из [OKF](https://cloud.google.com/blog/products/data-analytics/okf-v0-2-adds-trust-signals).
+  структура, выдержка из [OKF](https://cloud.google.com/blog/products/data-analytics/okf-v0-2-adds-trust-signals)
 
 Если вы новичок — начните с Part I, потом Part III, потом возвращайтесь
 к Part II по мере необходимости.
