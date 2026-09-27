@@ -10,15 +10,12 @@ tags:
   - guide
 ---
 
-# Knowledge Bundles for AI Agents
-# Наборы знаний для агентов искусственного интеллекта
+# Наборы знаний для AI-агентов: от AGENTS.md к структурированному контексту
 
-### A practical guide to OKF and agent-ready codebases
 ### Практическое руководство по OKF и кодовым базам, готовым к внедрению агентов
 
 ---
 
-## Preface
 ## Предисловие
 
 Эта книга — о том, как подготовить кодовую базу к работе с AI-агентом.
@@ -29,14 +26,14 @@ tags:
 агентов, звучит так:
 
 > «Агент не понимает наш проект. Он каждый раз задаёт одни и те же
-> вопросы, забывает, что мы уже обсуждали, и путается в контексте.»
+> вопросы, забывает, что мы уже обсуждали, и путается в контексте»
 
-Причина не в модели. Причина в том, что **знания о проекте не
+Причина не в модели, причина в том, что **знания о проекте не
 структурированы**. Всё лежит либо в головах разработчиков, либо в одном
 гигантском `AGENTS.md`, который агент читает целиком, но не понимает.
 
 Эта книга предлагает решение: **локальный knowledge bundle** —
-директорию с markdown-файлами, каждый из которых описывает одну тему,
+директорию с **markdown**-файлами, каждый из которых описывает одну тему,
 и которые загружаются агентом по требованию.
 
 Подход основан на **[Open Knowledge Format (OKF)](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing)** — открытом стандарте от Google Cloud для представления знаний в виде markdown-файлов с
@@ -45,29 +42,24 @@ YAML frontmatter.
 ### Для кого этот материал
 
 - **Разработчики**, которые работают с [OpenCode](https://opencode.ai), [Claude Code](https://claude.com/product/claude-code), [Cursor](https://cursor.com)
-  или другими агентами и хотят повысить качество их ответов
+  или другими агентами и хотят повысить качество их ответов;
 - **Тимлиды**, которые внедряют агентов в команду и хотят стандартизировать
-  работу с контекстом
+  работу с контекстом;
 - **Архитекторы**, которым интересно, как устроены knowledge bundles
-  и почему [OKF](https://cloud.google.com/blog/products/data-analytics/okf-v0-2-adds-trust-signals) выбран как фундамент
-- **Все, кому надоело** раздувать `AGENTS.md` до 500 строк
+  и почему [OKF](https://cloud.google.com/blog/products/data-analytics/okf-v0-2-adds-trust-signals) выбран как фундамент;
+- **Все, кому надоело** раздувать `AGENTS.md` до 500 строк;
 
 ### Как читать
 
 Книга линейная, но её можно читать по частям:
 
-- **[Part I (Foundations/Основы)](../textbook_ru/guide_ru_part_I.md)** — обязательно для всех. Объясняет, зачем
-  всё это и почему работает
-- **[Part II (The files/Файлы)](../textbook_ru/guide_ru_part_II.md)** — справочник по каждому файлу. Можно
-  читать выборочно
-- **[Part III (Workflows/Рабочие процессы)](../textbook_ru/guide_ru_part_III.md)** — сценарии. Полезно после понимания основ
-- **[Part IV (Operations/Процедуры)](../textbook_ru/guide_ru_part_IV.md)** — про эксплуатацию bundle: установку,
-  обновление, расширение
-- **[Part V (Appendices/Приложения)](../textbook_ru/guide_ru_part_V.md)** — справочники: словарь типов, полная
-  структура, выдержка из [OKF](https://cloud.google.com/blog/products/data-analytics/okf-v0-2-adds-trust-signals)
+- **[Part I (Foundations/Основы)](../textbook_ru/guide_ru_part_I.md)** — обязательно для всех. Объясняет, зачем всё это и почему работает;
+- **[Part II (The files/Файлы)](../textbook_ru/guide_ru_part_II.md)** — справочник по каждому файлу. Можно читать выборочно;
+- **[Part III (Workflows/Рабочие процессы)](../textbook_ru/guide_ru_part_III.md)** — сценарии. Полезно после понимания основ;
+- **[Part IV (Operations/Процедуры)](../textbook_ru/guide_ru_part_IV.md)** — про эксплуатацию bundle: установку, обновление, расширение;
+- **[Part V (Appendices/Приложения)](../textbook_ru/guide_ru_part_V.md)** — справочники: словарь типов, полная структура, выдержка из [OKF](https://cloud.google.com/blog/products/data-analytics/okf-v0-2-adds-trust-signals);
 
-Если вы новичок — начните с [Part I](../textbook_ru/guide_ru_part_I.md), потом [Part III](../textbook_ru/guide_ru_part_III.md), потом возвращайтесь
-к [Part II](../textbook_ru/guide_ru_part_II.md) по мере необходимости.
+Если вы новичок — начните с [Part I](../textbook_ru/guide_ru_part_I.md), потом [Part III](../textbook_ru/guide_ru_part_III.md), потом возвращайтесь к [Part II](../textbook_ru/guide_ru_part_II.md) по мере необходимости.
 
 ### Что нужно знать заранее
 
@@ -75,28 +67,27 @@ YAML frontmatter.
 - Понимание, что такое [YAML frontmatter](https://docs.github.com/en/contributing/writing-for-github-docs/using-yaml-frontmatter) ([Jekyll](https://jekyllrb.com), [Hugo](https://gohugo.io), [Obsidian](https://obsidian.md) — не
   важно, откуда)
 - Опыт работы с [git](https://github.com)
-- Опыт использования AI-агентов для кода ([OpenCode](https://opencode.ai), [Cursor](https://cursor.com), [Aider](https://aider.chat) —
-  любой другой какой вы предпочитаете)
+- Опыт использования AI-агентов для кода ([OpenCode](https://opencode.ai), [Cursor](https://cursor.com), [Aider](https://aider.chat) — любой другой какой вы предпочитаете)
 
 Не нужно знать:
-- OKF
-- Внутреннее устройство LLM
-- Как работают [embeddings](https://bigdataschool.ru/wiki/embedding/) или [векторные базы](https://productstar.ru/blog/cto-takoe-vektornye-bazy-dannyx-i-zacem-oni-nuzny)
+- OKF;
+- Внутреннее устройство LLM;
+- Как работают [embeddings](https://bigdataschool.ru/wiki/embedding/) или [векторные базы](https://productstar.ru/blog/cto-takoe-vektornye-bazy-dannyx-i-zacem-oni-nuzny);
 
 Мы говорим о **структуре знаний**, а не о моделях.
 
 ---
 
-## Table of contents
+## Оглавление
 
-### Part I — Foundations
+### Part I — Основы
 
-1. The problem: why agents drown in context
-2. What OKF is
+1. [The problem: why agents drown in context](#глава-1-проблема-почему-агенты-тонут-в-контексте)
+2. [What OKF is](#глава-2-что-это-такое-OKF)
 3. The bundle as a unit of knowledge
 4. Lazy loading
 
-### Part II — The files
+### Part II — Файлы
 
 5. AGENTS.md — the entry point
 6. Onboarding: `_setup`, `_concepts`, `_glossary`
@@ -105,7 +96,7 @@ YAML frontmatter.
 9. Navigation: `_files`, `_env`, `_security`, `analysis/`, `_meta`
 10. Utility: `index.md`, `log.md`, `SPEC_REFERENCE.md`, `.gitignore`, `.template-version`
 
-### Part III — Workflows
+### Part III — Рабочие процессы
 
 11. Issue lifecycle
 12. Session lifecycle
@@ -114,14 +105,14 @@ YAML frontmatter.
 15. Deep analysis
 16. Planning
 
-### Part IV — Operations
+### Part IV — Процедуры
 
 17. `init-opencode`: install and update
 18. Extending the bundle
 19. Anti-patterns
 20. Philosophy
 
-### Part V — Appendices
+### Part V — Приложения
 
 - A. Type dictionary
 - B. Full bundle structure
@@ -129,13 +120,9 @@ YAML frontmatter.
 - D. FAQ
 
 ---
-
-# Part I — Foundations
-# Часть I - Основы
-
+# Part I - Основы
 ---
 
-## Chapter 1. The problem: why agents drown in context
 ## Глава 1.  Проблема: почему агенты тонут в контексте
 
 ### 1.1 Как выглядит типичный AGENTS.md
