@@ -82,7 +82,7 @@ YAML frontmatter.
 
 ### Part I — Основы
 
-1. [The problem: why agents drown in context](../textbook_ru/guide_ru_part_I.md#глава-1-проблема-почему-агенты-тонут-в-контексте)
+1. [The problem: why agents drown in context](#глава%201%20проблема%20почему%20агенты%20тонут%20в%20контексте)
 2. [What OKF is](#глава-2-что-это-такое-OKF)
 3. The bundle as a unit of knowledge
 4. Lazy loading
@@ -121,9 +121,8 @@ YAML frontmatter.
 
 ---
 # Part I - Основы
----
 
-## Глава 1  Проблема: почему агенты тонут в контексте
+## Глава 1  Проблема почему агенты тонут в контексте
 
 ### 1.1 Как выглядит типичный AGENTS.md
 
@@ -132,13 +131,13 @@ YAML frontmatter.
 `.cursor/rules/`) примерно такого содержания:
 
 ```markdown
-# Project: acme-billing
-
-## Overview
+#Project: acme-billing
+	
+##Overview
 ACME Billing — SaaS для выставления счетов. Rails 7.1, PostgreSQL 16,
 Redis, Sidekiq. Multi-tenant, около 200 000 активных пользователей.
-
-## Architecture
+	
+##Architecture
 Основные компоненты:
 - `InvoiceGenerator` — генерирует счета
 - `PaymentGateway` — интеграция со Stripe
@@ -146,14 +145,14 @@ Redis, Sidekiq. Multi-tenant, около 200 000 активных пользов
 - `NotificationService` — email и push
 - `ReportBuilder` — отчёты
 - ...
-
-## Code Style
+	
+##Code Style
 - RuboCop с конфигом `.rubocop.yml`
 - Все файлы начинаются с `# frozen_string_literal: true`
 - SPDX headers в каждом файле
 - ...
-
-## CI
+	
+##CI
 У нас 5 GitHub Actions:
 1. test.yml — RSpec
 2. lint.yml — RuboCop
@@ -161,49 +160,49 @@ Redis, Sidekiq. Multi-tenant, около 200 000 активных пользов
 4. deploy-staging.yml
 5. deploy-prod.yml
 ...
-
-## Key Files
+	
+##Key Files
 | File | Purpose |
 |------|---------|
 | app/models/invoice.rb | Invoice model |
 | app/services/invoice_generator.rb | Generates invoices |
 | ...
 (50 more rows)
-
-## Testing
+	
+##Testing
 - RSpec
 - FactoryBot
 - VCR для внешних API
 - ...
-
-## Deployment
+	
+##Deployment
 - Staging: auto on push to master
 - Prod: manual, tags v*
 - Rollback: kubectl rollout undo
 - ...
-
-## Security
+	
+##Security
 - Secrets в AWS Secrets Manager
 - Never commit .env
 - ...
-
-## FAQ
+	
+##FAQ
 - Q: How do I reset the DB?
 - A: bundle exec rails db:reset
 - ...
 ```
 
-Файл разросся до 500–600 строк. Кажется, что он **полный** — в нём
-есть всё, что нужно знать о проекте.
+Файл разросся до 500–600 строк. Кажется, что он **полный** — в нём есть всё, что нужно знать о проекте.
 
 Но вот что происходит, когда вы просите агента:
 
 > «Добавь поле `discount` в Invoice»
 
-Агент получает **весь** этот файл в контекст, 600 строк. Из них
-релевантны: строчка про `Invoice` в Key Files; code style (для
-правильного синтаксиса); тесты. Всё остальное — CI-таблицы,
-deployment, security, FAQ — **шум**.
+Агент получает **весь** этот файл в контекст, 600 строк. Из них релевантны: 
+- строчка про `Invoice` в Key Files; 
+- code style (для правильного синтаксиса); 
+- тесты; 
+Всё остальное — CI-таблицы, deployment, security, FAQ — **шум**.
 
 ### 1.2 Три проблемы раздутого AGENTS.md
 
