@@ -86,11 +86,11 @@ YAML frontmatter.
 ### Part II — Файлы
 
 5. [AGENTS.md — the entry point](../textbook_ru/guide_ru_part_II.md#глава-5-agents-md-точка-входа)
-6. Onboarding: `_setup`, `_concepts`, `_glossary`
-7. Daily work: `_templates`, `_worklog`, `_backlog`, `_decisions`, `_codestyle`, `_commands`
-8. Diagnostics: `_ci`, `_troubleshooting`, `runbooks/`
-9. Navigation: `_files`, `_env`, `_security`, `analysis/`, `_meta`
-10. Utility: `index.md`, `log.md`, `SPEC_REFERENCE.md`, `.gitignore`, `.template-version`
+6. [Onboarding: `_setup`, `_concepts`, `_glossary`](../textbook_ru/guide_ru_part_II.md#глава-6-введение-в-setup-concepts-glossary)
+7. [Daily work: `_templates`, `_worklog`, `_backlog`, `_decisions`, `_codestyle`, `_commands`]()
+8. [Diagnostics: `_ci`, `_troubleshooting`, `runbooks/`]()
+9. [Navigation: `_files`, `_env`, `_security`, `analysis/`, `_meta`]()
+10. [Utility: `index.md`, `log.md`, `SPEC_REFERENCE.md`, `.gitignore`, `.template-version`]()
 
 ### Part III — Рабочие процессы
 
