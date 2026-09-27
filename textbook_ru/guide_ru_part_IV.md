@@ -7,7 +7,7 @@ tags: [okf, agents, opencode, guide]
 ---
 # Part IV — Operations
 
-_[[guide_ru_part_I|Part I]], [[guide_ru_part_II|Part II]], [[guide_ru_part_III|Part III]] были про **использование** bundle. Part IV — про **эксплуатацию**: как его устанавливать, обновлять, расширять, поддерживать. Это мета-уровень: не «как работать с проектом через bundle», а «как работать с самим bundle»._
+_[Part I](../textbook_ru/guide_ru_part_I.md), [Part II](../textbook_ru/guide_ru_part_II.md), [Part III](../textbook_ru/guide_ru_part_III.md) были про **использование** bundle. Part IV — про **эксплуатацию**: как его устанавливать, обновлять, расширять, поддерживать. Это мета-уровень: не «как работать с проектом через bundle», а «как работать с самим bundle»._
 
 _Четыре главы: install/update, extending, anti-patterns, philosophy._
 

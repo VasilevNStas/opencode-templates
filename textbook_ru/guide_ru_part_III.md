@@ -8,7 +8,7 @@ tags: [okf, agents, opencode, guide]
 
 # Part III — Workflows
 
-_В [[guide_ru_part_I|Part I]]и [[guide_ru_part_II|Part II ]] мы разобрали **что** лежит в bundle и **почему**. В Part III — **как** этим пользоваться. Не файлы, а процессы. Сценарии, которые повторяются снова и снова._
+_В [Part I](../textbook_ru/guide_ru_part_I.md) и [Part II](../textbook_ru/guide_ru_part_II.md) мы разобрали **что** лежит в bundle и **почему**. В Part III — **как** этим пользоваться. Не файлы, а процессы. Сценарии, которые повторяются снова и снова._
 
 _Шесть глава — шесть workflow'ов: issue, session, CI, incident, analysis, planning. Каждый — от начала до конца._
 

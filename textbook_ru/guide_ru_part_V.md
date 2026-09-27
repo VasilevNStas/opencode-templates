@@ -7,7 +7,7 @@ tags: [okf, agents, opencode, guide]
 ---
 # Part V — Appendices
 
-_[[guide_ru_part_I|Part I]], [[guide_ru_part_II|Part II]], [[guide_ru_part_III|Part III]], [[guide_ru_part_IV|Part IV]] — это основное содержание. Appendices — справочники. Их можно читать выборочно, использовать как reference. Не обязательно читать подряд._
+_[Part I](../textbook_ru/guide_ru_part_I.md), [Part II](../textbook_ru/guide_ru_part_II.md) , [Part III](../textbook_ru/guide_ru_part_III.md), [Part IV](../textbook_ru/guide_ru_part_IV.md) — это основное содержание. Appendices — справочники. Их можно читать выборочно, использовать как reference. Не обязательно читать подряд._
 
 _Четыре приложения: словарь типов, полная структура bundle, выдержка из OKF, FAQ._
 

@@ -42,7 +42,7 @@ tags:
 Подход основан на **[Open Knowledge Format (OKF)](https://cloud.google.com/blog/products/data-analytics/how-the-open-knowledge-format-can-improve-data-sharing)** — открытом стандарте от Google Cloud для представления знаний в виде markdown-файлов с
 YAML frontmatter.
 
-### Для кого эта книга
+### Для кого этот материал
 
 - **Разработчики**, которые работают с [OpenCode](https://opencode.ai), [Claude Code](https://claude.com/product/claude-code), [Cursor](https://cursor.com)
   или другими агентами и хотят повысить качество их ответов
@@ -66,22 +66,22 @@ YAML frontmatter.
 - **[Part V (Appendices/Приложения)](../textbook_ru/guide_ru_part_V.md)** — справочники: словарь типов, полная
   структура, выдержка из [OKF](https://cloud.google.com/blog/products/data-analytics/okf-v0-2-adds-trust-signals)
 
-Если вы новичок — начните с Part I, потом Part III, потом возвращайтесь
-к Part II по мере необходимости.
+Если вы новичок — начните с [Part I](../textbook_ru/guide_ru_part_I.md), потом [Part III](../textbook_ru/guide_ru_part_III.md), потом возвращайтесь
+к [Part II](../textbook_ru/guide_ru_part_II.md) по мере необходимости.
 
 ### Что нужно знать заранее
 
 - [Markdown](https://www.markdownguide.org) на базовом уровне
-- Понимание, что такое [YAML frontmatter](https://docs.github.com/en/contributing/writing-for-github-docs/using-yaml-frontmatter) (Jekyll, Hugo, Obsidian — не
+- Понимание, что такое [YAML frontmatter](https://docs.github.com/en/contributing/writing-for-github-docs/using-yaml-frontmatter) ([Jekyll](https://jekyllrb.com), [Hugo](https://gohugo.io), [Obsidian](https://obsidian.md) — не
   важно, откуда)
 - Опыт работы с [git](https://github.com)
-- Опыт использования AI-агентов для кода (OpenCode, Cursor, Aider —
-  любой)
+- Опыт использования AI-агентов для кода ([OpenCode](https://opencode.ai), [Cursor](https://cursor.com), [Aider](https://aider.chat) —
+  любой другой какой вы предпочитаете)
 
 Не нужно знать:
 - OKF
 - Внутреннее устройство LLM
-- Как работают embeddings или векторные базы
+- Как работают [embeddings](https://bigdataschool.ru/wiki/embedding/) или [векторные базы](https://productstar.ru/blog/cto-takoe-vektornye-bazy-dannyx-i-zacem-oni-nuzny)
 
 Мы говорим о **структуре знаний**, а не о моделях.
 
