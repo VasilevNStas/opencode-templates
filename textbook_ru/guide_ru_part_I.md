@@ -85,7 +85,7 @@ YAML frontmatter.
 
 ### Part II — Файлы
 
-5. AGENTS.md — the entry point
+5. [AGENTS.md — the entry point](../textbook_ru/guide_ru_part_II.md#глава-5-agents-md-точка-входа)
 6. Onboarding: `_setup`, `_concepts`, `_glossary`
 7. Daily work: `_templates`, `_worklog`, `_backlog`, `_decisions`, `_codestyle`, `_commands`
 8. Diagnostics: `_ci`, `_troubleshooting`, `runbooks/`

@@ -241,7 +241,8 @@
               "title": "Outline"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "horizontal",
@@ -260,9 +261,9 @@
   },
   "active": "c1a9430e588d49b4",
   "lastOpenFiles": [
-    "textbook_ru/guide_ru_part_III.md",
-    "textbook_ru/guide_ru_part_I.md",
     "textbook_ru/guide_ru_part_II.md",
+    "textbook_ru/guide_ru_part_I.md",
+    "textbook_ru/guide_ru_part_III.md",
     "textbook_ru/guide_ru_part_V.md",
     "guide_ru_part_I.md",
     "textbook_ru/guide_ru_part_IV.md",

@@ -13,8 +13,7 @@ _В [Part I](../textbook_ru/guide_ru_part_I.md) мы разобрали, зач�
 _Порядок глав следует логике first-day reading order: от точки входа к служебным файлам._
 
 ## Chapter 5. AGENTS.md — the entry point
-## Глава 5. AGENTS.md - точка входа
-
+## Глава 5. AGENTS.md точка входа
 
 ### 5.1 Почему этот файл существует
 
