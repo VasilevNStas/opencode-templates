@@ -78,14 +78,14 @@ YAML frontmatter.
 
 ### Part I — Основы
 
-1. [The problem: why agents drown in context](#глава%201%20проблема%20почему%20агенты%20тонут%20в%20контексте)
-2. [What OKF is](#глава%202%20что%20это%20такое%20OKF)
-3. [The bundle as a unit of knowledge](#глава%203%20Комплект%20как%20единица%20знания)
-4. [Lazy loading](#глава%204%20Ленивая%20загрузка%20информации)
+1. [The problem: why agents drown in context](../textbook_ru/guide_ru_part_I.md##глава%201%20проблема%20почему%20агенты%20тонут%20в%20контексте)
+2. [What OKF is](../textbook_ru/guide_ru_part_I.md##глава%202%20что%20это%20такое%20OKF)
+3. [The bundle as a unit of knowledge](../textbook_ru/guide_ru_part_I.md##глава%203%20Комплект%20как%20единица%20знания)
+4. [Lazy loading](../textbook_ru/guide_ru_part_I.md##глава%204%20Ленивая%20загрузка%20информации)
 
 ### Part II — Файлы
 
-5. [AGENTS.md — the entry point](../textbook_ru/guide_ru_part_II.md#глава-5-agents-md-точка-входа)
+5. [AGENTS.md — the entry point](../textbook_ru/guide_ru_part_II.md#глава%205%20agents%20md%20точка%20входа)
 6. [Onboarding: `_setup`, `_concepts`, `_glossary`](../textbook_ru/guide_ru_part_II.md#глава-6-введение-в-setup-concepts-glossary)
 7. [Daily work: `_templates`, `_worklog`, `_backlog`, `_decisions`, `_codestyle`, `_commands`]()
 8. [Diagnostics: `_ci`, `_troubleshooting`, `runbooks/`]()
@@ -94,26 +94,26 @@ YAML frontmatter.
 
 ### Part III — Рабочие процессы
 
-11. Issue lifecycle
-12. Session lifecycle
-13. When CI fails
-14. Incident in prod
-15. Deep analysis
-16. Planning
+11. [Issue lifecycle]()
+12. [Session lifecycle]()
+13. [When CI fails]()
+14. [Incident in prod]()
+15. [Deep analysis]()
+16. [Planning]()
 
 ### Part IV — Процедуры
 
-17. `init-opencode`: install and update
-18. Extending the bundle
-19. Anti-patterns
-20. Philosophy
+17. [`init-opencode`: install and update]()
+18. [Extending the bundle]()
+19. [Anti-patterns]()
+20. [Philosophy]()
 
 ### Part V — Приложения
 
-- A. Type dictionary
-- B. Full bundle structure
-- C. OKF spec extract
-- D. FAQ
+- [A. Type dictionary]()
+- [B. Full bundle structure]()
+- [C. OKF spec extract]()
+- [D. FAQ]()
 
 ---
 # Part I - Основы
