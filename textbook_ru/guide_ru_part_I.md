@@ -82,7 +82,7 @@ YAML frontmatter.
 
 ### Part I — Основы
 
-1. [The problem: why agents drown in context](#глава-1-проблема-почему-агенты-тонут-в-контексте)
+1. [The problem: why agents drown in context](../textbook_ru/guide_ru_part_I.md#глава-1-проблема-почему-агенты-тонут-в-контексте)
 2. [What OKF is](#глава-2-что-это-такое-OKF)
 3. The bundle as a unit of knowledge
 4. Lazy loading
@@ -123,7 +123,7 @@ YAML frontmatter.
 # Part I - Основы
 ---
 
-## Глава 1.  Проблема: почему агенты тонут в контексте
+## Глава 1  Проблема: почему агенты тонут в контексте
 
 ### 1.1 Как выглядит типичный AGENTS.md
 
@@ -310,10 +310,7 @@ deployment или security FAQ
 
 В следующей главе — что такое OKF и почему именно этот формат выбран
 как фундамент
-
 ---
-
-## Chapter 2. What OKF is
 ## Глава 2. Что это такое OKF ?
 
 ### 2.1 Определение
@@ -546,8 +543,6 @@ OKF — это **формат**, а не **методология**. Он не �
 применяется к нашему шаблону.
 
 ---
-
-## Chapter 3. The bundle as a unit of knowledge
 ## Глава 3.  Комплект как единица знания
 
 ### 3.1 Определение
@@ -734,7 +729,6 @@ cross-linking), но не **названия**.
 
 ---
 
-## Chapter 4. Lazy loading
 ## Глава 4. Ленивая загрузка информации
 
 ### 4.1 Идея
