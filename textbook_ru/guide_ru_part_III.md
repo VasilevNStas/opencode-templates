@@ -16,6 +16,8 @@ _Шесть глава — шесть workflow'ов: issue, session, CI, inciden
 
 ## Chapter 11. Issue lifecycle
 
+## Глава 11. Жизненный ц
+
 ### 11.1 Что такое «issue lifecycle»
 
 **Issue lifecycle** — последовательность шагов от «взяли задачу» до «PR смержен и заархивирован»
@@ -23,7 +25,6 @@ _Шесть глава — шесть workflow'ов: issue, session, CI, inciden
 Это **самый частый workflow**. Если вы работаете с проектом хотя бы раз в неделю, вы проходите его постоянно.
 
 Три стадии:
-
 
 ```text
 
@@ -39,20 +40,21 @@ _Шесть глава — шесть workflow'ов: issue, session, CI, inciden
     SUMMARY       WORK_LOG     PR desc
     PLAYBOOK      decisions    archive
 ```
+
 **Start:** создаём артефакты
 **During:** работаем
 **End:** завершаем
 
 ### 11.2 Роли файлов в lifecycle
 
-|Файл|Роль|Когда создаётся|
-|---|---|---|
-|`issue/PROJECT_SUMMARY_<N>.md`|Что делаем и как проверим|Start|
-|`playbook/PLAYBOOK_<N>.md`|Стратегия решения|Start|
-|`WORK_LOG.md`|Хронология сессий|During|
-|`_decisions.md`|Значимые решения|During (если есть)|
-|`pr/PR_<N>.md`|Описание PR|End|
-|`archive/`|Куда убираем после merge|End|
+| Файл                           | Роль                      | Когда создаётся    |
+| ------------------------------ | ------------------------- | ------------------ |
+| `issue/PROJECT_SUMMARY_<N>.md` | Что делаем и как проверим | Start              |
+| `playbook/PLAYBOOK_<N>.md`     | Стратегия решения         | Start              |
+| `WORK_LOG.md`                  | Хронология сессий         | During             |
+| `_decisions.md`                | Значимые решения          | During (если есть) |
+| `pr/PR_<N>.md`                 | Описание PR               | End                |
+| `archive/`                     | Куда убираем после merge  | End                |
 
 **Три артефакта на issue:** SUMMARY, PLAYBOOK, PR.
 
@@ -69,11 +71,10 @@ _Шесть глава — шесть workflow'ов: issue, session, CI, inciden
 Три вопроса:
 
 1. **Что** нужно сделать?
-    
-2. **Зачем** это нужно? (какую проблему решает)
-    
-3. **Как** поймём, что сделали? (критерии готовности)
 
+2. **Зачем** это нужно? (какую проблему решает)
+
+3. **Как** поймём, что сделали? (критерии готовности)
 
 Если не можете ответить на все три — вернитесь к issue. Задайте вопросы автору. **Не начинайте работу с размытым пониманием.**
 
@@ -82,11 +83,11 @@ _Шесть глава — шесть workflow'ов: issue, session, CI, inciden
 Перед работой полезно прочитать:
 
 - `_concepts.md` — как устроен проект
-    
+
 - `_codestyle.md` — как писать код
-    
+
 - `_files.md` — где что лежит
-    
+
 - `_glossary.md` — если встретили незнакомый термин
 
 Не читайте всё подряд. Только то, что **нужно для этой задачи**.
@@ -119,15 +120,19 @@ tags: [feature, parser]
 # Project Summary: #123 Add JSON parser
 
 ## Issue Overview
+
 [Ссылка на issue]. Нужен парсер для JSON с поддержкой streaming.
 
 ## Problem
+
 Входные файлы могут быть 100MB+. Текущий парсер загружает всё в память
 
 ## Solution
+
 (заполняется позже, по ходу)
 
 ## Verification
+
 - [ ] `bundle exec rubocop` — 0 offenses
 - [ ] `bundle exec rspec` — all pass
 - [ ] Parse 100MB file < 5 seconds
@@ -154,19 +159,23 @@ tags: [feature, parser]
 # Playbook #123: Add JSON parser
 
 ## Context
+
 Streaming требует инкрементального чтения. Нужно не сломать существующий API
 
 ## Strategy
+
 1. Write `StreamReader` for incremental file reading
 2. Rewrite `Parser` to consume tokens from stream
 3. Keep existing in-memory mode as fallback
 4. Benchmark on 100MB file
-   
+
 ## Known Pitfalls
+
 - Streaming requires buffering. Don't load whole file
 - AST nodes must be immutable
-  
+
 ## Verification Commands
+
 ```bash
 bundle exec rspec spec/parser_spec.rb
 bundle exec rake benchmark
@@ -176,15 +185,20 @@ bundle exec rake benchmark
 **PLAYBOOK не обязателен для простых задач** Если изменение — одна строка, PLAYBOOK избыточен.
 
 **Признаки, что PLAYBOOK нужен:**
+
 - Больше 3 файлов будет затронуто
 - Есть выбор между подходами
 - Есть риски и грабли
 
 #### Шаг 6: начать запись в WORK_LOG
+
 Первая сессия по issue:
+
 ```markdown
 ## 2026-09-21
+
 ### Session 47 — Start #123
+
 Created PROJECT_SUMMARY_123.md and PLAYBOOK_123.md. Read _concepts.md,
 understood the parser architecture. Started with StreamReader.
 **Decision:** Streaming via Enumerator, not thread-based. Simpler.
@@ -202,30 +216,31 @@ understood the parser architecture. Started with StreamReader.
 Каждая сессия — новый блок в WORK_LOG:
 
 ```markdown
-
 ## 2026-09-22
+
 ### Session 48 — StreamReader done
-| # | What | Files | Status | Complexity |
-|---|------|-------|--------|-----------|
-| 123 | StreamReader | `lib/stream_reader.rb`, `spec/` | in-progress | medium |
-**Decision:** Used `Enumerator::Lazy` for chunk reading. Alternative
-was manual buffering — more code, no benefit.
-**Problem:** Buffer overflow on very large lines. Fixed by splitting
-lines at 1MB.
-**Next:** Rewrite Parser to consume from stream.
+
+| #                                                                    | What         | Files                           | Status      | Complexity |
+| -------------------------------------------------------------------- | ------------ | ------------------------------- | ----------- | ---------- |
+| 123                                                                  | StreamReader | `lib/stream_reader.rb`, `spec/` | in-progress | medium     |
+| **Decision:** Used `Enumerator::Lazy` for chunk reading. Alternative |
+| was manual buffering — more code, no benefit.                        |
+| **Problem:** Buffer overflow on very large lines. Fixed by splitting |
+| lines at 1MB.                                                        |
+| **Next:** Rewrite Parser to consume from stream.                     |
+
 ---
 ```
 
 **Правила:**
 
 - **Одна сессия = один блок**
-    
-- **Decision** — только неочевидное
-    
-- **Problem** — что пошло не так и как решили
-    
-- **Next** — обязателен
 
+- **Decision** — только неочевидное
+
+- **Problem** — что пошло не так и как решили
+
+- **Next** — обязателен
 
 #### Когда создавать ADR
 
@@ -234,36 +249,39 @@ lines at 1MB.
 Триггеры:
 
 - Выбор технологии
-    
+
 - Изменение API
-    
+
 - Отказ от подхода
 
 **Пример:**
 
 ```markdown
-
 ## ADR-005: Streaming via Enumerator
+
 - **Date:** 2026-09-22
 - **Status:** accepted
 - **Issue:** #123
 - **Deciders:** @you
-  
+
 ### Context
+
 Need streaming JSON parsing for files >100MB. Two options: Enumerator
 and thread-based producer/consumer
 
 ### Decision
+
 Use Enumerator::Lazy
 
 ### Alternatives considered
+
 - **Thread-based** — more complex, no benefit for single-file parsing
-  
+
 ### Consequences
+
 - **Positive:** simpler code, no thread management
 - **Negative:** one file at a time (can't parallelize)
 - **Follow-up:** benchmark against thread-based for huge files
-  
 ```
 
 **В WORK_LOG — короткая ссылка:**
@@ -275,11 +293,10 @@ Use Enumerator::Lazy
 По ходу работы обновляйте:
 
 - `Solution` — как решаете
-    
-- `Files Changed` — что затронуто
-    
-- `Key Discoveries` — что узнали
 
+- `Files Changed` — что затронуто
+
+- `Key Discoveries` — что узнали
 
 **Статус:** `draft` → `in-progress`
 
@@ -290,19 +307,18 @@ Use Enumerator::Lazy
 Перед PR:
 
 - `Solution` — заполнен
-    
+
 - `Verification` — все чекбоксы отмечены
-    
+
 - `Files Changed` — актуален
-    
+
 - `Key Discoveries` — записаны
-    
+
 - `status: completed`
 
-
 ```markdown
-
 ## Verification
+
 - [x] `bundle exec rubocop` — 0 offenses
 - [x] `bundle exec rspec` — all pass
 - [x] Parse 100MB file < 5 seconds (actual: 3.2s)
@@ -321,28 +337,33 @@ status: ready-for-review
 ---
 
 ## Description
+
 Adds a streaming mode to the parser, allowing files >100MB to be parsed
 without loading everything into memory. Existing in-memory mode remains
 default
 
 ## Related Issue
+
 Fixes #123
 
 ## Changes
-| File | Change |
-|------|--------|
+
+| File                        | Change                         |
+| --------------------------- | ------------------------------ |
 | `lib/json/stream_reader.rb` | New — incremental file reading |
-| `lib/json/parser.rb` | Added streaming mode |
-| `spec/json/parser_spec.rb` | 5 new tests |
-| `benchmark/parse.rb` | New benchmark |
+| `lib/json/parser.rb`        | Added streaming mode           |
+| `spec/json/parser_spec.rb`  | 5 new tests                    |
+| `benchmark/parse.rb`        | New benchmark                  |
 
 ## Verification
+
 - [x] Build passes
 - [x] Tests pass
 - [x] Lint passes
 - [x] No unrelated changes
-      
+
 ## Notes for Reviewers
+
 The `StreamReader` uses `Enumerator::Lazy`. Pay attention to buffer
 management in `StreamReader#read_chunk`.
 ```
@@ -365,11 +386,10 @@ git push -u origin 123
 **Проверить:**
 
 - CI запустился
-    
-- Description корректный
-    
-- Reviewers назначены
 
+- Description корректный
+
+- Reviewers назначены
 
 #### Шаг 4: дождаться ревью
 
@@ -380,11 +400,10 @@ git push -u origin 123
 Если ревьюер просит изменения:
 
 - Правите код.
-    
-- Обновляете PR (тот же PR, не новый).
-    
-- Отвечаете на комментарии.
 
+- Обновляете PR (тот же PR, не новый).
+
+- Отвечаете на комментарии.
 
 **Не забывайте:** PR — итеративный. 2–3 раунда ревью — норма.
 
@@ -393,11 +412,10 @@ git push -u origin 123
 После approval:
 
 - Squash или merge — зависит от проекта.
-    
-- PR закрыт, issue закрыт автоматически (если `Fixes #N`).
-    
-- Ветка удалена.
 
+- PR закрыт, issue закрыт автоматически (если `Fixes #N`).
+
+- Ветка удалена.
 
 #### Шаг 6: архивировать
 
@@ -425,12 +443,13 @@ mv .opencode/pr/PR_123.md .opencode/archive/
 #### Шаг 7: запись в WORK_LOG
 
 ```markdown
-
 ## 2026-09-25
+
 ### Session 50 — Merged #123
-| # | What | Files | Status | Complexity |
-|---|------|-------|--------|-----------|
-| 123 | Streaming parser | 4 files | merged | medium |
+
+| #   | What             | Files   | Status | Complexity |
+| --- | ---------------- | ------- | ------ | ---------- |
+| 123 | Streaming parser | 4 files | merged | medium     |
 
 **Decision:** —
 
@@ -457,8 +476,8 @@ mv .opencode/pr/PR_123.md .opencode/archive/
 ├── archive/        (пусто)
 └── WORK_LOG.md     (пустой)
 ```
-#### Start
 
+#### Start
 
 ```text
 
@@ -471,6 +490,7 @@ mv .opencode/pr/PR_123.md .opencode/archive/
 ├── archive/        (пусто)
 └── WORK_LOG.md     ← Session 47
 ```
+
 #### During (3 сессии)
 
 ```text
@@ -485,6 +505,7 @@ mv .opencode/pr/PR_123.md .opencode/archive/
 ├── _decisions.md   ← ADR-005
 └── WORK_LOG.md     ← Session 47, 48, 49
 ```
+
 #### End
 
 ```text
@@ -511,13 +532,12 @@ mv .opencode/pr/PR_123.md .opencode/archive/
 Иногда issue растёт в процессе. Что делать:
 
 1. **Остановитесь.** Пересмотрите scope
-    
-2. **Разбейте** на несколько issues
-    
-3. **Первая issue** — минимально работающее решение
-    
-4. **Остальное** — в `_backlog.md`
 
+2. **Разбейте** на несколько issues
+
+3. **Первая issue** — минимально работающее решение
+
+4. **Остальное** — в `_backlog.md`
 
 **Не пихайте всё в один PR.** Маленькие PR быстрее ревьюятся.
 
@@ -526,49 +546,52 @@ mv .opencode/pr/PR_123.md .opencode/archive/
 Бывает. Issue устарела, или решение пришло извне. Что делать:
 
 1. **Закройте issue** с объяснением
-    
-2. **Удалите** `issue/PROJECT_SUMMARY_123.md` и `playbook/PLAYBOOK_123.md`
-    
-3. **Не архивируйте** — незачем
-    
-4. **Запишите** в WORK_LOG: «Closed #123 as obsolete»
 
+2. **Удалите** `issue/PROJECT_SUMMARY_123.md` и `playbook/PLAYBOOK_123.md`
+
+3. **Не архивируйте** — незачем
+
+4. **Запишите** в WORK_LOG: «Closed #123 as obsolete»
 
 #### PR не принимают
 
 Ревьюер против подхода. Что делать:
 
 1. **Обсудите.** Не спорьте, а поймите
-    
-2. **Возможно**, подход действительно плох
-    
-3. **Скорректируйте** или закройте PR
-    
-4. **Если PR закрыт** — обновите `_decisions.md` (ADR: почему не пошли этим путём)
 
+2. **Возможно**, подход действительно плох
+
+3. **Скорректируйте** или закройте PR
+
+4. **Если PR закрыт** — обновите `_decisions.md` (ADR: почему не пошли этим путём)
 
 **Пример ADR:**
 
 ```markdown
-
 ## ADR-006: Rejected streaming via Enumerator
+
 - **Date:** 2026-09-25
 - **Status:** rejected
 - **Issue:** #123
-  
+
 ### Context
+
 Considered Enumerator::Lazy for streaming
 
 ### Decision
+
 Rejected. Team prefers thread-based approach
 
 ### Alternatives considered
+
 - **Enumerator::Lazy** — rejected because we need parallel parsing
-  
+
 ### Consequences
+
 - **Positive:** —
 - **Negative:** implementation more complex
 ```
+
 Отклонённые решения — **тоже ADR**. Они документируют, что **не** сработало.
 
 #### Забыли про issue
@@ -580,22 +603,20 @@ Rejected. Team prefers thread-based approach
 Исключение: срочный хотфикс. Тогда:
 
 1. Создайте issue **после** фикса
-    
-2. Опишите, что сделали
-    
-3. Пометьте `hotfix`
 
+2. Опишите, что сделали
+
+3. Пометьте `hotfix`
 
 #### Работаете над несколькими issues параллельно
 
 Возможно, но осторожно:
 
 - **Одна ветка = одна issue.** Не смешивайте
-    
-- **Один WORK_LOG** — все сессии в одном файле
-    
-- **Один PROJECT_SUMMARY** на issue
 
+- **Один WORK_LOG** — все сессии в одном файле
+
+- **Один PROJECT_SUMMARY** на issue
 
 **Не создавайте один PR для двух issues.** Даже если связаны.
 
@@ -637,13 +658,13 @@ PR открыт, никто не смотрит. Назначайте ревью
 
 Что можно измерять:
 
-|Метрика|Что показывает|
-|---|---|
-|**Cycle time**|От открытия issue до merge|
-|**Review time**|От PR до approval|
-|**Sessions per issue**|Сколько сессий заняла issue|
-|**Files per issue**|Масштаб изменений|
-|**HoC**|Объём изменений (если используете)|
+| Метрика                | Что показывает                     |
+| ---------------------- | ---------------------------------- |
+| **Cycle time**         | От открытия issue до merge         |
+| **Review time**        | От PR до approval                  |
+| **Sessions per issue** | Сколько сессий заняла issue        |
+| **Files per issue**    | Масштаб изменений                  |
+| **HoC**                | Объём изменений (если используете) |
 
 **Не превращайте метрики в KPI.** Они для понимания, не для давления.
 
@@ -671,20 +692,18 @@ AGENTS.md (Issue workflow section)
 Возьмите **текущую** issue (или выберите одну из недавних). Пройдитесь по шагам:
 
 1. **Start:** создан ли PROJECT_SUMMARY? PLAYBOOK? Заполнены ли `Problem` и `Verification`?
-    
-2. **During:** ведётся ли WORK_LOG? Есть ли Decision/Problem/Next?
-    
-3. **End:** готов ли PR description? Все ли чекбоксы отмечены? Перемещены ли файлы в archive?
 
+2. **During:** ведётся ли WORK_LOG? Есть ли Decision/Problem/Next?
+
+3. **End:** готов ли PR description? Все ли чекбоксы отмечены? Перемещены ли файлы в archive?
 
 **Честно ответьте:**
 
 - Сколько сессий заняла issue? Совпадает с записями в WORK_LOG?
-    
-- Были ли решения, которые заслуживают ADR?
-    
-- Был ли PR слишком большим?
 
+- Были ли решения, которые заслуживают ADR?
+
+- Был ли PR слишком большим?
 
 **Если что-то не так** — исправьте процесс, а не только эту issue.
 
@@ -692,8 +711,8 @@ AGENTS.md (Issue workflow section)
 
 В следующей главе — **session lifecycle**. Issue — это задача. Session — это **атом времени**. Одна issue может занять несколько сессий. Session lifecycle описывает, что делать в начале и в конце каждой сессии.
 
-
 ## Chapter 12. Session lifecycle
+
 ## Глава 12. Жизненный цикл сессии
 
 ### 12.1 Что такое сессия
@@ -703,11 +722,10 @@ AGENTS.md (Issue workflow section)
 Примеры:
 
 - Утро понедельника: 2 часа работы над issue #123
-    
-- Вечер среды: 45 минут на багфикс
-    
-- Суббота: 4 часа на рефакторинг
 
+- Вечер среды: 45 минут на багфикс
+
+- Суббота: 4 часа на рефакторинг
 
 **Сессия не равна дню** Может быть две сессии в один день. Может быть одна сессия на три дня (если работаете с перерывами в рамках одного подхода).
 
@@ -722,13 +740,12 @@ AGENTS.md (Issue workflow section)
 Вы возвращаетесь к проекту через день, через неделю, через месяц. Вы **не помните**:
 
 - Где остановились
-    
-- Что решили в прошлый раз
-    
-- Почему пошли именно этим путём
-    
-- Что делать дальше
 
+- Что решили в прошлый раз
+
+- Почему пошли именно этим путём
+
+- Что делать дальше
 
 Session lifecycle — это ритуал, который **сохраняет контекст** между сессиями
 
@@ -774,10 +791,10 @@ Started with StreamReader.
 **Что вы узнаёте:**
 
 - Что делали в прошлый раз
-    
+
 - Какие решения приняли
-    
-- Что делать сейчас (секция **Next**)    
+
+- Что делать сейчас (секция **Next**)
 
 **Если Next пустой** — плохо. Значит, в прошлый раз не записали. Придётся вспоминать.
 
@@ -798,11 +815,10 @@ gh pr status
 **Типичные ситуации:**
 
 - **Незакоммиченные изменения** — что это? Забыли закоммитить? Или эксперимент?
-    
-- **Не та ветка** — переключились случайно? Переключитесь обратно.
-    
-- **CI красный** — сначала починить, потом новая работа.
 
+- **Не та ветка** — переключились случайно? Переключитесь обратно.
+
+- **CI красный** — сначала починить, потом новая работа.
 
 #### Шаг 3: перечитать Next
 
@@ -819,13 +835,12 @@ gh pr status
 В зависимости от задачи:
 
 - Работа над issue → `PROJECT_SUMMARY_<N>.md`, `PLAYBOOK_<N>.md`
-    
-- Новый код → `_codestyle.md`, `_concepts.md`, `_files.md`
-    
-- Багфикс → `_troubleshooting.md`, `_files.md`
-    
-- CI упал → `_ci.md`
 
+- Новый код → `_codestyle.md`, `_concepts.md`, `_files.md`
+
+- Багфикс → `_troubleshooting.md`, `_files.md`
+
+- CI упал → `_ci.md`
 
 **Не открывайте всё подряд** Только то, что нужно
 
@@ -848,26 +863,22 @@ gh pr status
 **Decision** — неочевидные решения.
 
 - Плохо: «Использовал `each` вместо `map`» — тривиально
-    
-- Хорошо: «Использовал `Enumerator::Lazy` вместо thread-based» — есть выбор
 
+- Хорошо: «Использовал `Enumerator::Lazy` вместо thread-based» — есть выбор
 
 **Problem** — что пошло не так и как решили
 
 - Плохо: «Ошибка в коде» — неинформативно
-    
-- Хорошо: «Buffer overflow on lines >1MB. Fixed by splitting at 1MB.» — конкретно
 
+- Хорошо: «Buffer overflow on lines >1MB. Fixed by splitting at 1MB.» — конкретно
 
 **Discovery** — что узнали нового
 
 - «Оказалось, что PostgreSQL `IN` имеет предел в 32k значений. Обойдём через `ANY(ARRAY[...])`»
 
-
 **Blocker** — что мешает продолжать
 
 - «Waiting for API key from ops. Can't test integration»
-
 
 **Next** — что делать в следующей сессии. **Обязателен.**
 
@@ -886,11 +897,10 @@ gh pr status
 **Правило:** заканчивайте сессию на **логической границе**.
 
 - Функция дописана
-    
-- Тест проходит
-    
-- Коммит сделан
 
+- Тест проходит
+
+- Коммит сделан
 
 **Не заканчивайте** на середине функции. Завтра будете 20 минут вспоминать, что хотели.
 
@@ -904,6 +914,7 @@ git add .
 git commit -m "Add StreamReader"
 
 ```
+
 Если работа **не** готова — но вы не хотите терять:
 
 ```bash
@@ -914,6 +925,7 @@ git commit -m "WIP: StreamReader in progress"
 # Или stash
 git stash push -m "StreamReader WIP"
 ```
+
 **Никогда не оставляйте незакоммиченные изменения на ночь** Завтра не вспомните, что делали
 
 #### Шаг 3: записать сессию в WORK_LOG
@@ -923,48 +935,51 @@ git stash push -m "StreamReader WIP"
 **Полная форма** (для обычной сессии):
 
 ```markdown
-
 ## 2026-09-22
+
 ### Session 48 — StreamReader done
-| # | What | Files | Status | Complexity |
-|---|------|-------|--------|-----------|
-| 123 | StreamReader | `lib/stream_reader.rb`, `spec/` | in-progress | medium |
-**Decision:** Used `Enumerator::Lazy` for chunk reading.
-**Problem:** Buffer overflow on lines >1MB. Fixed by splitting at 1MB.
-**Next:** Rewrite Parser to consume from stream.
+
+| #                                                                      | What         | Files                           | Status      | Complexity |
+| ---------------------------------------------------------------------- | ------------ | ------------------------------- | ----------- | ---------- |
+| 123                                                                    | StreamReader | `lib/stream_reader.rb`, `spec/` | in-progress | medium     |
+| **Decision:** Used `Enumerator::Lazy` for chunk reading.               |
+| **Problem:** Buffer overflow on lines >1MB. Fixed by splitting at 1MB. |
+| **Next:** Rewrite Parser to consume from stream.                       |
+
 ---
 ```
+
 **Краткая форма** (для тривиальной сессии):
 
 ```markdown
-
 ## 2026-09-22
+
 ### Session 49 — Typo fix in README
+
 Fixed typo. No code changes.
 **Next:** Continue #123.
 ---
 ```
+
 **Правила:**
 
 - **Одна сессия = один блок**
-    
-- **Номер сессии сквозной.** Session 47, 48, 49... Не сбрасывается
-    
-- **Дата ISO 8601.** `2026-09-22`, не `22/09/2026`
-    
-- **Секция Next обязательна**
 
+- **Номер сессии сквозной.** Session 47, 48, 49... Не сбрасывается
+
+- **Дата ISO 8601.** `2026-09-22`, не `22/09/2026`
+
+- **Секция Next обязательна**
 
 #### Шаг 4: обновить задачи
 
 Если что-то новое появилось — запишите в `_backlog.md`:
 
 - Идеи: «А что если...» — в секцию Ideas
-    
-- Задачи: «Надо не забыть...» — в Items
-    
-- Техдолг: «Этот код плохой, потом переделать» — в Tech debt
 
+- Задачи: «Надо не забыть...» — в Items
+
+- Техдолг: «Этот код плохой, потом переделать» — в Tech debt
 
 **Правило:** если **Next** содержит конкретную задачу — она должна быть и в backlog. WORK_LOG фиксирует факт «остановились здесь», backlog — «это надо сделать».
 
@@ -975,20 +990,18 @@ Fixed typo. No code changes.
 **Что значит «значимое»:**
 
 - Влияет на архитектуру
-    
-- Влияет на публичный API
-    
-- Влияет на процесс
 
+- Влияет на публичный API
+
+- Влияет на процесс
 
 **Что НЕ значит:**
 
 - «Использовал `each` вместо `map`»
-    
-- «Переименовал метод»
-    
-- «Добавил тест»
 
+- «Переименовал метод»
+
+- «Добавил тест»
 
 **Связь:** в WORK_LOG — короткая ссылка: «Decision: Used Enumerator. See ADR-005.»
 
@@ -1001,9 +1014,10 @@ Fixed typo. No code changes.
 #### Session 47 (Start)
 
 ```markdown
-
 ## 2026-09-21
+
 ### Session 47 — Start #123
+
 Created `issue/PROJECT_SUMMARY_123.md` and `playbook/PLAYBOOK_123.md`.
 Read `_concepts.md` — understood parser architecture.
 **Decision:** Streaming via Enumerator, not thread-based.
@@ -1011,44 +1025,53 @@ Read `_concepts.md` — understood parser architecture.
 **Next:** Finish StreamReader, then rewrite Parser.
 ---
 ```
+
 #### Session 48 (During)
 
 ```markdown
-
 ## 2026-09-22
+
 ### Session 48 — StreamReader done
-| # | What | Files | Status | Complexity |
-|---|------|-------|--------|-----------|
-| 123 | StreamReader | `lib/stream_reader.rb`, `spec/stream_reader_spec.rb` | in-progress | medium |
-**Decision:** Used `Enumerator::Lazy` for chunk reading.
-**Problem:** Buffer overflow on lines >1MB. Fixed by splitting at 1MB.
-**Next:** Rewrite Parser to consume from stream.
+
+| #                                                                      | What         | Files                                                | Status      | Complexity |
+| ---------------------------------------------------------------------- | ------------ | ---------------------------------------------------- | ----------- | ---------- |
+| 123                                                                    | StreamReader | `lib/stream_reader.rb`, `spec/stream_reader_spec.rb` | in-progress | medium     |
+| **Decision:** Used `Enumerator::Lazy` for chunk reading.               |
+| **Problem:** Buffer overflow on lines >1MB. Fixed by splitting at 1MB. |
+| **Next:** Rewrite Parser to consume from stream.                       |
+
 ---
 ```
+
 #### Session 49 (During, короткая)
 
 ```markdown
-
 ## 2026-09-23
+
 ### Session 49 — Parser rewrite started
+
 Started rewriting `Parser#parse` to accept stream. Not finished yet.
 **Next:** Finish Parser rewrite, run tests.
 ---
 ```
+
 #### Session 50 (End)
 
 ```markdown
-
 ## 2026-09-25
+
 ### Session 50 — Merged #123
-| # | What | Files | Status | Complexity |
-|---|------|-------|--------|-----------|
-| 123 | Streaming parser | 4 files | merged | medium |
-**Decision:** —
-**Problem:** —
-**Next:** Move to #124 (caching).
+
+| #                                 | What             | Files   | Status | Complexity |
+| --------------------------------- | ---------------- | ------- | ------ | ---------- |
+| 123                               | Streaming parser | 4 files | merged | medium     |
+| **Decision:** —                   |
+| **Problem:** —                    |
+| **Next:** Move to #124 (caching). |
+
 ---
 ```
+
 **Четыре сессии, одна issue.** Каждая запись — 5–15 строк. В сумме — 40 строк на всю issue. Через полгода вы прочитаете их за 2 минуты и вспомните всё.
 
 ### 12.8 Что если...
@@ -1060,21 +1083,22 @@ Started rewriting `Parser#parse` to accept stream. Not finished yet.
 **Записывать ли?** Зависит
 
 - **Не записывать:** если это часть другой работы (например, ответ на ревью в рамках issue #123)
-    
-- **Записать кратко:** если это отдельное действие, которое не вписывается в контекст
 
+- **Записать кратко:** если это отдельное действие, которое не вписывается в контекст
 
 **Пример краткой записи:**
 
 ```markdown
-
 ## 2026-09-23
+
 ### Session 49 — Reply to review on #123
+
 Addressed reviewer comments: renamed `read_chunk` to `read_chunks`,
 added test for edge case.
 **Next:** Wait for re-review.
 ---
 ```
+
 5 строк. Не таблица, не Decision/Problem. Просто факт.
 
 #### Сессия прервана
@@ -1082,25 +1106,26 @@ added test for edge case.
 Телефонный звонок, срочное дело, отключили электричество. Что делать:
 
 1. **Не паниковать.** WORK_LOG можно записать позже
-    
-2. **Если возможно** — закоммитить WIP
-    
-3. **Когда вернётесь** — восстановите контекст по git status / git log / open files
-    
-4. **Запишите** в WORK_LOG, что сессия была прервана. Это тоже информация.
 
+2. **Если возможно** — закоммитить WIP
+
+3. **Когда вернётесь** — восстановите контекст по git status / git log / open files
+
+4. **Запишите** в WORK_LOG, что сессия была прервана. Это тоже информация.
 
 **Пример:**
 
 ```markdown
-
 ## 2026-09-22
+
 ### Session 48 — Interrupted
+
 Started StreamReader. Session interrupted at 14:30 — no commit.
 See `git status` for current state.
 **Next:** Resume StreamReader.
 ---
 ```
+
 #### Забыли записать сессию
 
 Бывает. Вы работали вчера, а сегодня понимаете: «Я не записал WORK_LOG».
@@ -1108,22 +1133,24 @@ See `git status` for current state.
 **Что делать:**
 
 1. **Вспомните**, что делали. Используйте `git log`, `git reflog`, файлы
-    
+
 2. **Запишите** с пометкой: `(recorded late)`
-    
-3. **Впредь** — записывайте в конце сессии, пока помните    
+
+3. **Впредь** — записывайте в конце сессии, пока помните
 
 **Пример:**
 
 ```markdown
-
 ## 2026-09-22
+
 ### Session 48 — StreamReader (recorded late)
+
 Created `StreamReader` with `Enumerator::Lazy`. Added 5 tests.
 **Decision:** Enumerator::Lazy for chunks.
 **Next:** Parser rewrite.
 ---
 ```
+
 Пометка «recorded late» — честно. Не скрывайте, что запись сделана задним числом.
 
 #### Несколько issues в одной сессии
@@ -1131,25 +1158,27 @@ Created `StreamReader` with `Enumerator::Lazy`. Added 5 tests.
 Возможно, но **осторожно**
 
 - **Основная issue** — та, над которой работаете
-    
-- **Побочная** — мелкая (ответ на ревью, хотфикс)
 
+- **Побочная** — мелкая (ответ на ревью, хотфикс)
 
 **В WORK_LOG:**
 
 ```markdown
-
 ## 2026-09-22
+
 ### Session 48 — #123 + hotfix #999
-| # | What | Files | Status | Complexity |
-|---|------|-------|--------|-----------|
-| 123 | StreamReader | `lib/stream_reader.rb` | in-progress | medium |
-| 999 | Fix typo in help | `lib/cli.rb` | merged | low |
-**Decision:** —
-**Problem:** —
-**Next:** Continue #123.
+
+| #                        | What             | Files                  | Status      | Complexity |
+| ------------------------ | ---------------- | ---------------------- | ----------- | ---------- |
+| 123                      | StreamReader     | `lib/stream_reader.rb` | in-progress | medium     |
+| 999                      | Fix typo in help | `lib/cli.rb`           | merged      | low        |
+| **Decision:** —          |
+| **Problem:** —           |
+| **Next:** Continue #123. |
+
 ---
 ```
+
 Две строки в таблице — две issues.
 
 **Не злоупотребляйте.** Если issues много — это уже не одна сессия, а несколько.
@@ -1161,18 +1190,18 @@ Created `StreamReader` with `Enumerator::Lazy`. Added 5 tests.
 **Что делать:**
 
 - **Записать в WORK_LOG** как обычно
-    
-- **Статус:** `research` или `exploration`
-    
-- **Не создавать** PROJECT_SUMMARY — это не работа над issue
 
+- **Статус:** `research` или `exploration`
+
+- **Не создавать** PROJECT_SUMMARY — это не работа над issue
 
 **Пример:**
 
 ```markdown
-
 ## 2026-09-22
+
 ### Session 48 — Research: streaming libraries
+
 Explored 3 Ruby streaming libraries: `Enumerator::Lazy`, `IO#each_line`,
 `StringIO`. Compared performance on 10MB file.
 **Decision:** Enumerator::Lazy — fastest, simplest.
@@ -1237,6 +1266,7 @@ _worklog.md     _backlog.md    _decisions.md
          _codestyle.md   (что читать при работе)
          _ci.md          (если CI упал в сессии)
 ```
+
 **WORK_LOG — центральный узел.** Через него проходят все сессии, все issues.
 
 ### 12.11 Упражнение
@@ -1246,26 +1276,24 @@ _worklog.md     _backlog.md    _decisions.md
 Откройте ваш `WORK_LOG.md` (если есть). Ответьте:
 
 1. **Сколько сессий записано?** Совпадает с реальностью?
-    
-2. **Есть ли секция Next в каждой?** Если нет — как вы восстанавливаете контекст?
-    
-3. **Есть ли Decision?** Или только «сделал X»?
-    
-4. **Есть ли Problem?** Или «всё было хорошо»?
-    
-5. **Записи в правильном порядке** (newest first)?
 
+2. **Есть ли секция Next в каждой?** Если нет — как вы восстанавливаете контекст?
+
+3. **Есть ли Decision?** Или только «сделал X»?
+
+4. **Есть ли Problem?** Или «всё было хорошо»?
+
+5. **Записи в правильном порядке** (newest first)?
 
 **Часть 2: практика**
 
 Следующая сессия — сделайте ритуал:
 
 1. **Start:** прочитайте последнюю запись. Что в Next?
-    
-2. **During:** держите WORK_LOG мысленно открытым. Что стоит записать?
-    
-3. **End:** запишите. 5–15 строк. С Next.
 
+2. **During:** держите WORK_LOG мысленно открытым. Что стоит записать?
+
+3. **End:** запишите. 5–15 строк. С Next.
 
 Повторите 5 сессий. Через неделю посмотрите на WORK_LOG — стало ли проще возвращаться к проекту?
 
@@ -1281,23 +1309,22 @@ _worklog.md     _backlog.md    _decisions.md
 
 Что можно измерять:
 
-|Метрика|Что показывает|
-|---|---|
-|**Sessions per week**|Активность|
-|**Average session length**|Как долго работаете без перерыва|
-|**Sessions per issue**|Насколько issue крупная|
-|**Gap between sessions**|Как часто возвращаетесь к проекту|
+| Метрика                    | Что показывает                    |
+| -------------------------- | --------------------------------- |
+| **Sessions per week**      | Активность                        |
+| **Average session length** | Как долго работаете без перерыва  |
+| **Sessions per issue**     | Насколько issue крупная           |
+| **Gap between sessions**   | Как часто возвращаетесь к проекту |
 
 **Не превращайте в KPI.** Это для самопонимания.
 
 **Что полезно знать:**
 
 - Если sessions per issue > 10 — issue слишком крупная. Разбивайте.
-    
-- Если gap между сессиями > 7 дней — проект «остывает». Плохой знак.
-    
-- Если average session length < 30 минут — вас что-то отвлекает.
 
+- Если gap между сессиями > 7 дней — проект «остывает». Плохой знак.
+
+- Если average session length < 30 минут — вас что-то отвлекает.
 
 ### 12.13 Связь с issue lifecycle
 
@@ -1322,6 +1349,7 @@ Sessions:    S47  S48  S49  S50  S51  S52
 В следующей главе — **When CI fails**. Это отдельный workflow: CI упал, надо диагностировать и починить.
 
 ## Chapter 13. When CI fails
+
 ## Глава 13. Что делать если CI упал?
 
 ### 13.1 Что это за workflow
@@ -1343,11 +1371,10 @@ Sessions:    S47  S48  S49  S50  S51  S52
 CI упал по причине, которую видно сразу:
 
 - Lint: 3 offenses
-    
-- Опечатка в тесте
-    
-- Забыли добавить файл
 
+- Опечатка в тесте
+
+- Забыли добавить файл
 
 **Что делать:** исправить, запушить, дождаться зелёного CI
 
@@ -1358,11 +1385,10 @@ CI упал по причине, которую видно сразу:
 CI упал, но причина не сразу ясна. Нужна диагностика:
 
 - Тест флакует (падает через раз)
-    
-- Timeout на одном job
-    
-- Версия зависимости изменилась
 
+- Timeout на одном job
+
+- Версия зависимости изменилась
 
 **Что делать:** открыть `_ci.md`, найти в Common failures, воспроизвести локально, исправить.
 
@@ -1373,11 +1399,10 @@ CI упал, но причина не сразу ясна. Нужна диагн
 CI упал, но **непонятно почему**:
 
 - Локально всё работает
-    
-- В логах нет явной ошибки
-    
-- Проблема воспроизводится через раз
 
+- В логах нет явной ошибки
+
+- Проблема воспроизводится через раз
 
 **Что делать:** систематическая диагностика. См. секцию 13.6.
 
@@ -1426,30 +1451,28 @@ CI red
 **Что там:**
 
 - Таблица `Workflows` — какие workflow'ы есть, что проверяют, как воспроизвести локально
-    
-- Таблица `Common failures` — типичные ошибки с причинами и фиксами
-    
-- Секция `Local reproduction` — как запустить CI локально
-    
-- Секция `When CI passes locally but fails remotely` — пять проверок
 
+- Таблица `Common failures` — типичные ошибки с причинами и фиксами
+
+- Секция `Local reproduction` — как запустить CI локально
+
+- Секция `When CI passes locally but fails remotely` — пять проверок
 
 **Почему это первое действие:**
 
 - Если ошибка уже в `Common failures` — вы найдёте fix за 30 секунд
-    
-- Если нет — узнаете, как воспроизвести локально
-    
-- Если `_ci.md` устарел — это тоже сигнал: обновить его после решения
 
+- Если нет — узнаете, как воспроизвести локально
+
+- Если `_ci.md` устарел — это тоже сигнал: обновить его после решения
 
 **Пример:**
 
 CI упал с `Lint: 3 offenses`. Открываете `_ci.md`, ищете в Common failures:
 
-|Failure|Likely cause|Fix|
-|---|---|---|
-|`Lint: 3 offenses`|Style violations|`bundle exec rubocop -a`|
+| Failure            | Likely cause     | Fix                      |
+| ------------------ | ---------------- | ------------------------ |
+| `Lint: 3 offenses` | Style violations | `bundle exec rubocop -a` |
 
 **Готово.** Запускаете `bundle exec rubocop -a`, коммитите, пушите.
 
@@ -1466,25 +1489,22 @@ CI упал с `Lint: 3 offenses`. Открываете `_ci.md`, ищете �
 **Что смотреть:**
 
 - **Какой workflow** упал. `test.yml`? `lint.yml`? `deploy-staging.yml`?
-    
-- **Какой job** упал. Один? Несколько? Все?
-    
-- **Какой шаг** упал. Установка зависимостей? Тесты? Сборка?
 
+- **Какой job** упал. Один? Несколько? Все?
+
+- **Какой шаг** упал. Установка зависимостей? Тесты? Сборка?
 
 **Если упало всё сразу:**
 
 - Скорее всего, проблема общая: версия Ruby, сеть, кэш
-    
-- Проверьте установку зависимостей — часто там
 
+- Проверьте установку зависимостей — часто там
 
 **Если упал один job:**
 
 - Проблема локальная для этого job'а
-    
-- Смотрите логи именно этого job'а
 
+- Смотрите логи именно этого job'а
 
 #### Прочитать логи
 
@@ -1493,24 +1513,22 @@ CI упал с `Lint: 3 offenses`. Открываете `_ci.md`, ищете �
 **Что искать:**
 
 - **`Error`**, **`Failure`**, **`Exception`** — явные ошибки
-    
-- **`Expected X, got Y`** — несоответствие
-    
-- **`Timeout`** — превышение лимита
-    
-- **`undefined method`**, **`NameError`** — ошибки кода
-    
-- **`Cannot find`**, **`No such file`** — отсутствующие зависимости
 
+- **`Expected X, got Y`** — несоответствие
+
+- **`Timeout`** — превышение лимита
+
+- **`undefined method`**, **`NameError`** — ошибки кода
+
+- **`Cannot find`**, **`No such file`** — отсутствующие зависимости
 
 **Что НЕ искать:**
 
 - Warning'и, если они не критичны
-    
-- Info-сообщения
-    
-- «Успешные» логи перед ошибкой
 
+- Info-сообщения
+
+- «Успешные» логи перед ошибкой
 
 **Пример:**
 
@@ -1525,6 +1543,7 @@ Failures:
        undefined method `read_chunks' for #<StreamReader>
      # ./lib/parser.rb:42:in `parse'
 ```
+
 **Что видно:** `StreamReader` не имеет метода `read_chunks`. Кто-то переименовал метод, но не обновил вызов в `Parser#parse`.
 
 #### Найти в Common failures
@@ -1542,12 +1561,12 @@ Failures:
 ```bash
 bundle exec rspec
 ```
+
 **Результат:**
 
 - **Упало так же** → воспроизвели. Диагностика упрощается
-    
-- **Прошло** → не воспроизвели. См. секцию 13.6
 
+- **Прошло** → не воспроизвели. См. секцию 13.6
 
 ### 13.6 Когда локально работает, а CI — нет
 
@@ -1562,9 +1581,8 @@ bundle exec rspec
 **Как проверить:**
 
 - Локально: `ruby --version`, `node --version`
-    
-- В CI: посмотрите YAML workflow, шаг «Setup Ruby» или «Setup Node»
 
+- В CI: посмотрите YAML workflow, шаг «Setup Ruby» или «Setup Node»
 
 **Часто источник:** `.ruby-version`, `.tool-versions`, `.nvmrc` — но CI не читает эти файлы, если явно не указано.
 
@@ -1577,9 +1595,8 @@ bundle exec rspec
 **Как проверить:**
 
 - В workflow: секция `env:`, `secrets:`
-    
-- Локально: `printenv | sort`
 
+- Локально: `printenv | sort`
 
 **Часто источник:** тесты зависят от `DATABASE_URL`, `API_KEY`, которых нет локально.
 
@@ -1592,9 +1609,8 @@ bundle exec rspec
 **Как проверить:**
 
 - В workflow: `parallel:`, `matrix:`.
-    
-- Посмотрите на shared state в тестах: БД, файлы, time.
 
+- Посмотрите на shared state в тестах: БД, файлы, time.
 
 **Часто источник:** тесты, которые не изолированы.
 
@@ -1607,18 +1623,17 @@ bundle exec rspec
 **Как проверить:**
 
 - В workflow: `actions/cache` или аналог.
-    
-- Посмотрите, что именно кэшируется.
 
+- Посмотрите, что именно кэшируется.
 
 **Fix:** очистить кэш в настройках CI. Или добавить версию в ключ кэша:
 
 ```yaml
-
 - uses: actions/cache@v4
   with:
     key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile.lock') }}
 ```
+
 **Обратите внимание на `hashFiles`** — ключ меняется при изменении lock-файла.
 
 #### Проверка 5: debug logging
@@ -1630,10 +1645,10 @@ bundle exec rspec
 Для GitHub Actions:
 
 ```yaml
-
 - name: Enable debug logging
   run: echo "ACTIONS_STEP_DEBUG=true" >> $GITHUB_ENV
 ```
+
 Или через secrets: `ACTIONS_STEP_DEBUG=true`.
 
 **После включения:** перезапустите job. Логи станут подробнее.
@@ -1644,7 +1659,6 @@ bundle exec rspec
 
 #### Тип 1: lint
 
-
 ```text
 Lint: 3 offenses
 ```
@@ -1654,6 +1668,7 @@ Lint: 3 offenses
 **Fix:** `bundle exec rubocop -a` (или `--autocorrect`)
 
 **Профилактика:** настройте pre-commit hook с lint
+
 #### Тип 2: flaky tests
 
 ```text
@@ -1665,16 +1680,16 @@ Parser handles edge case — failed
 **Fix:**
 
 1. **Воспроизведите** локально, запустив тест в цикле:
-    
-    ```bash    
-    for i in {1..50}; do bundle exec rspec spec/parser_spec.rb || break; done
-    ```
-    
+
+   ```bash
+   for i in {1..50}; do bundle exec rspec spec/parser_spec.rb || break; done
+   ```
+
 1. **Найдите** источник нестабильности
-    
-2. **Изолируйте** тест
-    
-3. **Если не получается** — пометьте `skip` или `pending` и создайте issue
+
+1. **Изолируйте** тест
+
+1. **Если не получается** — пометьте `skip` или `pending` и создайте issue
 
 **См. также:** `_backlog.md`, секция Tech debt.
 
@@ -1689,11 +1704,11 @@ Timeout: job exceeded 60 minutes
 **Fix:**
 
 - **Увеличить лимит** — если тест легитимно долгий
-    
+
 - **Найти медленный тест** — профайлер (`rspec --profile`)
-    
+
 - **Параллелизовать** — если тестов много
-    
+
 - **Пропустить** — если тест долгий и не критичный
 
 #### Тип 4: зависимости
@@ -1712,6 +1727,7 @@ git add Gemfile.lock
 git commit -m "Update Gemfile.lock"
 git push
 ```
+
 **Профилактика:** всегда коммитьте lock-файл.
 
 #### Тип 5: environment
@@ -1725,13 +1741,13 @@ Error: DATABASE_URL is not set
 **Fix:**
 
 - Добавить в workflow:
-    
-    ```yaml
-    env:
-      DATABASE_URL: ${{ secrets.DATABASE_URL }}
-    ```
+
+  ```yaml
+  env:
+    DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  ```
+
 - Или настроить secrets в настройках репозитория
-    
 
 ### 13.8 После фикса
 
@@ -1745,9 +1761,9 @@ Error: DATABASE_URL is not set
 
 **Формат:**
 
-|Failure|Likely cause|Fix|
-|---|---|---|
-|`NoMethodError: read_chunks`|Renamed method, call not updated|`grep -r read_chunks`|
+| Failure                      | Likely cause                     | Fix                   |
+| ---------------------------- | -------------------------------- | --------------------- |
+| `NoMethodError: read_chunks` | Renamed method, call not updated | `grep -r read_chunks` |
 
 **Почему:** через полгода та же ошибка может повториться. `_ci.md` сэкономит время.
 
@@ -1756,17 +1772,20 @@ Error: DATABASE_URL is not set
 Стандартная запись сессии:
 
 ```markdown
-
 ## 2026-09-22
+
 ### Session 48 — Fix CI on #123
-| # | What | Files | Status | Complexity |
-|---|------|-------|--------|-----------|
-| 123 | Fix CI: renamed method call | `lib/parser.rb` | in-progress | low |
-**Problem:** CI failed with `NoMethodError: read_chunks`. Forgot to
-update `Parser#parse` after renaming `StreamReader#read_chunks`.
-**Next:** Continue with #123.
+
+| #                                                                   | What                        | Files           | Status      | Complexity |
+| ------------------------------------------------------------------- | --------------------------- | --------------- | ----------- | ---------- |
+| 123                                                                 | Fix CI: renamed method call | `lib/parser.rb` | in-progress | low        |
+| **Problem:** CI failed with `NoMethodError: read_chunks`. Forgot to |
+| update `Parser#parse` after renaming `StreamReader#read_chunks`.    |
+| **Next:** Continue with #123.                                       |
+
 ---
 ```
+
 **Problem** здесь — главная секция. Что произошло, как нашли, как починили.
 
 #### Действие 3: профилактика (если возможно)
@@ -1774,19 +1793,19 @@ update `Parser#parse` after renaming `StreamReader#read_chunks`.
 **Что можно сделать**, чтобы проблема не повторилась:
 
 - **Pre-commit hook** — если это lint
-    
-- **CI-проверка** — если это забытый lock-файл
-    
-- **Рефакторинг** — если это хрупкий тест
-    
-- **Update workflow** — если это версия зависимости
 
+- **CI-проверка** — если это забытый lock-файл
+
+- **Рефакторинг** — если это хрупкий тест
+
+- **Update workflow** — если это версия зависимости
 
 **Задача в `_backlog.md`:**
 
 ```text
 | B-042 | P2 | Add pre-commit hook for lint | — | — | Read pre-commit docs |
 ```
+
 **Не всё требует профилактики.** Иногда это разовый случай. Но если проблема повторяется — профилактика обязательна.
 
 ### 13.9 Худший случай: CI сломан, а прод — нет
@@ -1794,22 +1813,20 @@ update `Parser#parse` after renaming `StreamReader#read_chunks`.
 Иногда CI падает по причинам, не связанным с вашим кодом:
 
 - GitHub Actions лежит
-    
-- Runner сломался
-    
-- Квота исчерпана
 
+- Runner сломался
+
+- Квота исчерпана
 
 **Что делать:**
 
 1. **Проверьте статус CI-платформы** [githubstatus.com](https://www.githubstatus.com/) — для GitHub.
-    
-2. **Если проблема на стороне платформы** — подождите. Ничего не сделаете.
-    
-3. **Если это runner** — перезапустите job
-    
-4. **Если квота** — свяжитесь с админом или перейдите на платный план
 
+2. **Если проблема на стороне платформы** — подождите. Ничего не сделаете.
+
+3. **Если это runner** — перезапустите job
+
+4. **Если квота** — свяжитесь с админом или перейдите на платный план
 
 **Не паникуйте.** CI красный, но не из-за вашего кода — не ваша проблема.
 
@@ -1820,13 +1837,12 @@ update `Parser#parse` after renaming `StreamReader#read_chunks`.
 **Что делать:**
 
 1. **Проверьте историю CI** — на GitHub: Actions → All workflows. Найдите последний зелёный коммит на master.
-    
-2. **Если master тоже красный** — проблема не в вашем PR. Возможно, это known issue.
-    
-3. **Проверьте issues** — может быть открыт issue про сломанный CI
-    
-4. **Если нужно** — создайте issue
 
+2. **Если master тоже красный** — проблема не в вашем PR. Возможно, это known issue.
+
+3. **Проверьте issues** — может быть открыт issue про сломанный CI
+
+4. **Если нужно** — создайте issue
 
 **Не пытайтесь починить CI всего проекта в рамках своего PR.** Это отдельная работа.
 
@@ -1879,6 +1895,7 @@ _commands.md   _codestyle.md   _troubleshooting.md
          _backlog.md    (профилактика)
          runbooks/      (если CI деплоит в prod и там инцидент)
 ```
+
 **`_ci.md` — центральный файл.** Он открывается первым и обновляется последним.
 
 ### 13.13 Упражнение
@@ -1888,39 +1905,36 @@ _commands.md   _codestyle.md   _troubleshooting.md
 Вспомните последний раз, когда CI упал на вашем PR. Ответьте:
 
 1. **Сколько времени** заняла диагностика? 5 минут? Час? Три?
-    
-2. **Открывали ли вы `_ci.md`?** Если нет — почему?
-    
-3. **Была ли эта ошибка в Common failures?** Если да — сэкономили время? Если нет — записали после?
-    
-4. **Могли бы вы предотвратить** это падение? Pre-commit hook? Локальный запуск?
 
+2. **Открывали ли вы `_ci.md`?** Если нет — почему?
+
+3. **Была ли эта ошибка в Common failures?** Если да — сэкономили время? Если нет — записали после?
+
+4. **Могли бы вы предотвратить** это падение? Pre-commit hook? Локальный запуск?
 
 **Часть 2: обновление `_ci.md`**
 
 Откройте ваш `_ci.md`. Ответьте:
 
 1. **Все ли workflow'ы** перечислены? Сверьте с `.github/workflows/`
-    
-2. **У каждого ли workflow есть `Reproduce locally`?**
-    
-3. **Сколько строк в Common failures?** Если меньше 3 — допишите те, что помните
-    
-4. **Проверьте ссылку** на платформу и workflow-файлы
 
+2. **У каждого ли workflow есть `Reproduce locally`?**
+
+3. **Сколько строк в Common failures?** Если меньше 3 — допишите те, что помните
+
+4. **Проверьте ссылку** на платформу и workflow-файлы
 
 **Часть 3: профилактика.**
 
 Возьмите **одну** частую CI-ошибку из вашей практики. Что можно сделать, чтобы она не повторялась?
 
 - **Pre-commit hook** — для lint, форматирования
-    
-- **Dependabot** — для устаревших зависимостей
-    
-- **CI-проверка** — для забытых lock-файлов
-    
-- **Фикс flaky теста** — если он стабильно нестабильный
 
+- **Dependabot** — для устаревших зависимостей
+
+- **CI-проверка** — для забытых lock-файлов
+
+- **Фикс flaky теста** — если он стабильно нестабильный
 
 Создайте задачу в `_backlog.md`, если это не быстро.
 
@@ -1928,25 +1942,25 @@ _commands.md   _codestyle.md   _troubleshooting.md
 
 Что можно измерять:
 
-|Метрика|Что показывает|
-|---|---|
-|**CI failure rate**|Как часто CI падает|
-|**Time to fix**|От красного до зелёного|
-|**Flaky rate**|Процент flaky падений|
-|**Common failures count**|Размер таблицы|
+| Метрика                   | Что показывает          |
+| ------------------------- | ----------------------- |
+| **CI failure rate**       | Как часто CI падает     |
+| **Time to fix**           | От красного до зелёного |
+| **Flaky rate**            | Процент flaky падений   |
+| **Common failures count** | Размер таблицы          |
 
 **Что полезно знать:**
 
 - **CI failure rate > 20%** — что-то не так. Много flaky или плохие проверки.
-    
+
 - **Time to fix > 1 час** — `_ci.md` плохо работает.
-    
+
 - **Flaky rate > 5%** — серьёзная проблема.
-    
 
 **Не превращайте в KPI** Это для понимания.
 
 ## Chapter 14. Incident in prod
+
 ## Глава 14. Инциденты в продакшене
 
 ### 14.1 Что такое инцидент
@@ -1956,32 +1970,30 @@ _commands.md   _codestyle.md   _troubleshooting.md
 Примеры:
 
 - Прод-сервер не отвечает
-    
-- Оплата не проходит
-    
-- Данные повреждены
-    
-- API отвечает с ошибками
 
+- Оплата не проходит
+
+- Данные повреждены
+
+- API отвечает с ошибками
 
 **Ключевое отличие от других проблем:** инцидент влияет на **пользователей**, а не только на разработчиков.
 
-|Проблема|Кто страдает|Срочность|
-|---|---|---|
-|Локально не работает|Разработчик|P3|
-|CI упал|Разработчик|P2–P3|
-|**Инцидент в prod**|**Пользователи**|**P0–P1**|
+| Проблема             | Кто страдает     | Срочность |
+| -------------------- | ---------------- | --------- |
+| Локально не работает | Разработчик      | P3        |
+| CI упал              | Разработчик      | P2–P3     |
+| **Инцидент в prod**  | **Пользователи** | **P0–P1** |
 
 **Что меняется при инциденте:**
 
 - **Срочность.** Каждая минута = потерянные деньги / пользователи
-    
-- **Давление.** Вы работаете **под стрессом**
-    
-- **Аудитория.** Не только вы, но и вся команда
-    
-- **Цена ошибки.** Ошибка в проде = ещё больше проблем
 
+- **Давление.** Вы работаете **под стрессом**
+
+- **Аудитория.** Не только вы, но и вся команда
+
+- **Цена ошибки.** Ошибка в проде = ещё больше проблем
 
 ### 14.2 Три фазы инцидента
 
@@ -1993,6 +2005,7 @@ _commands.md   _codestyle.md   _troubleshooting.md
    Алерт сработал    Runbook → Fix        Разбор → ADR
                      эскалация            → backlog
 ```
+
 **Detection:** как узнали об инциденте. Обычно — алерт или жалоба пользователей.
 
 **Response:** что делаем. Runbook — центральный инструмент.
@@ -2026,20 +2039,19 @@ _commands.md   _codestyle.md   _troubleshooting.md
 **Первое действие — оценить серьёзность.** Три вопроса:
 
 1. **Сколько пользователей затронуто?** Все? Часть? Один?
-    
-2. **Что именно не работает?** Полный простой? Частичная деградация?
-    
-3. **Есть ли обходной путь?** Могут ли пользователи обойти проблему?
 
+2. **Что именно не работает?** Полный простой? Частичная деградация?
+
+3. **Есть ли обходной путь?** Могут ли пользователи обойти проблему?
 
 **На основе ответов — определить severity:**
 
-|Severity|Что|Пример|
-|---|---|---|
-|**P0**|Полный простой, все пользователи|Сайт не открывается|
-|**P1**|Частичная деградация, критично|Оплата не проходит|
-|**P2**|Деградация, не критично|Медленная загрузка отчётов|
-|**P3**|Минорная проблема|Мелкий визуальный баг|
+| Severity | Что                              | Пример                     |
+| -------- | -------------------------------- | -------------------------- |
+| **P0**   | Полный простой, все пользователи | Сайт не открывается        |
+| **P1**   | Частичная деградация, критично   | Оплата не проходит         |
+| **P2**   | Деградация, не критично          | Медленная загрузка отчётов |
+| **P3**   | Минорная проблема                | Мелкий визуальный баг      |
 
 **P0 и P1 — немедленное реагирование.** P2 — в рабочее время. P3 — обычный backlog.
 
@@ -2048,9 +2060,9 @@ _commands.md   _codestyle.md   _troubleshooting.md
 При P0:
 
 - **Канал `#incidents`** (или аналог) — «Starting incident response. Alert X, severity P0.»
-    
+
 - **On-call lead** — звонок или mention
-    
+
 - **Команда** — не обязательно всех, но тех, кто может помочь
 
 **Принцип:** лучше переуведомить, чем недоуведомить. Лишние люди отпишутся; отсутствие нужного — потеря времени.
@@ -2070,13 +2082,14 @@ runbooks/
 ├── rollback-release.md
 └── rotate-api-key.md
 ```
+
 **Что ищем:** подходящий runbook по симптому.
 
-|Симптом|Runbook|
-|---|---|
-|БД не отвечает|`db-failover.md`|
-|Последний релиз что-то сломал|`rollback-release.md`|
-|Утёк API-ключ|`rotate-api-key.md`|
+| Симптом                       | Runbook               |
+| ----------------------------- | --------------------- |
+| БД не отвечает                | `db-failover.md`      |
+| Последний релиз что-то сломал | `rollback-release.md` |
+| Утёк API-ключ                 | `rotate-api-key.md`   |
 
 **Если подходящего runbook'а нет** — см. секцию 14.8.
 
@@ -2087,11 +2100,10 @@ runbooks/
 **Читаем Prerequisites** — что нужно до начала:
 
 - Access: VPN, SSH, credentials
-    
-- Tools: `psql`, `kubectl`, `aws-cli`
-    
-- People to notify: кого предупредить перед началом
 
+- Tools: `psql`, `kubectl`, `aws-cli`
+
+- People to notify: кого предупредить перед началом
 
 **Если чего-то нет** — либо получаем, либо эскалируем.
 
@@ -2120,13 +2132,12 @@ runbooks/
 **Что сообщить:**
 
 - Какой инцидент
-    
-- Что попробовали (по runbook'у)
-    
-- Какие результаты
-    
-- Что нужно
 
+- Что попробовали (по runbook'у)
+
+- Какие результаты
+
+- Что нужно
 
 **Не «ничего не работает, помогите»** — конкретика.
 
@@ -2143,13 +2154,12 @@ runbooks/
 **Что собирать:**
 
 - Логи приложения
-    
-- Метрики (Grafana, Datadog screenshots)
-    
-- Вывод команд
-    
-- Таймлайн событий
 
+- Метрики (Grafana, Datadog screenshots)
+
+- Вывод команд
+
+- Таймлайн событий
 
 **Куда:** временный файл или канал `#incidents`.
 
@@ -2162,15 +2172,17 @@ runbooks/
 **Краткая запись:**
 
 ```markdown
-
 ## 2026-09-22
+
 ### Session 48 — P0 incident: DB failover
+
 Alert `PostgresReplicationLag > 60s`. Followed `db-failover.md`.
 Failover completed at 15:30. Service restored.
 **Problem:** Replica lag grew to 5 min due to slow query.
 **Next:** Post-incident review.
 ---
 ```
+
 **Не полный формат** — инцидент ещё не закончен. Полная запись — после post-incident.
 
 ### 14.5 Verification
@@ -2180,25 +2192,24 @@ Failover completed at 15:30. Service restored.
 **Стандартные проверки:**
 
 - □  
-    
-    Алерт исчез в мониторинге
-    
+
+  Алерт исчез в мониторинге
+
 - □  
-    
-    Метрика вернулась в норму
-    
+
+  Метрика вернулась в норму
+
 - □  
-    
-    Приложение отвечает 200
-    
+
+  Приложение отвечает 200
+
 - □  
-    
-    Логи не показывают ошибок
-    
+
+  Логи не показывают ошибок
+
 - □  
-    
-    Ключевая функциональность работает
-    
+
+  Ключевая функциональность работает
 
 **Для каждого инцидента — свои проверки.** Они в runbook'е, секция Verification.
 
@@ -2226,24 +2237,22 @@ Failover completed at 15:30. Service restored.
 **Что обсуждаем:**
 
 - Что произошло (timeline)
-    
-- Почему произошло (root cause)
-    
-- Что сработало хорошо
-    
-- Что можно улучшить
 
+- Почему произошло (root cause)
+
+- Что сработало хорошо
+
+- Что можно улучшить
 
 **Формат:** не «кто виноват», а «как улучшить». Это **blameless post-mortem**.
 
 **Артефакты:**
 
 - Запись в `_decisions.md` (если инцидент повлёк изменение процесса)
-    
-- Задачи в `_backlog.md`
-    
-- Обновление runbook'а
 
+- Задачи в `_backlog.md`
+
+- Обновление runbook'а
 
 #### Действие 3: обновить runbook
 
@@ -2252,20 +2261,18 @@ Failover completed at 15:30. Service restored.
 **Пример:**
 
 - В runbook'е шаг 3 — команда `pg_ctl promote`
-    
-- В реальности использовали `pg_ctlcluster 16 main promote`
-    
-- Обновите runbook
 
+- В реальности использовали `pg_ctlcluster 16 main promote`
+
+- Обновите runbook
 
 **Также:**
 
 - Обновите `Last tested` в `index.md`
-    
-- Добавьте новые pitfalls
-    
-- Уточните `Expected`
 
+- Добавьте новые pitfalls
+
+- Уточните `Expected`
 
 **Правило:** runbook улучшается после каждого использования.
 
@@ -2290,6 +2297,7 @@ Failover completed at 15:30. Service restored.
 15:35 — Service restored
 15:40 — Alert cleared
 ```
+
 **Источники:** логи CI, Slack, мониторинг, memory участников.
 
 #### Root cause
@@ -2297,24 +2305,22 @@ Failover completed at 15:30. Service restored.
 **Что вызвало инцидент?**
 
 - Медленный запрос → replication lag
-    
-- Или: сбой сети → реплика отстала
-    
-- Или: баг в коде → нагрузка
 
+- Или: сбой сети → реплика отстала
+
+- Или: баг в коде → нагрузка
 
 **Пять почему (5 Whys):**
 
 1. Почему лаг вырос? — Медленный запрос
-    
-2. Почему запрос медленный? — Отсутствует индекс
-    
-3. Почему нет индекса? — Забыли добавить в миграции
-    
-4. Почему забыли? — Не было ревью миграции
-    
-5. Почему не было? — Нет процесса
 
+2. Почему запрос медленный? — Отсутствует индекс
+
+3. Почему нет индекса? — Забыли добавить в миграции
+
+4. Почему забыли? — Не было ревью миграции
+
+5. Почему не было? — Нет процесса
 
 **Root cause:** нет процесса ревью миграций
 
@@ -2325,11 +2331,10 @@ Failover completed at 15:30. Service restored.
 Обязательно отметьте **что пошло хорошо**:
 
 - Runbook был — не пришлось изобретать
-    
-- Escalation сработала быстро
-    
-- Команда координировалась
 
+- Escalation сработала быстро
+
+- Команда координировалась
 
 **Зачем:** положительное подкрепление. И понимание, что сохранить.
 
@@ -2338,13 +2343,12 @@ Failover completed at 15:30. Service restored.
 **Конкретные действия:**
 
 1. **Добавить ревью миграций** → задача в `_backlog.md`
-    
-2. **Обновить runbook** → добавить шаг про `pg_ctlcluster`
-    
-3. **Настроить алерт** → на медленные запросы
-    
-4. **Обновить ADR** → если это меняет процесс
 
+2. **Обновить runbook** → добавить шаг про `pg_ctlcluster`
+
+3. **Настроить алерт** → на медленные запросы
+
+4. **Обновить ADR** → если это меняет процесс
 
 **Каждое действие** — с owner и deadline
 
@@ -2353,9 +2357,8 @@ Failover completed at 15:30. Service restored.
 **Не ищем виноватого.** Ищем **системные проблемы**
 
 - Плохо: «Иван забыл добавить индекс»
-    
-- Хорошо: «Процесс не требует ревью миграций»
 
+- Хорошо: «Процесс не требует ревью миграций»
 
 **Почему:** если искать виноватого — люди начнут скрывать ошибки. Если искать систему — люди будут открыто разбирать.
 
@@ -2366,13 +2369,12 @@ Failover completed at 15:30. Service restored.
 **Что делать:**
 
 1. **Импровизируйте осторожно.** Не экспериментируйте в проде без понимания
-    
-2. **Эскалируйте.** Кто-то в команде знает систему лучше
-    
-3. **Соберите информацию** — логи, метрики, состояние системы
-    
-4. **После** — **напишите runbook**. Обязательно
 
+2. **Эскалируйте.** Кто-то в команде знает систему лучше
+
+3. **Соберите информацию** — логи, метрики, состояние системы
+
+4. **После** — **напишите runbook**. Обязательно
 
 **Правило:** каждый инцидент без runbook'а → новый runbook
 
@@ -2381,15 +2383,17 @@ Failover completed at 15:30. Service restored.
 Если инцидент серьёзный, а runbook'а нет — **пишите на ходу**:
 
 ```markdown
-
 ## Emergency runbook: <incident>
+
 **Trigger:** <what happened>
 **Steps taken:**
+
 1. <action 1> → <result>
 2. <action 2> → <result>
-**Resolution:** <how resolved>
-**Next:** Convert to formal runbook
+   **Resolution:** <how resolved>
+   **Next:** Convert to formal runbook
 ```
+
 После инцидента — преобразуйте в формальный runbook.
 
 ### 14.9 Когда инцидент — не ваш
@@ -2397,11 +2401,10 @@ Failover completed at 15:30. Service restored.
 Возможные ситуации:
 
 - **Инцидент в сервисе, которым вы не владеете.** Уведомите владельца.
-    
-- **Инцидент в инфраструктуре** (AWS, GCP). Проверьте status page, эскалируйте.
-    
-- **Инцидент в стороннем API** (Stripe, Twilio). Уведомите, подождите.
 
+- **Инцидент в инфраструктуре** (AWS, GCP). Проверьте status page, эскалируйте.
+
+- **Инцидент в стороннем API** (Stripe, Twilio). Уведомите, подождите.
 
 **Не пытайтесь починить чужое.** Уведомьте, эскалируйте, документируйте.
 
@@ -2465,6 +2468,7 @@ _env.md       _security.md      _backlog.md
          WORK_LOG.md     (запись сессии)
          _ci.md          (если CI деплоит и что-то пошло не так)
 ```
+
 **`runbooks/` — центральный инструмент.** Открывается первым, обновляется последним.
 
 ### 14.12 Упражнение
@@ -2474,60 +2478,56 @@ _env.md       _security.md      _backlog.md
 Вспомните последний инцидент в вашей практике. Ответьте:
 
 1. **Был ли runbook?** Если да — следовали ли ему?
-    
-2. **Сколько времени заняло реагирование?** 10 минут? Час? Больше?
-    
-3. **Что было root cause?** Не симптом, а причина.
-    
-4. **Что улучшили после?** Или забыли?
 
+2. **Сколько времени заняло реагирование?** 10 минут? Час? Больше?
+
+3. **Что было root cause?** Не симптом, а причина.
+
+4. **Что улучшили после?** Или забыли?
 
 **Часть 2: аудит runbook'ов.
 
 Откройте `runbooks/index.md`. Ответьте:
 
 1. **Сколько runbook'ов?** Покрывают ли они **самые частые** инциденты?
-    
-2. **Все ли имеют `Last tested`?** Если нет — когда последний раз проверяли?
-    
-3. **У всех ли есть секция `If it doesn't work`?**
-    
-4. **Все ли команды работают?** Попробуйте в staging.
 
+2. **Все ли имеют `Last tested`?** Если нет — когда последний раз проверяли?
+
+3. **У всех ли есть секция `If it doesn't work`?**
+
+4. **Все ли команды работают?** Попробуйте в staging.
 
 **Часть 3: тестирование**
 
 Возьмите **один** runbook. Проведите **dry-run** в staging:
 
 1. Откройте runbook
-    
-2. Следуйте шагам
-    
-3. Записывайте, где отклонились
-    
-4. Обновите runbook
 
+2. Следуйте шагам
+
+3. Записывайте, где отклонились
+
+4. Обновите runbook
 
 **Правило:** непротестированный runbook — не runbook.
 
 ### 14.13 Метрики
 
-|Метрика|Что показывает|
-|---|---|
-|**MTTD** (Mean Time To Detect)|От начала до обнаружения|
-|**MTTR** (Mean Time To Resolve)|От обнаружения до разрешения|
-|**Incidents per month**|Частота|
-|**P0 count**|Сколько серьёзных|
-|**Runbook coverage**|Процент инцидентов с runbook'ами|
+| Метрика                         | Что показывает                   |
+| ------------------------------- | -------------------------------- |
+| **MTTD** (Mean Time To Detect)  | От начала до обнаружения         |
+| **MTTR** (Mean Time To Resolve) | От обнаружения до разрешения     |
+| **Incidents per month**         | Частота                          |
+| **P0 count**                    | Сколько серьёзных                |
+| **Runbook coverage**            | Процент инцидентов с runbook'ами |
 
 **Что полезно знать:**
 
 - **MTTR > 1 час** — runbook'и плохо работают
-    
-- **Incidents per month растёт** — что-то системное
-    
-- **Runbook coverage < 80%** — много инцидентов без процедур
 
+- **Incidents per month растёт** — что-то системное
+
+- **Runbook coverage < 80%** — много инцидентов без процедур
 
 **Не превращайте в KPI.** Это для понимания.
 
@@ -2536,6 +2536,7 @@ _env.md       _security.md      _backlog.md
 В следующей главе — **Deep analysis**. Это workflow для случаев, когда нужно **исследовать**проект: аудит безопасности, поиск узких мест производительности, оценка техдолга. Результат — находки в `analysis/`.
 
 ## Chapter 15. Deep analysis
+
 ## Глава 15. Глубокий анализ
 
 ### 15.1 Что такое deep analysis
@@ -2544,26 +2545,25 @@ _env.md       _security.md      _backlog.md
 
 Отличие от обычной работы:
 
-|Обычная работа|Deep analysis|
-|---|---|
-|Решить конкретную задачу|Понять общую картину|
-|Issue → fix|Исследование → findings|
-|Известно, что делать|Неизвестно, что найдём|
-|Ограничено scope|Широкий охват|
-|Результат: PR|Результат: `analysis/`|
+| Обычная работа           | Deep analysis           |
+| ------------------------ | ----------------------- |
+| Решить конкретную задачу | Понять общую картину    |
+| Issue → fix              | Исследование → findings |
+| Известно, что делать     | Неизвестно, что найдём  |
+| Ограничено scope         | Широкий охват           |
+| Результат: PR            | Результат: `analysis/`  |
 
 **Примеры deep analysis:**
 
 - Аудит безопасности
-    
-- Поиск узких мест производительности
-    
-- Оценка техдолга
-    
-- Ревизия архитектуры
-    
-- Подготовка к рефакторингу
 
+- Поиск узких мест производительности
+
+- Оценка техдолга
+
+- Ревизия архитектуры
+
+- Подготовка к рефакторингу
 
 ### 15.2 Когда запускать
 
@@ -2584,23 +2584,22 @@ _env.md       _security.md      _backlog.md
 **Не запускайте** analysis:
 
 - Без конкретной цели
-    
-- Ради процесса
-    
-- Когда нужно просто решить задачу
 
+- Ради процесса
+
+- Когда нужно просто решить задачу
 
 **Deep analysis — это дорого.** Часы или дни. Запускайте, когда есть причина.
 
 ### 15.3 Отличие от issue
 
-|Issue|Deep analysis|
-|---|---|
-|Решить проблему|Найти проблемы|
-|Известная задача|Неизвестный результат|
-|`issue/`|`analysis/`|
-|PROJECT_SUMMARY|Finding|
-|PR в конце|Отчёт в конце|
+| Issue            | Deep analysis         |
+| ---------------- | --------------------- |
+| Решить проблему  | Найти проблемы        |
+| Известная задача | Неизвестный результат |
+| `issue/`         | `analysis/`           |
+| PROJECT_SUMMARY  | Finding               |
+| PR в конце       | Отчёт в конце         |
 
 **Deep analysis может породить issues.** Один finding → одна задача в `_backlog.md`. Но сам анализ — не issue.
 
@@ -2628,6 +2627,7 @@ _env.md       _security.md      _backlog.md
         ▼
 7. Перенести в _backlog.md
 ```
+
 Семь шагов. Разберём каждый.
 
 ### 15.5 Шаг 1: определить цель
@@ -2637,13 +2637,12 @@ _env.md       _security.md      _backlog.md
 **Примеры целей:**
 
 - «Есть ли SQL-инъекции в коде?»
-    
-- «Какие запросы самые медленные?»
-    
-- «Где дублируется логика?»
-    
-- «Какие зависимости устарели?»
 
+- «Какие запросы самые медленные?»
+
+- «Где дублируется логика?»
+
+- «Какие зависимости устарели?»
 
 **Плохая цель:** «Провести аудит». Слишком широко. Не поймёте, когда закончить.
 
@@ -2662,21 +2661,21 @@ Deep analysis легко расширяется. «Пока проверяю SQL
 **Пример:**
 
 ```markdown
-
 ## Reports
-| Date | Report | Scope | Status |
-|------|--------|-------|--------|
-| 2026-09-22 | [Security audit](./security-audit.md) | User input handling: forms, API, file uploads | open |
+
+| Date       | Report                                | Scope                                         | Status |
+| ---------- | ------------------------------------- | --------------------------------------------- | ------ |
+| 2026-09-22 | [Security audit](./security-audit.md) | User input handling: forms, API, file uploads | open   |
 ```
+
 Scope: «User input handling: forms, API, file uploads». Не «весь проект».
 **Почему это важно:**
 
 - Без scope — анализ никогда не закончится.
-    
-- С scope — знаете, когда остановиться.
-    
-- Что вне scope — в отдельный отчёт, если найдётся важное.
 
+- С scope — знаете, когда остановиться.
+
+- Что вне scope — в отдельный отчёт, если найдётся важное.
 
 ### 15.7 Шаг 3: исследовать
 
@@ -2687,40 +2686,36 @@ Scope: «User input handling: forms, API, file uploads». Не «весь про
 **Для безопасности:**
 
 - `brakeman` (Ruby), `bandit` (Python), `gosec` (Go)
-    
-- `bundle audit`, `npm audit` — уязвимости зависимостей
-    
-- Ручной ревью опасных мест: SQL, `eval`, десериализация
 
+- `bundle audit`, `npm audit` — уязвимости зависимостей
+
+- Ручной ревью опасных мест: SQL, `eval`, десериализация
 
 **Для производительности:**
 
 - Профайлеры: `stackprof`, `rbspy`, `py-spy`.
-    
-- Slow query log в БД.
-    
-- `EXPLAIN ANALYZE` для запросов.
-    
-- Flamegraph.
 
+- Slow query log в БД.
+
+- `EXPLAIN ANALYZE` для запросов.
+
+- Flamegraph.
 
 **Для техдолга:**
 
 - `rubocop --format offenses`, `eslint --format json`
-    
-- `flog`, `flay` — сложность
-    
-- Метрики: размер файлов, длина методов, дублирование
 
+- `flog`, `flay` — сложность
+
+- Метрики: размер файлов, длина методов, дублирование
 
 **Для архитектуры:**
 
 - Граф зависимостей: `bundle viz`, `madge`
-    
-- Ручной обзор модулей
-    
-- Циклы в зависимостях
 
+- Ручной обзор модулей
+
+- Циклы в зависимостях
 
 #### Как записывать
 
@@ -2745,9 +2740,9 @@ Scope: «User input handling: forms, API, file uploads». Не «весь про
 Deep analysis может занять:
 
 - **Малый анализ** (1 тема) — 2–4 часа.
-    
+
 - **Средний** (модуль, компонент) — 1–3 дня.
-    
+
 - **Большой** (весь проект) — неделя+.
 
 **Не растягивайте.** Если анализ длится больше недели — вы либо выбрали слишком широкий scope, либо застряли на деталях.
@@ -2759,25 +2754,29 @@ Deep analysis может прерываться на другие задачи. 
 **Записывайте состояние:**
 
 - Что уже проверили.
-    
+
 - Что нашли.
-    
+
 - Где остановились.
 
 **В WORK_LOG:**
 
 ```markdown
-
 ## 2026-09-22
+
 ### Session 48 — Security audit (part 1)
+
 Started security audit on user input handling. Covered forms and API.
 Found 3 issues:
+
 - `eval` in `session.rb:42`
 - SQL injection risk in `search.rb:88`
 - Missing CSRF on `webhooks_controller.rb`
-**Next:** Continue with file uploads.
+  **Next:** Continue with file uploads.
+
 ---
 ```
+
 ### 15.8 Шаг 4: зафиксировать findings
 
 Каждая находка → отдельный файл в `analysis/`.
@@ -2796,12 +2795,17 @@ status: todo
 timestamp: 2026-09-22
 tags: [finding, security]
 ---
+
 # Finding: Eval on user input in Session
+
 ## Summary
+
 `Auth::Session#load` calls `eval` on a value taken directly from
 `params[:session_data]`. An attacker can inject Ruby code executed on
 the server.
+
 ## Evidence
+
 - File: `lib/auth/session.rb:42`
 - Code:
   ```ruby
@@ -2810,18 +2814,27 @@ the server.
   end
   ```
 - Repro: `curl -X POST /login -d 'session_data=system("id")'`
+
 ## Impact
+
 Remote code execution. Attacker can execute any command on the server
 with app's privileges.
+
 ## Recommendation
+
 Use `JSON.parse` instead of `eval`. Validate and sign session data
 before parsing.
+
 ## Effort estimate
+
 S
+
 ## Related
+
 - Report: [Security audit 2026-09](./security-audit.md)
 - Issue: (create after prioritization)
 ````
+
 #### Формат полей
 
 **Title** — короткий, конкретный. «Eval on user input» — хорошо. «Security issue» — плохо.
@@ -2849,9 +2862,8 @@ S
 **Сквозной, не переиспользуется.**
 
 - `F-001`, `F-002`, ... `F-N`.
-    
-- Удалили F-003 — следующий всё равно F-004.
 
+- Удалили F-003 — следующий всё равно F-004.
 
 **Имя файла:** `F-XXX-<short-title>.md`. Например: `F-001-eval-injection.md`.
 
@@ -2859,21 +2871,20 @@ S
 
 **Важное различие.**
 
-|Severity|Priority|
-|---|---|
-|Насколько серьёзна проблема|Когда её чинить|
-|Объективно|Субъективно|
-|Оценка ущерба|Оценка срочности|
-|Не меняется со временем|Может меняться|
+| Severity                    | Priority         |
+| --------------------------- | ---------------- |
+| Насколько серьёзна проблема | Когда её чинить  |
+| Объективно                  | Субъективно      |
+| Оценка ущерба               | Оценка срочности |
+| Не меняется со временем     | Может меняться   |
 
 **Severity:**
 
 - **high** — RCE, утечка данных, падение prod
-    
-- **medium** — часть функциональности сломана, ошибки в логах
-    
-- **low** — косметика, потенциальные проблемы
 
+- **medium** — часть функциональности сломана, ошибки в логах
+
+- **low** — косметика, потенциальные проблемы
 
 **Priority:** берётся из `_backlog.md` (P0–P3).
 
@@ -2888,16 +2899,17 @@ S
 Каждое finding → строка в сводной таблице.
 
 ```markdown
-
 ## Findings summary
-| ID | Severity | Finding | Report | Status |
-|----|----------|---------|--------|--------|
-| F-001 | high | Eval on user input | [link](./F-001-eval-injection.md) | todo |
-| F-002 | high | SQL injection in search | [link](./F-002-sql-injection.md) | todo |
-| F-003 | medium | Missing CSRF on webhooks | [link](./F-003-csrf.md) | todo |
-| F-004 | medium | N+1 in users list | [link](./F-004-n-plus-one.md) | todo |
-| F-005 | low | Duplicate validators | [link](./F-005-validators.md) | todo |
+
+| ID    | Severity | Finding                  | Report                            | Status |
+| ----- | -------- | ------------------------ | --------------------------------- | ------ |
+| F-001 | high     | Eval on user input       | [link](./F-001-eval-injection.md) | todo   |
+| F-002 | high     | SQL injection in search  | [link](./F-002-sql-injection.md)  | todo   |
+| F-003 | medium   | Missing CSRF on webhooks | [link](./F-003-csrf.md)           | todo   |
+| F-004 | medium   | N+1 in users list        | [link](./F-004-n-plus-one.md)     | todo   |
+| F-005 | low      | Duplicate validators     | [link](./F-005-validators.md)     | todo   |
 ```
+
 **Порядок:** по severity (high сверху). Или по дате обнаружения.
 
 **Report:** ссылка на отчёт (если finding часть большого отчёта).
@@ -2913,42 +2925,38 @@ Findings найдены. Что **делать**?
 **1. Чинить сейчас.**
 
 - Severity high, легко чинить.
-    
-- Или: severity любая, но блокирует что-то.
 
+- Или: severity любая, но блокирует что-то.
 
 **2. Чинить потом.**
 
 - Severity medium, effort большой.
-    
-- Или: severity low, но полезно.
 
+- Или: severity low, но полезно.
 
 **3. Не чинить.**
 
 - Severity low, effort большой.
-    
-- Или: не стоит того.
 
+- Или: не стоит того.
 
 **Для каждой категории:**
 
 - «Сейчас» → task в `_backlog.md` с priority P0–P1.
-    
-- «Потом» → task в `_backlog.md` с priority P2–P3.
-    
-- «Не чинить» → finding.status = `wontfix`. Обоснование — в finding.
 
+- «Потом» → task в `_backlog.md` с priority P2–P3.
+
+- «Не чинить» → finding.status = `wontfix`. Обоснование — в finding.
 
 **Пример решения:**
 
-|Finding|Severity|Effort|Решение|
-|---|---|---|---|
-|F-001 Eval injection|high|S|P0, чинить сейчас|
-|F-002 SQL injection|high|S|P0, чинить сейчас|
-|F-003 CSRF|medium|S|P1|
-|F-004 N+1|medium|M|P2|
-|F-005 Duplicate validators|low|S|P3|
+| Finding                    | Severity | Effort | Решение           |
+| -------------------------- | -------- | ------ | ----------------- |
+| F-001 Eval injection       | high     | S      | P0, чинить сейчас |
+| F-002 SQL injection        | high     | S      | P0, чинить сейчас |
+| F-003 CSRF                 | medium   | S      | P1                |
+| F-004 N+1                  | medium   | M      | P2                |
+| F-005 Duplicate validators | low      | S      | P3                |
 
 **Не оставляйте всё.** Если 20 findings и все P0 — приоритезация сломана.
 
@@ -2966,6 +2974,7 @@ Findings найдены. Что **делать**?
 | B-045 | P2 | Fix N+1 (F-004) | — | B-044 | Wait for B-044 |
 | B-046 | P3 | Merge duplicate validators (F-005) | — | — | Refactor User model |
 ```
+
 **Ссылка на finding** — в колонке `Item`. «Fix eval injection (F-001)».
 
 **Связь:** finding остаётся в `analysis/` со статусом `in-progress` при старте работы.
@@ -2976,13 +2985,13 @@ Findings найдены. Что **делать**?
 
 Различие важно.
 
-|Report|Finding|
-|---|---|
-|Крупный отчёт|Одна находка|
-|Охватывает scope|Один аспект|
-|`security-audit.md`|`F-001-eval-injection.md`|
-|Содержит overview|Содержит детали|
-|Один на анализ|Много на отчёт|
+| Report              | Finding                   |
+| ------------------- | ------------------------- |
+| Крупный отчёт       | Одна находка              |
+| Охватывает scope    | Один аспект               |
+| `security-audit.md` | `F-001-eval-injection.md` |
+| Содержит overview   | Содержит детали           |
+| Один на анализ      | Много на отчёт            |
 
 **Один report → много findings.**
 
@@ -2998,25 +3007,39 @@ description: "Audit of user input handling"
 timestamp: 2026-09-22
 tags: [report, security, audit]
 ---
+
 # Security Audit 2026-09
+
 ## Scope
+
 User input handling: forms, API, file uploads.
+
 ## Method
+
 Manual review + `brakeman` scan + manual testing.
+
 ## Findings
+
 - [F-001 Eval injection](./F-001-eval-injection.md) — high
 - [F-002 SQL injection](./F-002-sql-injection.md) — high
 - [F-003 CSRF](./F-003-csrf.md) — medium
+
 ## Summary
+
 3 critical issues found. All in legacy code (pre-2024). Modern code
 uses parameterized queries and Rails protections.
+
 ## Recommendations
+
 1. Fix F-001 and F-002 immediately (P0).
 2. Schedule F-003 for next sprint (P1).
 3. Add automated security scan to CI.
+
 ## References
+
 - [1] [OWASP Top 10](url)
 ```
+
 **Report** — это **обзор**. Findings — **детали**.
 
 **Не обязательно.** Если findings мало и они не связаны — report можно не делать. Только findings + index.
@@ -3044,15 +3067,19 @@ Deep analysis может прерываться. Как возвращаться
 **Пример записи в WORK_LOG:**
 
 ```markdown
-
 ## 2026-09-23
+
 ### Session 49 — Security audit (part 2)
+
 Continued from Session 48. Covered file uploads. Found 2 more issues:
+
 - Unrestricted file types in `uploads_controller.rb:30`
 - Missing size limit in `uploads_controller.rb:45`
-**Next:** Wrap up audit; update `analysis/index.md`; prioritize.
+  **Next:** Wrap up audit; update `analysis/index.md`; prioritize.
+
 ---
 ```
+
 ### 15.15 Завершение
 
 Когда анализ закончен:
@@ -3067,11 +3094,10 @@ Continued from Session 48. Covered file uploads. Found 2 more issues:
 **Что дальше:**
 
 - Работа по findings — обычные issues.
-    
-- Findings постепенно становятся `addressed`.
-    
-- Report можно архивировать после закрытия всех findings.
 
+- Findings постепенно становятся `addressed`.
+
+- Report можно архивировать после закрытия всех findings.
 
 ### 15.16 Частые ошибки
 
@@ -3187,6 +3213,7 @@ _backlog.md      _decisions.md     _concepts.md
          _files.md        (evidence)
          _security.md     (если про безопасность)
 ```
+
 **`analysis/` — центральный узел.** Открывается при исследовании, обновляется по ходу, становится задачами.
 
 ### 15.19 Варианты по типам analysis
@@ -3194,38 +3221,34 @@ _backlog.md      _decisions.md     _concepts.md
 #### Security audit
 
 - **Tools:** brakeman, bundle audit, ручной ревью
-    
-- **Scope:** user input, authentication, authorization, secrets
-    
-- **Severity:** high для RCE/SQLi, medium для CSRF/XSS, low для info leaks
 
+- **Scope:** user input, authentication, authorization, secrets
+
+- **Severity:** high для RCE/SQLi, medium для CSRF/XSS, low для info leaks
 
 #### Performance analysis
 
 - **Tools:** профайлеры, slow query log.
-    
-- **Scope:** критичные endpoints, hot paths.
-    
-- **Severity:** high для timeout, medium для slow, low для оптимизаций.
 
+- **Scope:** критичные endpoints, hot paths.
+
+- **Severity:** high для timeout, medium для slow, low для оптимизаций.
 
 #### Tech debt assessment
 
 - **Tools:** rubocop, flog, flay.
-    
-- **Scope:** модуль / компонент.
-    
-- **Severity:** high для блокирующих, medium для замедляющих, low для косметики.
 
+- **Scope:** модуль / компонент.
+
+- **Severity:** high для блокирующих, medium для замедляющих, low для косметики.
 
 #### Architecture review
 
 - **Tools:** граф зависимостей.
-    
-- **Scope:** модули, компоненты.
-    
-- **Severity:** high для циклов, medium для coupling, low для naming.
 
+- **Scope:** модули, компоненты.
+
+- **Severity:** high для циклов, medium для coupling, low для naming.
 
 ### 15.20 Упражнение
 
@@ -3234,70 +3257,67 @@ _backlog.md      _decisions.md     _concepts.md
 Выберите **одну** тему. Например: «Проверить безопасность работы с файлами».
 
 1. **Цель:** что ищем?
-    
-2. **Scope:** какие файлы, какие аспекты?
-    
-3. **Исследование:** 1–2 часа.
-    
-4. **Findings:** запишите каждую находку.
-    
-5. **Обновление:** `analysis/index.md`.
-    
-6. **Приоритезация:** что чинить?
-    
-7. **Backlog:** создайте задачи.
 
+2. **Scope:** какие файлы, какие аспекты?
+
+3. **Исследование:** 1–2 часа.
+
+4. **Findings:** запишите каждую находку.
+
+5. **Обновление:** `analysis/index.md`.
+
+6. **Приоритезация:** что чинить?
+
+7. **Backlog:** создайте задачи.
 
 **Часть 2: ретроспектива существующих findings.**
 
 Если у вас уже есть `analysis/`, ответьте:
 
 1. **Сколько findings?** Все ли с evidence, impact, recommendation?
-    
-2. **Все ли имеют статус?** Как много `addressed`?
-    
-3. **Все ли связаны с backlog?** Или висят?
-    
-4. **Есть ли findings годами в `todo`?** Пора ревизовать.
 
+2. **Все ли имеют статус?** Как много `addressed`?
+
+3. **Все ли связаны с backlog?** Или висят?
+
+4. **Есть ли findings годами в `todo`?** Пора ревизовать.
 
 **Часть 3: аудит недавнего рефакторинга.**
 
 Вспомните крупный рефакторинг за последние 3 месяца. Ответьте:
 
 1. **Проводили ли analysis перед ним?** Если нет — почему?
-    
-2. **Были ли сюрпризы?** Что нашли по ходу?
-    
-3. **Если бы провели analysis — сэкономили бы время?**
 
+2. **Были ли сюрпризы?** Что нашли по ходу?
+
+3. **Если бы провели analysis — сэкономили бы время?**
 
 **Вывод:** для следующего крупного изменения — сначала analysis.
 
 ### 15.21 Метрики
 
-|Метрика|Что показывает|
-|---|---|
-|**Findings per analysis**|Плотность проблем|
-|**High severity %**|Критичность|
-|**Addressed %**|Скорость реакции|
-|**Avg age**|Как долго findings живут|
-|**Backlog conversion**|% findings, ставших задачами|
+| Метрика                   | Что показывает               |
+| ------------------------- | ---------------------------- |
+| **Findings per analysis** | Плотность проблем            |
+| **High severity %**       | Критичность                  |
+| **Addressed %**           | Скорость реакции             |
+| **Avg age**               | Как долго findings живут     |
+| **Backlog conversion**    | % findings, ставших задачами |
 
 **Что полезно знать:**
 
 - **High severity > 30%** — что-то системное.
-    
-- **Addressed < 50%** — findings не приоритезируются.
-    
-- **Avg age > 6 месяцев** — нужна ревизия.
 
+- **Addressed < 50%** — findings не приоритезируются.
+
+- **Avg age > 6 месяцев** — нужна ревизия.
 
 ### 15.22 Что дальше
 
 В следующей главе — **Planning**. Это workflow для случаев, когда нужно **спланировать** работу: посмотреть на backlog, выбрать задачи, оценить сроки.
 
 ## Chapter 16. Planning
+
 ## Глава 16. Планирование
 
 ### 16.1 Что такое planning
@@ -3306,14 +3326,14 @@ _backlog.md      _decisions.md     _concepts.md
 
 Отличие от других workflow:
 
-|Workflow|Про что|
-|---|---|
-|Issue lifecycle|Про **одну** задачу|
-|Session lifecycle|Про **один** отрезок времени|
-|CI failure|Про **реакцию** на проблему|
-|Incident|Про **реакцию** на аварию|
-|Deep analysis|Про **исследование**|
-|**Planning**|**Про выбор задач**|
+| Workflow          | Про что                      |
+| ----------------- | ---------------------------- |
+| Issue lifecycle   | Про **одну** задачу          |
+| Session lifecycle | Про **один** отрезок времени |
+| CI failure        | Про **реакцию** на проблему  |
+| Incident          | Про **реакцию** на аварию    |
+| Deep analysis     | Про **исследование**         |
+| **Planning**      | **Про выбор задач**          |
 
 Planning — **проактивный**. Вы не реагируете на что-то, вы решаете, что делать.
 
@@ -3344,20 +3364,18 @@ Planning — **проактивный**. Вы не реагируете на ч
 **Что там:**
 
 - **Items** — приоритезированные задачи (P0–P3)
-    
-- **Ideas** — сырые идеи без приоритета
-    
-- **Tech debt** — технический долг
 
+- **Ideas** — сырые идеи без приоритета
+
+- **Tech debt** — технический долг
 
 **Чего там НЕТ:**
 
 - **GitHub Issues** — подтверждённые задачи. Backlog — черновики.
-    
-- **Roadmap** — стратегия на квартал. Backlog — конкретные задачи.
-    
-- **Календарь** — сроки. Backlog — без дат (или с условными).
 
+- **Roadmap** — стратегия на квартал. Backlog — конкретные задачи.
+
+- **Календарь** — сроки. Backlog — без дат (или с условными).
 
 **Ключевое правило:** backlog — это **не roadmap**. Backlog — inbox для того, что «надо бы сделать». Roadmap — отдельный документ для стратегии.
 
@@ -3379,6 +3397,7 @@ Planning — **проактивный**. Вы не реагируете на ч
        │ └───────────────────────┘ │
        └───────────────────────────┘
 ```
+
 **Issue** — атом. **Session** — когда работаем. **Week/Sprint** — что входит. **Quarterly** — зачем всё это.
 
 **Планирование идёт сверху вниз:** цели квартала → задачи спринта → конкретные issues.
@@ -3409,6 +3428,7 @@ Planning — **проактивный**. Вы не реагируете на ч
         ▼
 7. Обновить backlog
 ```
+
 Семь шагов. Разберём.
 
 ### 16.6 Шаг 1: прочитать backlog
@@ -3416,22 +3436,20 @@ Planning — **проактивный**. Вы не реагируете на ч
 Откройте `_backlog.md`. Прочитайте:
 
 - **Items** — что там сейчас?
-    
-- **Ideas** — что накопилось?
-    
-- **Tech debt** — что болит?
 
+- **Ideas** — что накопилось?
+
+- **Tech debt** — что болит?
 
 **Вопросы:**
 
 1. **Сколько items?** Если 50+ — пора чистить
-    
-2. **Есть ли P0?** Если да — почему они ещё не сделаны?
-    
-3. **Есть ли старые items?** Что висит больше месяца?
-    
-4. **Есть ли items без Next action?** Они «висят»
 
+2. **Есть ли P0?** Если да — почему они ещё не сделаны?
+
+3. **Есть ли старые items?** Что висит больше месяца?
+
+4. **Есть ли items без Next action?** Они «висят»
 
 ### 16.7 Шаг 2: разобрать Ideas
 
@@ -3440,13 +3458,12 @@ Ideas — это **сырые мысли**. Раз в цикл их надо р
 **Для каждой идеи:**
 
 - **Актуальна?** Если нет — удалить
-    
-- **Есть потенциал?** Если да — перевести в Items с приоритетом
-    
-- **Это отдельная задача?** Если нет — слить с другой
-    
-- **Слишком расплывчато?** Уточнить или удалить
 
+- **Есть потенциал?** Если да — перевести в Items с приоритетом
+
+- **Это отдельная задача?** Если нет — слить с другой
+
+- **Слишком расплывчато?** Уточнить или удалить
 
 **Правило:** Ideas не должны жить в этом разделе больше месяца. Либо в Items, либо удалить.
 
@@ -3459,14 +3476,14 @@ Ideas — это **сырые мысли**. Раз в цикл их надо р
 - What if we used GraphQL instead of REST?
 - Add dark mode.
 ```
+
 **Ревизия:**
 
 - **Elixir** — «не сейчас, но интересно». Оставить.
-    
-- **GraphQL** — «уже обсуждали, решили не делать». Удалить. Или → ADR (rejected).
-    
-- **Dark mode** — «фича, хочу». → Items с приоритетом P3.
 
+- **GraphQL** — «уже обсуждали, решили не делать». Удалить. Или → ADR (rejected).
+
+- **Dark mode** — «фича, хочу». → Items с приоритетом P3.
 
 ### 16.8 Шаг 3: пересмотреть приоритеты
 
@@ -3475,43 +3492,40 @@ Ideas — это **сырые мысли**. Раз в цикл их надо р
 **Вопросы для каждого item:**
 
 1. **Всё ещё актуально?** Если нет — удалить.
-    
-2. **Всё ещё P0/P1?** Или можно понизить?
-    
-3. **P0 остались P0?** Если да — почему не сделаны? Может, не P0 на самом деле?
-    
-4. **P2/P3 ещё нужны?** Или удалить?
 
+2. **Всё ещё P0/P1?** Или можно понизить?
+
+3. **P0 остались P0?** Если да — почему не сделаны? Может, не P0 на самом деле?
+
+4. **P2/P3 ещё нужны?** Или удалить?
 
 **Правило:** раз в цикл — **ревизия приоритетов**. Иначе backlog превращается в кладбище.
 
 **Типичные проблемы:**
 
 - **Много P0.** 5 P0 — сломанная приоритезация. P0 = «горит».
-    
-- **Всё P1.** Если всё важно — ничего не важно.
-    
-- **P3 живут годами.** Если не сделали за год — не сделаете. Удалить.
 
+- **Всё P1.** Если всё важно — ничего не важно.
+
+- **P3 живут годами.** Если не сделали за год — не сделаете. Удалить.
 
 ### 16.9 Шаг 4: оценить
 
 **Effort** — насколько задача большая.
 
-|Размер|Время|Пример|
-|---|---|---|
-|**S**|< 1 день|Опечатка, мелкий фикс|
-|**M**|1–3 дня|Небольшая фича|
-|**L**|3+ дня|Крупная фича, рефакторинг|
+| Размер | Время    | Пример                    |
+| ------ | -------- | ------------------------- |
+| **S**  | < 1 день | Опечатка, мелкий фикс     |
+| **M**  | 1–3 дня  | Небольшая фича            |
+| **L**  | 3+ дня   | Крупная фича, рефакторинг |
 
 **Для каждой задачи** — оценка S/M/L.
 
 **Что если не уверены:**
 
 - **По умолчанию — M.** Лучше переоценить.
-    
+
 - **Если задача > L** — **разбить**. Большие задачи плохо оцениваются.
-    
 
 **Оценка в часах — фикция.** S/M/L даёт порядок величины. Этого достаточно для планирования.
 
@@ -3526,11 +3540,10 @@ Ideas — это **сырые мысли**. Раз в цикл их надо р
 **Для недельного цикла:**
 
 - 5–10 задач категории S.
-    
-- Или 2–3 задачи категории M.
-    
-- Или 1 задача категории L.
 
+- Или 2–3 задачи категории M.
+
+- Или 1 задача категории L.
 
 **Правило:** 30–50% времени на задачи + остаток на unexpected.
 
@@ -3541,11 +3554,10 @@ Ideas — это **сырые мысли**. Раз в цикл их надо р
 **Идеальное соотношение:**
 
 - **60%** — новая функциональность (features, improvements).
-    
-- **30%** — техдолг, рефакторинг.
-    
-- **10%** — эксперименты, исследования.
 
+- **30%** — техдолг, рефакторинг.
+
+- **10%** — эксперименты, исследования.
 
 **Не 100% features.** Техдолг накопится. Через полгода — легаси, которое страшно трогать.
 
@@ -3561,6 +3573,7 @@ Ideas — это **сырые мысли**. Раз в цикл их надо р
 - Chore: Update dependencies (S)
 - Research: Explore streaming libraries (S)
 ```
+
 5 задач, баланс: 1 feature, 1 tech debt, 1 bug, 1 chore, 1 research.
 
 #### Критерии выбора
@@ -3568,22 +3581,20 @@ Ideas — это **сырые мысли**. Раз в цикл их надо р
 **Включайте задачу, если:**
 
 - Она **P0/P1**
-    
-- Она **разблокирует** другие
-    
-- Она **быстрая** (S) и полезная
-    
-- Она **интересна** (мотивация важна)
 
+- Она **разблокирует** другие
+
+- Она **быстрая** (S) и полезная
+
+- Она **интересна** (мотивация важна)
 
 **Исключайте, если:**
 
 - Она **заблокирована** (Blocked by)
-    
-- Нет **Next action**
-    
-- Нет **ясности**, что делать
 
+- Нет **Next action**
+
+- Нет **ясности**, что делать
 
 ### 16.11 Шаг 6: создать issues
 
@@ -3592,20 +3603,28 @@ Ideas — это **сырые мысли**. Раз в цикл их надо р
 **Формат issue:**
 
 ```markdown
-
 # Add caching to Parser
+
 ## Problem
+
 Parsing same file twice executes full pipeline. Cache would speed up
 repeated parses by ~10x.
+
 ## Solution
+
 Cache parsed AST keyed by file content hash. TTL 1 hour.
+
 ## Acceptance criteria
+
 - [ ] Cache implemented
 - [ ] Tests for cache hits/misses
 - [ ] Benchmark shows improvement
+
 ## Related
+
 From: _backlog.md B-042
 ```
+
 **Ссылка на backlog** — важно. Связывает мотивацию (backlog) с задачей (issue).
 
 **После создания issue:** удалите из `_backlog.md`. Backlog — для тех, **кто ещё не в работе**.
@@ -3635,27 +3654,24 @@ From: _backlog.md B-042
 **1. Массовая чистка.**
 
 - Items старше 6 месяцев → удалить или архивировать
-    
-- Items без Next action → либо добавить, либо удалить
-    
-- Ideas старше месяца → удалить
 
+- Items без Next action → либо добавить, либо удалить
+
+- Ideas старше месяца → удалить
 
 **2. Разделить.**
 
 - `_backlog.md` — активные items (P0–P2)
-    
-- `_backlog-ideas.md` — идеи, которые может быть
-    
-- `_backlog-archive.md` — завершённые / отменённые
 
+- `_backlog-ideas.md` — идеи, которые может быть
+
+- `_backlog-archive.md` — завершённые / отменённые
 
 **3. Пересмотреть процесс.**
 
 - Почему так много? Вы добавляете всё подряд?
-    
-- Есть ли фильтр «стоит ли записывать»?
 
+- Есть ли фильтр «стоит ли записывать»?
 
 **Правило:** backlog должен быть **читаемым за 5 минут**. Если дольше — пора чистить.
 
@@ -3666,31 +3682,33 @@ From: _backlog.md B-042
 **Вопросы:**
 
 1. **Какие цели** на квартал? (3–5 крупных целей)
-    
-2. **Какие фичи** критичны?
-    
-3. **Какой техдолг** должен быть починен?
-    
-4. **Какие метрики** улучшить?
 
+2. **Какие фичи** критичны?
+
+3. **Какой техдолг** должен быть починен?
+
+4. **Какие метрики** улучшить?
 
 **Артефакт:** документ с целями. Не в `_backlog.md` — отдельный файл.
 
 **Пример:**
 
 ```markdown
-
 # Q4 2026 Goals
+
 1. **Performance:** Parse 100MB files in <3s (currently 10s).
 2. **Security:** Fix all high-severity findings from audit.
 3. **Quality:** Test coverage > 90% (currently 75%).
 4. **Features:** Add streaming mode to public API.
 5. **Tech debt:** Merge duplicate validators, refactor User model.
+
 ## How to measure
+
 - Weekly: check benchmark, coverage.
 - Monthly: review findings.
 - End of quarter: retrospective.
 ```
+
 **Quarterly planning — не для всех.** Solo-разработчик может не иметь стратегических целей. Team — обычно нужен.
 
 ### 16.15 Приоритезация
@@ -3700,87 +3718,78 @@ From: _backlog.md B-042
 **P0: Critical.**
 
 - Ломает prod
-    
-- Ломает CI
-    
-- Блокирует релиз
-    
-- Безопасность
 
+- Ломает CI
+
+- Блокирует релиз
+
+- Безопасность
 
 **Примеры:**
 
 - «Прод не работает»
-    
-- «Уязвимость с RCE»
-    
-- «Тесты падают на master»
 
+- «Уязвимость с RCE»
+
+- «Тесты падают на master»
 
 **P1: Important.**
 
 - Влияет на пользователей
-    
-- Влияет на скорость разработки
-    
-- Обещанная фича с дедлайном
 
+- Влияет на скорость разработки
+
+- Обещанная фича с дедлайном
 
 **Примеры:**
 
 - «Медленная загрузка страницы»
-    
-- «Хрупкий тест, падает через раз»
-    
-- «Фича X для клиента Y»
 
+- «Хрупкий тест, падает через раз»
+
+- «Фича X для клиента Y»
 
 **P2: Desirable.**
 
 - Улучшения
-    
-- Рефакторинг
-    
-- Мелкие фичи
 
+- Рефакторинг
+
+- Мелкие фичи
 
 **Примеры:**
 
 - «Добавить caching»
-    
-- «Улучшить error messages»
-    
-- «Обновить README»
 
+- «Улучшить error messages»
+
+- «Обновить README»
 
 **P3: Nice-to-have.**
 
 - Идеи
-    
-- Косметика
-    
-- Может быть когда-нибудь
 
+- Косметика
+
+- Может быть когда-нибудь
 
 **Примеры:**
 
 - «Поддержка dark mode»
-    
-- «Попробовать Elixir»
-    
-- «Рефакторинг класса с 800 строками»
 
+- «Попробовать Elixir»
+
+- «Рефакторинг класса с 800 строками»
 
 **Правило:**
 
 - **P0 — редкие.** Больше 2-3 одновременно — сломанная приоритезация
-    
-- **P1 — текущий цикл.** Что делаете прямо сейчас
-    
-- **P2 — когда есть время.** Следующий цикл
-    
-- **P3 — backlog идей.** Может быть никогда
 
+- **P1 — текущий цикл.** Что делаете прямо сейчас
+
+- **P2 — когда есть время.** Следующий цикл
+
+- **P3 — backlog идей.** Может быть никогда
 
 ### 16.16 Anti-patterns
 
@@ -3844,16 +3853,16 @@ analysis/      _decisions.md  WORK_LOG.md
               ▼
          Issue lifecycle
 ```
+
 **`_backlog.md` — центральный узел.** Он собирает:
 
 - **Из `analysis/`** — findings
-    
-- **Из `_decisions.md`** — follow-up
-    
-- **Из WORK_LOG** — «Next» из сессий
-    
-- **Из Ideas** — сырые идеи
 
+- **Из `_decisions.md`** — follow-up
+
+- **Из WORK_LOG** — «Next» из сессий
+
+- **Из Ideas** — сырые идеи
 
 **Из backlog → GitHub Issues → работа.**
 
@@ -3862,24 +3871,22 @@ analysis/      _decisions.md  WORK_LOG.md
 **Solo:**
 
 - Недельное планирование — оптимально
-    
-- Quarterly — если есть стратегические цели
-    
-- Backlog — личный
-    
-- Приоритеты — субъективны
 
+- Quarterly — если есть стратегические цели
+
+- Backlog — личный
+
+- Приоритеты — субъективны
 
 **Team:**
 
 - Спринтовое планирование
-    
-- Daily standup
-    
-- Backlog — общий
-    
-- Приоритеты — consensus
 
+- Daily standup
+
+- Backlog — общий
+
+- Приоритеты — consensus
 
 **Компромисс:** если team маленькая (2-3 человека) — недельное планирование + месячное ревью.
 
@@ -3890,34 +3897,32 @@ analysis/      _decisions.md  WORK_LOG.md
 Откройте `_backlog.md`. Ответьте:
 
 1. **Сколько items?** 5–15 — норма. 50+ — пора чистить
-    
-2. **Сколько P0?** Больше 3 — пересмотрите
-    
-3. **Есть ли items старше 3 месяцев?** Что с ними?
-    
-4. **Есть ли items без Next action?** Добавьте или удалите
-    
-5. **Сколько в Ideas?** Разберите
 
+2. **Сколько P0?** Больше 3 — пересмотрите
+
+3. **Есть ли items старше 3 месяцев?** Что с ними?
+
+4. **Есть ли items без Next action?** Добавьте или удалите
+
+5. **Сколько в Ideas?** Разберите
 
 **Часть 2: планирование цикла.**
 
 Сделайте полное планирование на следующую неделю:
 
 1. **Прочитайте** backlog
-    
-2. **Разберите** Ideas
-    
-3. **Пересмотрите** приоритеты
-    
-4. **Оцените** (S/M/L)
-    
-5. **Выберите** 5–10 задач
-    
-6. **Создайте** issues
-    
-7. **Обновите** backlog
 
+2. **Разберите** Ideas
+
+3. **Пересмотрите** приоритеты
+
+4. **Оцените** (S/M/L)
+
+5. **Выберите** 5–10 задач
+
+6. **Создайте** issues
+
+7. **Обновите** backlog
 
 Замерьте время. Оптимум: 15–30 минут для недельного цикла.
 
@@ -3926,35 +3931,33 @@ analysis/      _decisions.md  WORK_LOG.md
 Через неделю — сравните план и факт:
 
 1. **Сколько задач сделали?** Из плана?
-    
-2. **Сколько unexpected было?**
-    
-3. **План был реалистичный?**
-    
-4. **Что менять** в следующий раз?
 
+2. **Сколько unexpected было?**
+
+3. **План был реалистичный?**
+
+4. **Что менять** в следующий раз?
 
 ### 16.20 Метрики
 
-|Метрика|Что показывает|
-|---|---|
-|**Backlog size**|Размер|
-|**Items closed per week**|Скорость|
-|**Items added per week**|Прирост|
-|**Avg age of items**|Свежесть|
-|**P0 count**|Критичность|
-|**Feature / Tech debt ratio**|Баланс|
+| Метрика                       | Что показывает |
+| ----------------------------- | -------------- |
+| **Backlog size**              | Размер         |
+| **Items closed per week**     | Скорость       |
+| **Items added per week**      | Прирост        |
+| **Avg age of items**          | Свежесть       |
+| **P0 count**                  | Критичность    |
+| **Feature / Tech debt ratio** | Баланс         |
 
 **Что полезно знать:**
 
 - **Backlog растёт** — вы добавляете больше, чем делаете. Либо замедлитесь, либо чистите.
-    
-- **Avg age > 3 месяцев** — items не актуальны. Удалить.
-    
-- **Feature / Tech debt > 9:1** — техдолг накапливается.
-    
-- **Feature / Tech debt < 1:1** — проект стагнирует.
 
+- **Avg age > 3 месяцев** — items не актуальны. Удалить.
+
+- **Feature / Tech debt > 9:1** — техдолг накапливается.
+
+- **Feature / Tech debt < 1:1** — проект стагнирует.
 
 **Не превращайте в KPI.** Это для понимания.
 
@@ -3963,17 +3966,16 @@ analysis/      _decisions.md  WORK_LOG.md
 Part III — Workflows — завершён. Мы разобрали шесть workflow'ов:
 
 1. **Issue lifecycle** — от открытия до merge
-    
-2. **Session lifecycle** — ритуал начала и конца сессии
-    
-3. **When CI fails** — диагностика и фикс
-    
-4. **Incident in prod** — реакция на аварию
-    
-5. **Deep analysis** — исследование проекта
-    
-6. **Planning** — выбор задач
 
+2. **Session lifecycle** — ритуал начала и конца сессии
+
+3. **When CI fails** — диагностика и фикс
+
+4. **Incident in prod** — реакция на аварию
+
+5. **Deep analysis** — исследование проекта
+
+6. **Planning** — выбор задач
 
 **Общий принцип:** каждый workflow связан с файлами bundle. Issue → templates, WORK_LOG, decisions. Session → WORK_LOG. CI → `_ci.md`. Incident → runbooks. Analysis → `analysis/`. Planning → `_backlog.md`.
 
@@ -3984,15 +3986,14 @@ Part III — Workflows — завершён. Мы разобрали шесть 
 В **Part IV — Operations** — эксплуатация bundle:
 
 - Установка через `init-opencode`.
-    
+
 - Обновление.
-    
+
 - Расширение bundle (новые файлы, типы).
-    
+
 - Anti-patterns (общие).
-    
+
 - Philosophy.
-    
 
 Это мета-уровень: не «как работать с проектом», а «как работать с самим bundle».
 
@@ -4005,6 +4006,7 @@ _Четыре главы: install/update, extending, anti-patterns, philosophy._
 ---
 
 ## Chapter 17. `init-opencode`: install and update
+
 ## Глава 17. `init-opencode`: установка и обновление
 
 ### 17.1 Зачем нужен installer
@@ -4014,11 +4016,10 @@ Bundle состоит из 20+ файлов. Копировать их вруч�
 **Installer решает три задачи:**
 
 1. **Install** — скопировать шаблон в проект
-    
-2. **Update** — обновить шаблонные файлы, не тронув пользовательские
-    
-3. **Diff** — показать, что изменится, до обновления
 
+2. **Update** — обновить шаблонные файлы, не тронув пользовательские
+
+3. **Diff** — показать, что изменится, до обновления
 
 Без installer'а вы бы делали `cp -R template/ .opencode/` вручную. Это работает один раз. При обновлении — перезапишет все ваши данные.
 
@@ -4046,12 +4047,12 @@ opencode-templates/
     ├── analysis/
     └── runbooks/
 ```
+
 **Две ключевые директории:**
 
 - `bin/` — скрипт, **не** копируется в проект.
-    
-- `template/` — содержимое, **копируется** в `.opencode/`.
 
+- `template/` — содержимое, **копируется** в `.opencode/`.
 
 **VERSION-файл** — просто строка `v0.1.0`. Используется в `.template-version`.
 
@@ -4064,6 +4065,7 @@ git clone <repo-url> ~/Projects/opencode-templates
 ln -s ~/Projects/opencode-templates/bin/init-opencode \
       ~/.local/bin/init-opencode
 ```
+
 **Symlink предпочтительнее копии.** Если правите скрипт в репозитории — изменения сразу доступны.
 
 **Проверка:**
@@ -4073,12 +4075,14 @@ which init-opencode
 # → /home/user/.local/bin/init-opencode
 init-opencode --help
 ```
+
 **Если `~/.local/bin` не в PATH:**
 
 ```bash
 # В ~/.bashrc или ~/.zshrc
 export PATH="$HOME/.local/bin:$PATH"
 ```
+
 ### 17.4 Режимы
 
 Четыре режима:
@@ -4090,24 +4094,24 @@ init-opencode --update <project-dir>     # update
 init-opencode --diff <project-dir>       # preview
 init-opencode --help                     # help
 ```
+
 ### 17.5 Install
 
 #### Что делает
 
 1. Проверяет, что `template/` существует
-    
-2. **Бэкапит** существующий `.opencode/` (если есть)
-    
-3. Создаёт `.opencode/`
-    
-4. Копирует содержимое `template/`
-    
-5. Создаёт пустые директории (`issue/`, `playbook/`, `pr/`, `archive/`)
-    
-6. Создаёт `.template-version` с метаданными
-    
-7. Выводит next steps
 
+2. **Бэкапит** существующий `.opencode/` (если есть)
+
+3. Создаёт `.opencode/`
+
+4. Копирует содержимое `template/`
+
+5. Создаёт пустые директории (`issue/`, `playbook/`, `pr/`, `archive/`)
+
+6. Создаёт `.template-version` с метаданными
+
+7. Выводит next steps
 
 #### Бэкап
 
@@ -4116,6 +4120,7 @@ init-opencode --help                     # help
 ```bash
 mv .opencode/ .opencode.bak.20260922-153045/
 ```
+
 Timestamp — `YYYYMMDD-HHMMSS`. Можно откатиться, если что-то пошло не так.
 
 **Почему не перезапись:** `.opencode/` содержит ваши данные. Перезапись = потеря `WORK_LOG.md`, `_decisions.md`, `_backlog.md`, `_concepts.md`.
@@ -4127,6 +4132,7 @@ Timestamp — `YYYYMMDD-HHMMSS`. Можно откатиться, если чт
 ```bash
 init-opencode ~/Projects/my-app
 ```
+
 Подсказка в конце: _«Starting a new project — help me fill in the template.»_
 
 **С анализом:**
@@ -4134,6 +4140,7 @@ init-opencode ~/Projects/my-app
 ```bash
 init-opencode --analyze ~/Projects/existing-repo
 ```
+
 Подсказка: _«Analyze the repository and fill in the template.»_
 
 **Разница — в подсказке для агента.** Сама установка одинакова.
@@ -4163,6 +4170,7 @@ my-app/
 ├── src/
 └── README.md
 ```
+
 **`.template-version`:**
 
 ```text
@@ -4170,54 +4178,52 @@ version: v0.1.0
 installed: 2026-09-22
 source: /home/user/Projects/opencode-templates
 ```
+
 ### 17.6 Update
 
 #### Что делает
 
 1. Читает `.template-version`
-    
-2. Проверяет, что `.opencode/` существует
-    
-3. Для каждого файла из списка **ALWAYS_OVERWRITE**:
-    
-    - Сравнивает с версией из `template/` (через `cmp -s`)
-        
-    - Если отличается — копирует
-        
-4. Обновляет `.template-version`
-    
-5. Сообщает, сколько файлов обновлено
 
+2. Проверяет, что `.opencode/` существует
+
+3. Для каждого файла из списка **ALWAYS_OVERWRITE**:
+
+   - Сравнивает с версией из `template/` (через `cmp -s`)
+
+   - Если отличается — копирует
+
+4. Обновляет `.template-version`
+
+5. Сообщает, сколько файлов обновлено
 
 #### Два списка
 
 **NEVER_OVERWRITE** (пользовательские):
 
 - `WORK_LOG.md`
-    
-- `_concepts.md`
-    
-- `_setup.md`
-    
-- `_decisions.md`
-    
-- `_backlog.md`
-    
-- `_meta.md`
-    
-- Всё в `analysis/`, `runbooks/`, `issue/`, `playbook/`, `pr/`, `archive/`
 
+- `_concepts.md`
+
+- `_setup.md`
+
+- `_decisions.md`
+
+- `_backlog.md`
+
+- `_meta.md`
+
+- Всё в `analysis/`, `runbooks/`, `issue/`, `playbook/`, `pr/`, `archive/`
 
 **ALWAYS_OVERWRITE** (шаблонные):
 
 - `AGENTS.md`, `index.md`, `log.md`, `SPEC_REFERENCE.md`
-    
-- `_codestyle.md`, `_ci.md`, `_commands.md`, `_files.md`
-    
-- `_glossary.md`, `_security.md`, `_troubleshooting.md`
-    
-- `_templates.md`, `_env.md`, `_worklog.md`
 
+- `_codestyle.md`, `_ci.md`, `_commands.md`, `_files.md`
+
+- `_glossary.md`, `_security.md`, `_troubleshooting.md`
+
+- `_templates.md`, `_env.md`, `_worklog.md`
 
 **Файлы из NEVER не участвуют в цикле вообще.** Мы их просто не трогаем.
 
@@ -4231,6 +4237,7 @@ init-opencode --diff ~/Projects/my-app
 # 3. Применить
 init-opencode --update ~/Projects/my-app
 ```
+
 **Никогда не запускайте `--update` без предварительного `--diff`.** Может быть, вы кастомизировали один из ALWAYS-файлов — и потеряете изменения.
 
 #### Что если кастомизировали ALWAYS-файл
@@ -4244,6 +4251,7 @@ init-opencode --update ~/Projects/my-app
 ```bash
 cp .opencode/_codestyle.md .opencode/_codestyle.local.md
 ```
+
 Потом в `_codestyle.md` — ссылка: _«See also `_codestyle.local.md` for project-specific rules.»_
 
 **Вариант B: перенести в NEVER.**
@@ -4261,15 +4269,14 @@ cp .opencode/_codestyle.md .opencode/_codestyle.local.md
 #### Что делает
 
 1. Проверяет, что `.opencode/` существует
-    
-2. Для каждого ALWAYS-файла:
-    
-    - Сравнивает с `template/`
-        
-    - Если отличается — показывает `diff -u`
-        
-3. Сообщает, сколько файлов изменится
 
+2. Для каждого ALWAYS-файла:
+
+   - Сравнивает с `template/`
+
+   - Если отличается — показывает `diff -u`
+
+3. Сообщает, сколько файлов изменится
 
 **Ничего не пишет.** Только preview.
 
@@ -4282,12 +4289,12 @@ cp .opencode/_codestyle.md .opencode/_codestyle.local.md
 +++ template/_codestyle.md     2026-09-22 ...
 @@ -10,6 +10,10 @@
  ## Lint — 0 offenses
- 
+
  ```bash
  bundle exec rubocop
 ```
-+Lint must pass with **zero offenses** before any commit.  
-+  
++Lint must pass with **zero offenses** before any commit.
++
 +See _ci.md for CI-specific lint configuration.
 ````
 
@@ -4304,6 +4311,7 @@ cp .opencode/_codestyle.md .opencode/_codestyle.local.md
 init-opencode --update ~/Projects/my-app
 ```
 ````
+
 Если хотите **только часть** изменений:
 
 ```bash
@@ -4313,6 +4321,7 @@ init-opencode --diff ~/Projects/my-app > /tmp/changes.diff
 # Применить выборочно
 cd ~/Projects/my-app && patch -p1 < /tmp/changes.diff
 ```
+
 **Продвинутое использование.** Обычно `--update` достаточно.
 
 ### 17.8 Environment
@@ -4325,24 +4334,24 @@ cd ~/Projects/my-app && patch -p1 < /tmp/changes.diff
 OPENCODE_TEMPLATE_REPO=~/work/opencode-templates \
   init-opencode ~/Projects/my-app
 ```
+
 **Когда полезно:**
 
 - Шаблон в нестандартном месте
-    
-- Несколько версий шаблона (stable, dev)
-    
-- CI, где `$HOME` другой
 
+- Несколько версий шаблона (stable, dev)
+
+- CI, где `$HOME` другой
 
 **В CI:**
 
 ```yaml
-
 - name: Install bundle
   env:
     OPENCODE_TEMPLATE_REPO: /opt/opencode-templates
   run: init-opencode ${{ github.workspace }}
 ```
+
 ### 17.9 Обработка ошибок
 
 Скрипт использует `set -euo pipefail`. Это значит: любая ошибка → скрипт останавливается.
@@ -4378,13 +4387,12 @@ Fix: `init-opencode --help`.
 Если install упал на середине:
 
 1. Проверьте `.opencode/` — часть файлов скопирована?
-    
-2. Если да — удалите `.opencode/`
-    
-3. Проверьте бэкап: `.opencode.bak.*` — там старые данные
-    
-4. Запустите install заново
 
+2. Если да — удалите `.opencode/`
+
+3. Проверьте бэкап: `.opencode.bak.*` — там старые данные
+
+4. Запустите install заново
 
 **Бэкап гарантирует**, что старые данные не потеряны.
 
@@ -4395,6 +4403,7 @@ Fix: `init-opencode --help`.
 ```text
 v0.1.0
 ```
+
 Одна строка. SemVer.
 
 #### Что делать при обновлении шаблона
@@ -4406,25 +4415,24 @@ v0.1.0 → v0.1.1   (bug fix)
 v0.1.1 → v0.2.0   (new features, backward compatible)
 v0.2.0 → v1.0.0   (breaking changes)
 ```
+
 **SemVer для шаблонов:**
 
 - **Patch** (`v0.1.1`) — исправления в существующих файлах
-    
-- **Minor** (`v0.2.0`) — новый файл, новая секция, совместимо
-    
-- **Major** (`v1.0.0`) — структурные изменения, breaking
 
+- **Minor** (`v0.2.0`) — новый файл, новая секция, совместимо
+
+- **Major** (`v1.0.0`) — структурные изменения, breaking
 
 **Что такое breaking changes:**
 
 - Переименование файлов
-    
-- Удаление файлов
-    
-- Изменение структуры frontmatter
-    
-- Несовместимое изменение `init-opencode`
 
+- Удаление файлов
+
+- Изменение структуры frontmatter
+
+- Несовместимое изменение `init-opencode`
 
 ### 17.11 Как добавить новый файл в шаблон
 
@@ -4483,9 +4491,8 @@ v0.2.0 → v1.0.0   (breaking changes)
 **Решения:**
 
 - Если хотите, чтобы обновление доходило — перенесите `_concepts.md` в `ALWAYS`
-    
-- Но тогда пользовательские `_concepts.md` перезапишутся
 
+- Но тогда пользовательские `_concepts.md` перезапишутся
 
 **Компромисс:** добавьте новую секцию в отдельный файл. Например, `_concepts-advanced.md`. Пользователи, кому надо — прочитают. Остальным — не мешает.
 
@@ -4496,55 +4503,52 @@ v0.2.0 → v1.0.0   (breaking changes)
 **NEVER** (пользовательские):
 
 - `_concepts.md` — архитектура проекта уникальна.
-    
-- `_setup.md` — версии, команды уникальны.
-    
-- `_decisions.md` — ADR уникальны.
-    
-- `_backlog.md` — задачи уникальны.
-    
-- `_meta.md` — версия и даты уникальны.
-    
-- `WORK_LOG.md` — сессии уникальны.
 
+- `_setup.md` — версии, команды уникальны.
+
+- `_decisions.md` — ADR уникальны.
+
+- `_backlog.md` — задачи уникальны.
+
+- `_meta.md` — версия и даты уникальны.
+
+- `WORK_LOG.md` — сессии уникальны.
 
 **ALWAYS** (шаблонные):
 
 - `AGENTS.md` — структура одинакова, заполняется плейсхолдерами.
-    
-- `index.md` — структура одинакова.
-    
-- `log.md` — структура одинакова.
-    
-- `SPEC_REFERENCE.md` — выдержка из спеки, не уникальна.
-    
-- `_codestyle.md` — структура одинакова.
-    
-- `_ci.md` — структура одинакова.
-    
-- `_commands.md` — структура одинакова.
-    
-- `_files.md` — структура одинакова.
-    
-- `_glossary.md` — структура одинакова.
-    
-- `_security.md` — структура одинакова.
-    
-- `_troubleshooting.md` — структура одинакова.
-    
-- `_templates.md` — структура одинакова.
-    
-- `_env.md` — структура одинакова.
-    
-- `_worklog.md` — шаблон, не данные.
 
+- `index.md` — структура одинакова.
+
+- `log.md` — структура одинакова.
+
+- `SPEC_REFERENCE.md` — выдержка из спеки, не уникальна.
+
+- `_codestyle.md` — структура одинакова.
+
+- `_ci.md` — структура одинакова.
+
+- `_commands.md` — структура одинакова.
+
+- `_files.md` — структура одинакова.
+
+- `_glossary.md` — структура одинакова.
+
+- `_security.md` — структура одинакова.
+
+- `_troubleshooting.md` — структура одинакова.
+
+- `_templates.md` — структура одинакова.
+
+- `_env.md` — структура одинакова.
+
+- `_worklog.md` — шаблон, не данные.
 
 **Пограничные случаи:**
 
 - **`_env.md`** — может быть и там, и там. Структура общая, но URL'ы уникальны. Я поставил в ALWAYS — структура обновляется, значения теряются.
-    
-- **`_meta.md`** — версия уникальна, но структура одинакова. Я поставил в NEVER.
 
+- **`_meta.md`** — версия уникальна, но структура одинакова. Я поставил в NEVER.
 
 **Всё зависит от ваших приоритетов.** Что важнее: свежая структура или сохранённые данные?
 
@@ -4557,32 +4561,35 @@ v0.2.0 → v1.0.0   (breaking changes)
 ```bash
 mv .opencode .opencode.old
 ```
+
 **2. Install.**
 
 ```bash
 init-opencode ~/Projects/my-app
 ```
+
 **3. Проверить разницу.**
 
 ```bash
 diff -r .opencode.old .opencode
 ```
+
 **4. Перенести данные вручную.**
 
 - `WORK_LOG.md` — скопировать.
-    
-- `_decisions.md` — скопировать.
-    
-- `_concepts.md` — скопировать.
-    
-- `_backlog.md` — скопировать.
 
+- `_decisions.md` — скопировать.
+
+- `_concepts.md` — скопировать.
+
+- `_backlog.md` — скопировать.
 
 **5. Удалить бэкап.**
 
 ```bash
 rm -rf .opencode.old
 ```
+
 **Проблема:** ручной перенос. Но это один раз.
 
 ### 17.15 Работа с несколькими проектами
@@ -4598,6 +4605,7 @@ for project in ~/Projects/*; do
   init-opencode "$project"
 done
 ```
+
 **Осторожно:** проверяйте каждый проект отдельно. Не все должны получать bundle.
 
 ### 17.16 Обновление через CI
@@ -4609,7 +4617,7 @@ done
 name: Update bundle
 on:
   schedule:
-    - cron: '0 9 * * 1'  # Каждый понедельник в 9:00
+    - cron: "0 9 * * 1" # Каждый понедельник в 9:00
   workflow_dispatch:
 jobs:
   update:
@@ -4630,12 +4638,12 @@ jobs:
             git push
           fi
 ```
+
 **Что нужно:**
 
 - Bundle **должен** коммититься (иначе CI не работает)
-    
-- Или — bundle в отдельном репозитории, CI обновляет его
 
+- Или — bundle в отдельном репозитории, CI обновляет его
 
 **Обычно не нужно.** Bundle — локальный. Но для команды, где все используют один шаблон, — полезно.
 
@@ -4670,24 +4678,24 @@ init-opencode --update /tmp/test1
 grep "Custom" /tmp/test1/.opencode/_decisions.md
 # → должен остаться
 ```
+
 **Полный набор тестов:**
 
 1. Install в чистую директорию
-    
-2. Install в директорию с `.opencode/` (проверить бэкап)
-    
-3. Update сразу после install (no-op)
-    
-4. Update после изменения template
-    
-5. NEVER-файлы не тронуты
-    
-6. Diff показывает корректные различия
-    
-7. `--help` работает
-    
-8. Неверный аргумент → ошибка
 
+2. Install в директорию с `.opencode/` (проверить бэкап)
+
+3. Update сразу после install (no-op)
+
+4. Update после изменения template
+
+5. NEVER-файлы не тронуты
+
+6. Diff показывает корректные различия
+
+7. `--help` работает
+
+8. Неверный аргумент → ошибка
 
 ### 17.18 Anti-patterns
 
@@ -4733,14 +4741,14 @@ init-opencode
     ├─→ .template-version   (машинные метаданные)
     └─→ _meta.md            (человеческие метаданные)
 ```
+
 **Скрипт связывает:**
 
 - Репозиторий шаблонов (источник)
-    
-- Проект (назначение)
-    
-- Метаданные версии
 
+- Проект (назначение)
+
+- Метаданные версии
 
 ### 17.20 Упражнение
 
@@ -4749,45 +4757,43 @@ init-opencode
 Если ещё не установили `init-opencode`:
 
 1. Клонируйте репозиторий шаблонов
-    
-2. Создайте symlink
-    
-3. Проверьте `--help`
 
+2. Создайте symlink
+
+3. Проверьте `--help`
 
 **Часть 2: тестирование.**
 
 Создайте тестовый проект. Прогоните:
 
 1. `init-opencode /tmp/test-project`
-    
-2. Проверьте структуру
-    
-3. `init-opencode --diff /tmp/test-project` — должно быть `no differences`
-    
-4. Измените что-то в `template/`
-    
-5. `init-opencode --diff /tmp/test-project` — покажет изменения
-    
-6. `init-opencode --update /tmp/test-project`
 
+2. Проверьте структуру
+
+3. `init-opencode --diff /tmp/test-project` — должно быть `no differences`
+
+4. Измените что-то в `template/`
+
+5. `init-opencode --diff /tmp/test-project` — покажет изменения
+
+6. `init-opencode --update /tmp/test-project`
 
 **Часть 3: аудит вашего репозитория.**
 
 1. **VERSION** — актуальна?
-    
-2. **NEVER_OVERWRITE** — все файлы на месте? Ничего не забыли?
-    
-3. **ALWAYS_OVERWRITE** — все файлы на месте?
-    
-4. **README** — упоминает `init-opencode`?
 
+2. **NEVER_OVERWRITE** — все файлы на месте? Ничего не забыли?
+
+3. **ALWAYS_OVERWRITE** — все файлы на месте?
+
+4. **README** — упоминает `init-opencode`?
 
 ### 17.21 Что дальше
 
 В следующей главе — **Extending the bundle**. Как добавлять новые файлы, типы, изменять структуру. Что делать, когда стандартного набора не хватает.
 
 ## Chapter 18. Extending the bundle
+
 ## Глава 18. Расширения
 
 ### 18.1 Зачем расширять
@@ -4797,11 +4803,10 @@ init-opencode
 **Когда стандарта не хватает:**
 
 - Проект специфичен (например, встроенная система)
-    
-- Есть практики, которых нет в шаблоне
-    
-- Появилась новая категория знаний
 
+- Есть практики, которых нет в шаблоне
+
+- Появилась новая категория знаний
 
 **Расширение — это нормально.** OKF явно разрешает. Наш шаблон — тоже.
 
@@ -4819,6 +4824,7 @@ init-opencode
 4. Новая секция в существующем файле
 5. Новое правило в init-opencode
 ```
+
 Разберём каждый тип.
 
 ### 18.3 Тип 1: новый reference file
@@ -4828,28 +4834,26 @@ init-opencode
 **Примеры:**
 
 - `_api.md` — публичный API (методы, эндпоинты)
-    
-- `_deploy.md` — процесс деплоя
-    
-- `_release.md` — процесс релиза
-    
-- `_performance.md` — характеристики производительности
-    
-- `_testing.md` — если тесты сложные и не умещаются в `_codestyle.md`
-    
-- `_monitoring.md` — метрики, алерты, dashboards
-    
-- `_compliance.md` — GDPR, SOC2, HIPAA
 
+- `_deploy.md` — процесс деплоя
+
+- `_release.md` — процесс релиза
+
+- `_performance.md` — характеристики производительности
+
+- `_testing.md` — если тесты сложные и не умещаются в `_codestyle.md`
+
+- `_monitoring.md` — метрики, алерты, dashboards
+
+- `_compliance.md` — GDPR, SOC2, HIPAA
 
 **Когда НЕ создавать:**
 
 - Если умещается в существующий файл. Тесты — в `_codestyle.md`. Метрики — в `_env.md`.
-    
-- Если это одноразовая информация. Не заслуживает отдельного файла.
-    
-- Если файл будет пустым. Пустой файл хуже отсутствующего.
 
+- Если это одноразовая информация. Не заслуживает отдельного файла.
+
+- Если файл будет пустым. Пустой файл хуже отсутствующего.
 
 #### Как создать
 
@@ -4869,9 +4873,12 @@ description: "<one-line>"
 timestamp: <YYYY-MM-DD>
 tags: [<name>]
 ---
+
 # <Title>
+
 <content>
 ```
+
 **3. Обновить `AGENTS.md`.**
 
 Добавить в reference files:
@@ -4908,45 +4915,57 @@ tags: [api, reference]
 ---
 
 # Public API
+
 The public surface of the library. Everything here is guaranteed by
 semver. Everything else is internal
 
 ## Methods
+
 ### `Parser.parse(input)`
+
 Parses input and returns AST
+
 - **Input:** `String` or `IO`
 - **Returns:** `AST::Node`
 - **Raises:** `ParserError` on invalid input
 - **Since:** v1.0.0
-  
+
 ### `Parser.parse_stream(io)`
+
 Same as `parse`, but reads incrementally
+
 - **Input:** `IO`-like object
 - **Returns:** `Enumerator<AST::Node>`
 - **Since:** v1.2.0
-  
+
 ## Commands (CLI)
+
 ### `json-parser parse <file>`
+
 Parses file and prints AST to stdout
+
 - **Options:** `--pretty`, `--stream`
 - **Exit codes:** 0 success, 1 parse error, 2 IO error
-  
+
 ## Stability
+
 - **Stable:** everything in this document
 - **Deprecated:** `Parser.parse_legacy` — removed in v2.0.0
 - **Internal:** everything under `JSON::Parser::Internal`
 ```
+
 **Почему полезен:** агент по `_api.md` понимает, что можно менять, а что — публичный контракт.
 
 **Где в `AGENTS.md`:**
 
 ```markdown
-
 **Navigation & safety**
-| File | When to read |
-|------|-------------|
+
+| File               | When to read                              |
+| ------------------ | ----------------------------------------- |
 | [_api.md](_api.md) | Public API — methods, commands, endpoints |
 ```
+
 ### 18.4 Тип 2: новая директория
 
 **Когда:** нужна отдельная категория динамических артефактов.
@@ -4954,22 +4973,20 @@ Parses file and prints AST to stdout
 **Примеры:**
 
 - `metrics/` — замеры производительности по сессиям
-    
-- `incidents/` — история инцидентов (post-mortem)
-    
-- `experiments/` — эксперименты, A/B-тесты
-    
-- `meetings/` — заметки со встреч
-    
-- `research/` — исследовательские заметки
 
+- `incidents/` — история инцидентов (post-mortem)
+
+- `experiments/` — эксперименты, A/B-тесты
+
+- `meetings/` — заметки со встреч
+
+- `research/` — исследовательские заметки
 
 **Когда НЕ создавать:**
 
 - Если это часть существующей категории. Post-mortem — в `runbooks/`
-    
-- Если директория будет почти пустой
 
+- Если директория будет почти пустой
 
 #### Как создать
 
@@ -4989,11 +5006,14 @@ tags: [<name>, index]
 ---
 
 # <Title>
+
 <описание>
+
 ## Index
+
 | Date | Item | Status |
-|------|------|--------|
-| ... | ... | ... |
+| ---- | ---- | ------ |
+| ...  | ...  | ...    |
 ```
 
 **4. Создать шаблон `_<name>.md`**
@@ -5025,6 +5045,7 @@ Minor bump
 │   ├── 2026-09-15-db-failover.md
 │   └── 2026-08-20-api-outage.md
 ```
+
 **`incidents/index.md`:**
 
 ```markdown
@@ -5037,15 +5058,18 @@ tags: [incidents, index]
 ---
 
 # Incidents
+
 Post-mortem records for past incidents. For runbooks (procedures),
 see `runbooks/`
 
 ## Index
-| Date | Incident | Severity | Status |
-|------|----------|----------|--------|
-| 2026-09-15 | DB failover | P0 | resolved |
-| 2026-08-20 | API outage | P1 | resolved |
+
+| Date       | Incident    | Severity | Status   |
+| ---------- | ----------- | -------- | -------- |
+| 2026-09-15 | DB failover | P0       | resolved |
+| 2026-08-20 | API outage  | P1       | resolved |
 ```
+
 **`incidents/_postmortem.md`:**
 
 ```markdown
@@ -5062,13 +5086,16 @@ tags: [postmortem, <area>]
 # Post-mortem: <title>
 
 ## Timeline
+
 - HH:MM — <event>
 - HH:MM — <event>
-  
+
 ## Root cause
+
 <5 Whys>
 
 ## Impact
+
 <Who was affected, how long, financial>
 
 ## What went well
@@ -5076,22 +5103,26 @@ tags: [postmortem, <area>]
 ## What could be improved
 
 ## Action items
+
 - [ ] <action 1> — owner, deadline
 - [ ] <action 2>
-      
+
 ## Related
+
 - Runbook: [<runbook>](../runbooks/<file>.md)
 - ADR: [ADR-XXX](../_decisions.md#adr-xxx)
 ```
+
 **Где в `AGENTS.md`:**
 
 ```markdown
-
 **When things break**
-| File | When to read |
-|------|-------------|
+
+| File                             | When to read          |
+| -------------------------------- | --------------------- |
 | [incidents/](incidents/index.md) | Past incident records |
 ```
+
 **Почему полезно:** post-mortem — не runbook. Runbook — процедура. Post-mortem — разбор. Разные жанры.
 
 ### 18.5 Тип 3: новый `type`
@@ -5101,22 +5132,20 @@ tags: [postmortem, <area>]
 **Примеры:**
 
 - `type: runbook-index` — уже есть
-    
-- `type: postmortem` — новый
-    
-- `type: metrics` — новый
-    
-- `type: experiment` — новый
 
+- `type: postmortem` — новый
+
+- `type: metrics` — новый
+
+- `type: experiment` — новый
 
 **Когда НЕ создавать:**
 
 - Если есть близкий. `project-summary` vs `summary`
-    
-- Если это разовый файл. Не плодите типы ради одного файла
-    
-- Если можно обойтись без `type`. Но OKF требует `type` в каждом файле
 
+- Если это разовый файл. Не плодите типы ради одного файла
+
+- Если можно обойтись без `type`. Но OKF требует `type` в каждом файле
 
 #### Как добавить
 
@@ -5143,22 +5172,20 @@ Minor bump.
 **Используйте:**
 
 - Существительные: `postmortem`, `finding`, `playbook`
-    
-- Единственное число: `runbook`, а не `runbooks`
-    
-- Одно слово где возможно: `ci`, не `continuous-integration`
-    
-- Дефисы для составных: `runbook-index`, `project-summary`
 
+- Единственное число: `runbook`, а не `runbooks`
+
+- Одно слово где возможно: `ci`, не `continuous-integration`
+
+- Дефисы для составных: `runbook-index`, `project-summary`
 
 **Не используйте:**
 
 - Глаголы: `decision-log` — существительное, ок. `log-decision` — плохо
-    
-- Общие слова: `file`, `doc`, `thing`
-    
-- Сокращения без причины: `pdca`, `okr` — если они не общеприняты в команде
 
+- Общие слова: `file`, `doc`, `thing`
+
+- Сокращения без причины: `pdca`, `okr` — если они не общеприняты в команде
 
 #### Список типов в шаблоне
 
@@ -5171,6 +5198,7 @@ security, troubleshooting, ci, decision-log, backlog, worklog, templates,
 analysis-index, finding, runbook-index, runbook,
 project-summary, playbook, pr
 ```
+
 **Не создавайте новый тип, если можно использовать существующий.** Например, `postmortem`— новое, но если у вас один post-mortem в год — используйте `type: finding` или `type: log`.
 
 ### 18.6 Тип 4: новая секция в существующем файле
@@ -5180,22 +5208,20 @@ project-summary, playbook, pr
 **Примеры:**
 
 - В `_codestyle.md` — секция «Commit message format»
-    
-- В `_concepts.md` — секция «Performance characteristics»
-    
-- В `_setup.md` — секция «Troubleshooting during setup»
-    
-- В `_ci.md` — секция «Nightly jobs»
 
+- В `_concepts.md` — секция «Performance characteristics»
+
+- В `_setup.md` — секция «Troubleshooting during setup»
+
+- В `_ci.md` — секция «Nightly jobs»
 
 **Когда:**
 
 - Секция логически принадлежит файлу
-    
-- Файл не разрастётся до неприличия
-    
-- Секция не пересекается с другой
 
+- Файл не разрастётся до неприличия
+
+- Секция не пересекается с другой
 
 #### Как добавить
 
@@ -5211,19 +5237,22 @@ Patch bump: `v0.1.0 → v0.1.1`.
 
 ```markdown
 ## Commit message format
+
 Format: `<type>: <subject>`
 Types:
+
 - `feat` — new feature
 - `fix` — bug fix
 - `docs` — documentation
 - `refactor` — refactoring
 - `test` — tests
 - `chore` — maintenance
-Subject: imperative mood, no period, < 72 chars.
-Examples:
+  Subject: imperative mood, no period, < 72 chars.
+  Examples:
 - `feat: add streaming mode to parser`
 - `fix: handle nil input in Session#load`
 ```
+
 **Польза:** агент будет писать коммиты в правильном формате.
 
 ### 18.7 Тип 5: новое правило в `init-opencode`
@@ -5233,13 +5262,12 @@ Examples:
 **Примеры:**
 
 - Добавить файл в NEVER/ALWAYS
-    
-- Добавить новую директорию
-    
-- Изменить логику бэкапа
-    
-- Добавить новую опцию
 
+- Добавить новую директорию
+
+- Изменить логику бэкапа
+
+- Добавить новую опцию
 
 #### Как добавить
 
@@ -5278,6 +5306,7 @@ cmd_update() {
   done
 }
 ```
+
 **Обновить `usage()`** с описанием новой опции.
 
 **Обновить README_en.md и README_ru.md.**
@@ -5300,27 +5329,33 @@ tags: [api, reference]
 ---
 
 # Public API
+
 The public surface of the project. Everything here is guaranteed by
 semver. Everything else is internal
 
 ## Methods
+
 ### `<Class>.<method>(<args>)`
+
 <description>
 - **Input:** <types>
 - **Returns:** <type>
 - **Raises:** <exceptions>
 - **Since:** <version>
 ```
+
 #### Шаг 2: обновить AGENTS.md
 
 В `template/AGENTS.md`, в reference files:
 
 ```markdown
 **Navigation & safety**
-| File | When to read |
-|------|-------------|
+
+| File               | When to read                              |
+| ------------------ | ----------------------------------------- |
 | [_api.md](_api.md) | Public API — methods, commands, endpoints |
 ```
+
 #### Шаг 3: обновить init-opencode
 
 В `bin/init-opencode`:
@@ -5332,11 +5367,13 @@ ALWAYS_OVERWRITE=(
   ...
 )
 ```
+
 #### Шаг 4: обновить VERSION
 
 ```text
 v0.2.0 → v0.3.0
 ```
+
 Minor bump: новый файл.
 
 #### Шаг 5: обновить README
@@ -5360,11 +5397,12 @@ Minor bump: новый файл.
 В `template/_meta.md`, секция `OKF base + extensions`:
 
 ```markdown
-| Extension | What we added |
-|-----------|---------------|
-| ... | ... |
+| Extension | What we added        |
+| --------- | -------------------- |
+| ...       | ...                  |
 | `_api.md` | Public API reference |
 ```
+
 #### Шаг 7: commit, push
 
 ```bash
@@ -5372,6 +5410,7 @@ git add .
 git commit -m "Add _api.md reference file"
 git push
 ```
+
 #### Шаг 8: обновить в проектах
 
 ```bash
@@ -5379,6 +5418,7 @@ cd ~/Projects/my-app
 init-opencode --diff .   # покажет новый файл
 init-opencode --update . # применит
 ```
+
 **Готово.** Новый файл появился во всех проектах при следующем update.
 
 ### 18.9 Расширение в проекте (без изменения шаблона)
@@ -5402,8 +5442,10 @@ init-opencode --update . # применит
 ```markdown
 All shared workflow rules from `~/.config/opencode/AGENTS.md`.
 Project-specific extensions:
+
 - [_local.md](_local.md) — project-specific rules
 ```
+
 **`AGENTS.local.md` не в списках**, `--update` его не тронет.
 
 **Альтернатива:** редактируйте `AGENTS.md` проекта и **не запускайте `--update`**. Но тогда не получите обновлений.
@@ -5494,6 +5536,7 @@ Minor bump для новых файлов, major для переименован
               ▼
          .opencode/
 ```
+
 **Расширение bundle — это правка нескольких файлов.** Не одного.
 
 ### 18.13 Упражнение
@@ -5503,11 +5546,10 @@ Minor bump для новых файлов, major для переименован
 Есть ли в вашем проекте знания, которых **нет** в bundle?
 
 - Специфичные практики
-    
-- Необычные процессы
-    
-- Регулярные задачи
 
+- Необычные процессы
+
+- Регулярные задачи
 
 **Что стоит добавить?** Создайте `_<name>.md` или добавьте секцию.
 
@@ -5516,32 +5558,30 @@ Minor bump для новых файлов, major для переименован
 Если у вас уже есть расширения:
 
 1. **Они нужны?** Или можно удалить?
-    
-2. **Они актуальны?** Или устарели?
-    
-3. **Они задокументированы?** В `AGENTS.md`, README, словаре типов?
 
+2. **Они актуальны?** Или устарели?
+
+3. **Они задокументированы?** В `AGENTS.md`, README, словаре типов?
 
 **Часть 3: end-to-end.**
 
 Добавьте **один** новый reference file в свой шаблон:
 
 1. Создайте `template/_<name>.md`
-    
-2. Обновите `AGENTS.md`
-    
-3. Обновите `init-opencode`
-    
-4. Обновите `VERSION`
-    
-5. Обновите README
-    
-6. Обновите `_meta.md`
-    
-7. Commit, push
-    
-8. Проверьте в тестовом проекте
 
+2. Обновите `AGENTS.md`
+
+3. Обновите `init-opencode`
+
+4. Обновите `VERSION`
+
+5. Обновите README
+
+6. Обновите `_meta.md`
+
+7. Commit, push
+
+8. Проверьте в тестовом проекте
 
 **Замерьте время.** Оптимум: 20–30 минут на один файл.
 
@@ -5550,6 +5590,7 @@ Minor bump для новых файлов, major для переименован
 В следующей главе — **Anti-patterns**. Общие ошибки, которые встречаются при работе с bundle. Не в отдельных файлах, а во всей системе.
 
 ## Chapter 19. Anti-patterns
+
 ## Глава 19. Анти паттерны
 
 ### 19.1 Что такое anti-pattern
@@ -5559,13 +5600,12 @@ Minor bump для новых файлов, major для переименован
 В отличие от простой ошибки, anti-pattern:
 
 - **Кажется хорошей идеей.** Логика понятна, намерения благие.
-    
-- **Повторяется.** Один раз — случайность. Много раз — паттерн.
-    
-- **Имеет последствия.** Не сразу, но накапливаются.
-    
-- **Не очевидна.** Трудно заметить без рефлексии.
 
+- **Повторяется.** Один раз — случайность. Много раз — паттерн.
+
+- **Имеет последствия.** Не сразу, но накапливаются.
+
+- **Не очевидна.** Трудно заметить без рефлексии.
 
 **Пример простой ошибки:** забыли обновить `timestamp`.
 
@@ -5580,15 +5620,14 @@ Minor bump для новых файлов, major для переименован
 **Каждая категория ниже** — про свой уровень:
 
 - **Structural** — как устроен bundle
-    
-- **Content** — как пишем
-    
-- **Process** — как используем
-    
-- **Relational** — как связываем
-    
-- **Evolutionary** — как развиваем
 
+- **Content** — как пишем
+
+- **Process** — как используем
+
+- **Relational** — как связываем
+
+- **Evolutionary** — как развиваем
 
 ### 19.3 Structural anti-patterns
 
@@ -5603,24 +5642,22 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Шум в контексте
-    
-- Потеря фокуса агентом
-    
-- Расширяется бесконтрольно
-    
-- Дублирует reference files
 
+- Потеря фокуса агентом
+
+- Расширяется бесконтрольно
+
+- Дублирует reference files
 
 **Как лечить:**
 
 - Вынести всё, что «только когда пишешь код» → `_codestyle.md`
-    
-- CI-таблицы → `_ci.md`
-    
-- Карту файлов → `_files.md`
-    
-- Architecture details → `_concepts.md`
 
+- CI-таблицы → `_ci.md`
+
+- Карту файлов → `_files.md`
+
+- Architecture details → `_concepts.md`
 
 **Правило:** `AGENTS.md` — оглавление. Максимум 90 строк.
 
@@ -5633,18 +5670,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Глаз не находит нужное
-    
-- Порядок случайный
-    
-- Добавить новый файл некуда
 
+- Порядок случайный
+
+- Добавить новый файл некуда
 
 **Как лечить:**
 
 - Группировка по ситуации: onboarding, daily, break, navigation
-    
-- 3–5 групп — оптимум
 
+- 3–5 групп — оптимум
 
 #### Anti-pattern 3: файлы без назначения
 
@@ -5655,18 +5690,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Не используется
-    
-- Устаревает
-    
-- Захламляет bundle
 
+- Устаревает
+
+- Захламляет bundle
 
 **Как лечить:**
 
 - Для каждого файла сформулировать одно предложение: **«Этот файл отвечает на вопрос X»**
-    
-- Если не получается — удалить файл
 
+- Если не получается — удалить файл
 
 #### Anti-pattern 4: дублирование между файлами
 
@@ -5677,20 +5710,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Рассинхрон неизбежен
-    
-- При обновлении забываете обновить копию
-    
-- Через месяц — противоречия
 
+- При обновлении забываете обновить копию
+
+- Через месяц — противоречия
 
 **Как лечить:**
 
 - **Правило «link, don't duplicate».**
-    
-- Оставить в одном месте, в другом — ссылку
-    
-- Проверка: **«если изменится X — придётся править в двух файлах?»** Если да — дублирование
 
+- Оставить в одном месте, в другом — ссылку
+
+- Проверка: **«если изменится X — придётся править в двух файлах?»** Если да — дублирование
 
 #### Anti-pattern 5: bundle в корне репозитория
 
@@ -5701,20 +5732,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Загрязняет репозиторий
-    
-- Смешивается с публичной документацией
-    
-- Не понятно, что это локальное
-    
-- Риск случайного коммита
 
+- Смешивается с публичной документацией
+
+- Не понятно, что это локальное
+
+- Риск случайного коммита
 
 **Как лечить:**
 
 - Bundle в `.opencode/`
-    
-- В `.git/info/exclude`
 
+- В `.git/info/exclude`
 
 #### Anti-pattern 6: неполный bundle
 
@@ -5725,18 +5754,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Динамические артефакты некуда класть
-    
-- Workflows не работают
-    
-- Bundle не самодостаточен
 
+- Workflows не работают
+
+- Bundle не самодостаточен
 
 **Как лечить:**
 
 - Использовать `init-opencode` — он ставит полный bundle
-    
-- Если ручная установка — не забывать про `issue/`, `playbook/`, `pr/`, `analysis/`, `runbooks/`, `archive/`
 
+- Если ручная установка — не забывать про `issue/`, `playbook/`, `pr/`, `analysis/`, `runbooks/`, `archive/`
 
 ### 19.4 Content anti-patterns
 
@@ -5751,20 +5778,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - «Потом» не наступает
-    
-- Агент читает пустоту
-    
-- Захламляет bundle
 
+- Агент читает пустоту
+
+- Захламляет bundle
 
 **Как лечить:**
 
 - Если не заполнено — удалить
-    
-- Или заполнить **сразу**. Хотя бы минимально
-    
-- **Пустой файл хуже отсутствующего.** Отсутствие = «не нужно». Пустой = «нужно, но забыли»
 
+- Или заполнить **сразу**. Хотя бы минимально
+
+- **Пустой файл хуже отсутствующего.** Отсутствие = «не нужно». Пустой = «нужно, но забыли»
 
 #### Anti-pattern 8: устаревшие файлы
 
@@ -5775,20 +5800,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Агент работает по ложным данным
-    
-- Хуже, чем отсутствие файла
-    
-- Подрывает доверие к bundle
 
+- Хуже, чем отсутствие файла
+
+- Подрывает доверие к bundle
 
 **Как лечить:**
 
 - Обновлять при каждом значимом изменении
-    
-- Раз в квартал — ревизия `timestamp`
-    
-- Если файл не актуален — обновить или удалить
 
+- Раз в квартал — ревизия `timestamp`
+
+- Если файл не актуален — обновить или удалить
 
 #### Anti-pattern 9: длинные файлы
 
@@ -5799,26 +5822,24 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Файл перестаёт читаться
-    
-- Агент тонет в деталях
-    
-- Сложно поддерживать
 
+- Агент тонет в деталях
+
+- Сложно поддерживать
 
 **Как лечить:**
 
 - Если файл > 100 строк — разбить или сократить
-    
-- **`_concepts.md`** — 80 строк оптимум
-    
-- **`_setup.md`** — 60 строк
-    
-- **`_troubleshooting.md`** — 80–100 строк (растёт)
-    
-- **`_ci.md`** — 60–80 строк
-    
-- **`AGENTS.md`** — 60–90 строк
 
+- **`_concepts.md`** — 80 строк оптимум
+
+- **`_setup.md`** — 60 строк
+
+- **`_troubleshooting.md`** — 80–100 строк (растёт)
+
+- **`_ci.md`** — 60–80 строк
+
+- **`AGENTS.md`** — 60–90 строк
 
 #### Anti-pattern 10: файлы без timestamp
 
@@ -5829,18 +5850,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Невозможно понять актуальность
-    
-- Агент не отличает свежее от старого
-    
-- Нарушение OKF-конвенции
 
+- Агент не отличает свежее от старого
+
+- Нарушение OKF-конвенции
 
 **Как лечить:**
 
 - Заполнять **сразу** при создании файла
-    
-- Обновлять при каждом изменении
 
+- Обновлять при каждом изменении
 
 #### Anti-pattern 11: файлы с секретами
 
@@ -5851,20 +5870,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Утечка при первом коммите
-    
-- Даже если не коммитится — рискует
-    
-- Нарушение базовых правил
 
+- Даже если не коммитится — рискует
+
+- Нарушение базовых правил
 
 **Как лечить:**
 
 - **Никогда** не хранить секреты в bundle
-    
-- Только ссылки: «Vault, путь X»
-    
-- Если случайно попал — отозвать, ротировать, очистить
 
+- Только ссылки: «Vault, путь X»
+
+- Если случайно попал — отозвать, ротировать, очистить
 
 #### Anti-pattern 12: смешение языков
 
@@ -5875,20 +5892,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Непрофессионально
-    
-- Агенту сложнее
-    
-- Сложно поддерживать
 
+- Агенту сложнее
+
+- Сложно поддерживать
 
 **Как лечить:**
 
 - Выбрать **один** язык для bundle
-    
-- Рекомендую английский — родной для LLM
-    
-- Личные пометки — на русском, но не смешивать
 
+- Рекомендую английский — родной для LLM
+
+- Личные пометки — на русском, но не смешивать
 
 ### 19.5 Process anti-patterns
 
@@ -5903,20 +5918,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Bundle устаревает
-    
-- Через месяц бесполезен
-    
-- Лучше не иметь, чем иметь мёртвый
 
+- Через месяц бесполезен
+
+- Лучше не иметь, чем иметь мёртвый
 
 **Как лечить:**
 
 - Начать с **одного** файла — WORK_LOG
-    
-- Ввести ритуал: конец сессии → запись
-    
-- Через неделю — заметите пользу
 
+- Ввести ритуал: конец сессии → запись
+
+- Через неделю — заметите пользу
 
 #### Anti-pattern 14: bundle используется частично
 
@@ -5927,20 +5940,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Динамика теряется
-    
-- Связи между файлами не работают
-    
-- Bundle не самодостаточен
 
+- Связи между файлами не работают
+
+- Bundle не самодостаточен
 
 **Как лечить:**
 
 - Использовать **весь** bundle
-    
-- Если какой-то файл не нужен — удалить, а не игнорировать
-    
-- **Пустой файл хуже отсутствующего.**
 
+- Если какой-то файл не нужен — удалить, а не игнорировать
+
+- **Пустой файл хуже отсутствующего.**
 
 #### Anti-pattern 15: bundle без ритуала
 
@@ -5951,24 +5962,22 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Нерегулярно → бесполезно
-    
-- Пропустили сессию → пропустили ещё
-    
-- Через месяц — заброшен
 
+- Пропустили сессию → пропустили ещё
+
+- Через месяц — заброшен
 
 **Как лечить:**
 
 - Ввести **триггеры**:
-    
-    - Начало сессии → прочитать WORK_LOG
-        
-    - Конец сессии → записать WORK_LOG
-        
-    - Новая идея → в backlog
-        
-    - Значимое решение → ADR
-        
+
+  - Начало сессии → прочитать WORK_LOG
+
+  - Конец сессии → записать WORK_LOG
+
+  - Новая идея → в backlog
+
+  - Значимое решение → ADR
 
 #### Anti-pattern 16: bundle заменяет реальную работу
 
@@ -5979,18 +5988,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Bundle — инструмент, не цель
-    
-- Цель — закрывать задачи
-    
-- Бесконечное «улучшение» bundle — форма прокрастинации
 
+- Цель — закрывать задачи
+
+- Бесконечное «улучшение» bundle — форма прокрастинации
 
 **Как лечить:**
 
 - **Правило:** bundle обновляется **по мере работы**. Не вместо.
-    
-- Если за день не сделали ни одной задачи, но правили bundle — что-то не так
 
+- Если за день не сделали ни одной задачи, но правили bundle — что-то не так
 
 #### Anti-pattern 17: bundle для галочки
 
@@ -6001,18 +6008,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Bundle становится мёртвым грузом
-    
-- Тратите время на поддержку без пользы
-    
-- Лучше не иметь
 
+- Тратите время на поддержку без пользы
+
+- Лучше не иметь
 
 **Как лечить:**
 
 - Честно ответить: **«Помогает ли bundle?»**
-    
-- Если нет — либо понять, почему, либо удалить
 
+- Если нет — либо понять, почему, либо удалить
 
 ### 19.6 Relational anti-patterns
 
@@ -6027,18 +6032,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Агент пытается читать — не находит
-    
-- Раздражает
-    
-- Подрывает доверие
 
+- Раздражает
+
+- Подрывает доверие
 
 **Как лечить:**
 
 - При удалении файла — grep по ссылкам
-    
-- Регулярная проверка: `grep -r '\[.*\](.*\.md)' .` и проверка
 
+- Регулярная проверка: `grep -r '\[.*\](.*\.md)' .` и проверка
 
 #### Anti-pattern 19: циклы ссылок
 
@@ -6049,18 +6052,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Агент может уйти в цикл
-    
-- Запутывает
-    
-- Бессмысленно
 
+- Запутывает
+
+- Бессмысленно
 
 **Как лечить:**
 
 - Держать граф ссылок **ацикличным**
-    
-- Если цикл — заменить одну из ссылок на текстовое упоминание
 
+- Если цикл — заменить одну из ссылок на текстовое упоминание
 
 #### Anti-pattern 20: файлы, ссылающиеся сами на себя
 
@@ -6071,14 +6072,12 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Бессмысленно
-    
-- Выглядит как баг
 
+- Выглядит как баг
 
 **Как лечить:**
 
 - Проверка: `grep -r "$(basename "$f")" "$f"`
-
 
 #### Anti-pattern 21: bundle для одного человека
 
@@ -6089,18 +6088,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Агент не понимает
-    
-- Коллега не понимает
-    
-- Вы через полгода не понимаете
 
+- Коллега не понимает
+
+- Вы через полгода не понимаете
 
 **Как лечить:**
 
 - **Правило «другого человека»**: если коллега прочитает — поймёт?
-    
-- Писать для будущего себя, не для текущего
 
+- Писать для будущего себя, не для текущего
 
 #### Anti-pattern 22: bundle без контекста
 
@@ -6111,18 +6108,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Нет понимания мотивации
-    
-- Агенту сложно принимать решения
-    
-- «Почему» — важнее, чем «что»
 
+- Агенту сложно принимать решения
+
+- «Почему» — важнее, чем «что»
 
 **Как лечить:**
 
 - В `_concepts.md` — не только «что», но и «почему так»
-    
-- Или ссылка на ADR: _«Почему pipeline — см. ADR-005.»_
 
+- Или ссылка на ADR: _«Почему pipeline — см. ADR-005.»_
 
 ### 19.7 Evolutionary anti-patterns
 
@@ -6137,22 +6132,20 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Устарел
-    
-- `_troubleshooting.md` не пополняется
-    
-- `_backlog.md` неактуален
-    
-- Bundle — **живая система**
 
+- `_troubleshooting.md` не пополняется
+
+- `_backlog.md` неактуален
+
+- Bundle — **живая система**
 
 **Как лечить:**
 
 - `_troubleshooting.md` — после каждой решённой проблемы
-    
-- `_backlog.md` — при появлении/завершении задач
-    
-- `_ci.md` — при изменении workflows
 
+- `_backlog.md` — при появлении/завершении задач
+
+- `_ci.md` — при изменении workflows
 
 #### Anti-pattern 24: bundle растёт бесконтрольно
 
@@ -6163,22 +6156,20 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Файлы нечитаемы
-    
-- Планирование замедляется
-    
-- Полезное тонет в мусоре
 
+- Планирование замедляется
+
+- Полезное тонет в мусоре
 
 **Как лечить:**
 
 - Раз в месяц — ревизия
-    
-- `_backlog.md` — удалять неактуальное
-    
-- `_files.md` — только 15–30 ключевых файлов
-    
-- `_decisions.md` — статус `deprecated` для устаревших ADR
 
+- `_backlog.md` — удалять неактуальное
+
+- `_files.md` — только 15–30 ключевых файлов
+
+- `_decisions.md` — статус `deprecated` для устаревших ADR
 
 #### Anti-pattern 25: расширения без надобности
 
@@ -6189,18 +6180,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Bundle сложнее
-    
-- Больше поддержки
-    
-- Новому человеку непонятно
 
+- Больше поддержки
+
+- Новому человеку непонятно
 
 **Как лечить:**
 
 - **Минимализм.** Только то, что **реально** нужно
-    
-- Ревизия раз в полгода: какой файл не читал ни разу? Удалить.
 
+- Ревизия раз в полгода: какой файл не читал ни разу? Удалить.
 
 #### Anti-pattern 26: breaking changes без версии
 
@@ -6211,20 +6200,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Пользователи теряют файл
-    
-- Ссылки битые
-    
-- `--update` может сломаться
 
+- Ссылки битые
+
+- `--update` может сломаться
 
 **Как лечить:**
 
 - **SemVer.** Breaking changes — major bump
-    
-- Переименования — breaking
-    
-- Удаления — breaking
 
+- Переименования — breaking
+
+- Удаления — breaking
 
 #### Anti-pattern 27: нет миграции
 
@@ -6235,20 +6222,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Пользователи в панике
-    
-- Данные потеряны
-    
-- Доверие подорвано
 
+- Данные потеряны
+
+- Доверие подорвано
 
 **Как лечить:**
 
 - Для major изменений — **migration guide**
-    
-- `init-opencode --migrate` — опциональный режим
-    
-- Или — предоставить скрипт миграции
 
+- `init-opencode --migrate` — опциональный режим
+
+- Или — предоставить скрипт миграции
 
 ### 19.8 Мета-anti-pattern: слишком серьёзно
 
@@ -6259,20 +6244,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Bundle — **инструмент**, не цель
-    
-- Время уходит на полировку
-    
-- Задачи не закрываются
 
+- Время уходит на полировку
+
+- Задачи не закрываются
 
 **Как лечить:**
 
 - **Помните философию:** speed over quality
-    
-- Bundle может быть несовершенным
-    
-- Лучше — работающий, чем идеальный
 
+- Bundle может быть несовершенным
+
+- Лучше — работающий, чем идеальный
 
 ### 19.9 Как замечать anti-patterns
 
@@ -6283,47 +6266,42 @@ Minor bump для новых файлов, major для переименован
 **Про структуру:**
 
 - `AGENTS.md` растёт?
-    
-- Файлы дублируются?
-    
-- Есть пустые файлы?
 
+- Файлы дублируются?
+
+- Есть пустые файлы?
 
 **Про контент:**
 
 - Все `timestamp` свежие?
-    
-- Все ссылки работают?
-    
-- Нет секретов?
 
+- Все ссылки работают?
+
+- Нет секретов?
 
 **Про процесс:**
 
 - Все файлы используются?
-    
-- Ритуалы соблюдаются?
-    
-- Bundle помогает или мешает?
 
+- Ритуалы соблюдаются?
+
+- Bundle помогает или мешает?
 
 **Про связи:**
 
 - Ссылки работают?
-    
-- Нет циклов?
-    
-- Понятно без контекста?
 
+- Нет циклов?
+
+- Понятно без контекста?
 
 **Про эволюцию:**
 
 - Bundle растёт?
-    
-- Или устаревает?
-    
-- Расширения нужны?
 
+- Или устаревает?
+
+- Расширения нужны?
 
 **Если нашли 3+ проблемы** — пора чистить
 
@@ -6332,16 +6310,14 @@ Minor bump для новых файлов, major для переименован
 **Когда чистить:**
 
 - Раз в квартал — планово
-    
-- При обнаружении anti-pattern
-    
-- Перед крупным изменением
 
+- При обнаружении anti-pattern
+
+- Перед крупным изменением
 
 **Как чистить:**
 
 **Шаг 1: инвентаризация.**
-
 
 ```bash
 # Список файлов и размеров
@@ -6354,49 +6330,46 @@ grep -r '\[.*\](.*\.md)' .opencode/ | while read line; do
 done
 
 ```
+
 **Шаг 2: категоризация.**
 
 Для каждого файла:
 
 - **Используется** — оставить
-    
-- **Используется редко** — оставить, но проверить
-    
-- **Не используется** — удалить
-    
-- **Пустой** — удалить или заполнить
 
+- **Используется редко** — оставить, но проверить
+
+- **Не используется** — удалить
+
+- **Пустой** — удалить или заполнить
 
 **Шаг 3: ревизия контента.**
 
 Для каждого оставшегося файла:
 
 - Актуален? Обновить.
-    
-- Дублируется? Объединить.
-    
-- Устарел? Удалить.
 
+- Дублируется? Объединить.
+
+- Устарел? Удалить.
 
 **Шаг 4: ревизия структуры.**
 
 - `AGENTS.md` — оптимальный размер?
-    
-- Группировка в reference files — правильная?
-    
-- Словарь `type` — все типы используются?
 
+- Группировка в reference files — правильная?
+
+- Словарь `type` — все типы используются?
 
 **Шаг 5: документация.**
 
 После чистки — обновить:
 
 - README (если что-то изменилось).
-    
-- `_meta.md` (расширения).
-    
-- `VERSION` (если правки значительные).
 
+- `_meta.md` (расширения).
+
+- `VERSION` (если правки значительные).
 
 ### 19.11 Профилактика
 
@@ -6405,49 +6378,44 @@ done
 **1. Ритуалы.**
 
 - Начало сессии: прочитать WORK_LOG.
-    
-- Конец сессии: записать WORK_LOG.
-    
-- Новая идея: в backlog.
-    
-- Значимое решение: ADR.
 
+- Конец сессии: записать WORK_LOG.
+
+- Новая идея: в backlog.
+
+- Значимое решение: ADR.
 
 **2. Регулярная ревизия.**
 
 - Раз в месяц: проверить backlog.
-    
-- Раз в квартал: полная чистка bundle.
-    
-- Раз в полгода: аудит структуры.
 
+- Раз в квартал: полная чистка bundle.
+
+- Раз в полгода: аудит структуры.
 
 **3. Правило другого человека.**
 
 - Перед добавлением файла: «Коллега поймёт?»
-    
-- Перед секцией: «Это в другом файле?»
-    
-- Перед ссылкой: «Она работает?»
 
+- Перед секцией: «Это в другом файле?»
+
+- Перед ссылкой: «Она работает?»
 
 **4. Минимализм.**
 
 - Новый файл — только если **реально** нужен.
-    
-- Новая секция — только если **действительно** важна.
-    
-- Новая директория — только если есть что положить.
 
+- Новая секция — только если **действительно** важна.
+
+- Новая директория — только если есть что положить.
 
 **5. Консистентность.**
 
 - Один язык
-    
-- Один стиль
-    
-- Одна структура
 
+- Один стиль
+
+- Одна структура
 
 ### 19.12 Связь с другими файлами
 
@@ -6466,22 +6434,20 @@ Anti-patterns могут быть **в любом файле** и **в люб
 Для каждой найденной проблемы:
 
 - **Что именно** не так
-    
-- **Что делать** (обновить / удалить / объединить)
-    
-- **Когда** (сегодня / на выходных / в конце квартала)
 
+- **Что делать** (обновить / удалить / объединить)
+
+- **Когда** (сегодня / на выходных / в конце квартала)
 
 **Часть 3: ритуалы.**
 
 Определите **три ритуала**, которые вы введёте:
 
 - Например: конец сессии → 5 строк в WORK_LOG
-    
+
 - Раз в неделю → ревизия backlog
-    
+
 - Раз в месяц → проверка `timestamp` во всех файлах
-   
 
 **Запишите** их в `_meta.md` или в `AGENTS.md` своего проекта.
 
@@ -6489,8 +6455,8 @@ Anti-patterns могут быть **в любом файле** и **в люб
 
 В следующей главе — **Philosophy**. Почему bundle устроен именно так. Философия, которая стоит за всеми решениями: минимализм, speed over quality, OKF.
 
-
 ## Chapter 20. Philosophy
+
 ## Глава 20. Философия
 
 ### 20.1 Зачем эта глава
@@ -6498,13 +6464,12 @@ Anti-patterns могут быть **в любом файле** и **в люб
 Все предыдущие главы отвечали на вопросы **«что»** и **«как»**:
 
 - **Что** лежит в bundle
-    
-- **Как** этим пользоваться
-    
-- **Как** расширять
-    
-- **Что** не делать
 
+- **Как** этим пользоваться
+
+- **Как** расширять
+
+- **Что** не делать
 
 Эта глава — про **«почему»**.
 
@@ -6517,15 +6482,15 @@ Anti-patterns могут быть **в любом файле** и **в люб
 Всё устройство bundle сводится к шести принципам:
 
 1. **Speed over quality.**
-    
+
 2. **Минимализм.**
-    
+
 3. **Ленивая загрузка.**
-    
+
 4. **Локальность.**
-    
+
 5. **Ясность через структуру.**
-    
+
 6. **OKF как фундамент.**
 
 Разберём каждый.
@@ -6539,11 +6504,11 @@ Anti-patterns могут быть **в любом файле** и **в люб
 Проект фильтрует изменения через:
 
 - CI (тесты, линт, сборка)
-    
+
 - Ревью (человек проверяет)
-    
+
 - Статический анализ (RuboCop, ESLint)
-    
+
 - Мониторинг (метрики после деплоя)
 
 Если что-то плохое прошло все фильтры — это **проблема процесса**, а не ваша.
@@ -6571,20 +6536,18 @@ Anti-patterns могут быть **в любом файле** и **в люб
 **Bundle не требует идеальности.**
 
 - `_concepts.md` может быть неполным. Заполните по мере необходимости
-    
-- `_troubleshooting.md` — обогащается после каждой проблемы
-    
-- `_backlog.md` — не roadmap, а черновик
 
+- `_troubleshooting.md` — обогащается после каждой проблемы
+
+- `_backlog.md` — не roadmap, а черновик
 
 **Bundle не тормозит.** Правило «за 5 секунд»:
 
 - Найти нужный файл — за 5 секунд
-    
-- Записать сессию — за 5 минут
-    
-- Обновить backlog — за 2 минуты
 
+- Записать сессию — за 5 минут
+
+- Обновить backlog — за 2 минуты
 
 Если что-то занимает дольше — **это проблема дизайна**
 
@@ -6609,11 +6572,10 @@ Anti-patterns могут быть **в любом файле** и **в люб
 **Bundle тоже не должен быть идеальным.**
 
 - Если файл не идеален — оставьте.
-    
-- Если ссылка битая — поправьте позже.
-    
-- Если ADR написан коряво — важно, чтобы **был**.
 
+- Если ссылка битая — поправьте позже.
+
+- Если ADR написан коряво — важно, чтобы **был**.
 
 **Лучше работающий несовершенный bundle, чем идеальный неработающий.**
 
@@ -6648,42 +6610,38 @@ OKF подчёркивает: знаний должно быть **ровно �
 **Длина файлов ограничена.**
 
 - `AGENTS.md` — 60–90 строк.
-    
-- `_setup.md` — 60 строк.
-    
-- `_concepts.md` — 80 строк.
-    
-- `_files.md` — 15–30 записей.
 
+- `_setup.md` — 60 строк.
+
+- `_concepts.md` — 80 строк.
+
+- `_files.md` — 15–30 записей.
 
 Если файл растёт больше — сигнал пересмотреть.
 
 **Удаление — часть работы.**
 
 - Устаревшие ADR — `deprecated`
-    
-- Выполненные задачи — удаляются из `_backlog.md`
-    
-- Ненужные файлы — удаляются
 
+- Выполненные задачи — удаляются из `_backlog.md`
+
+- Ненужные файлы — удаляются
 
 **Пустой файл хуже отсутствующего.**
 
 - Отсутствие файла = «не нужно»
-    
-- Пустой файл = «нужно, но забыли»
-    
-- Пустой файл **врёт**. Отсутствующий — честен.
 
+- Пустой файл = «нужно, но забыли»
+
+- Пустой файл **врёт**. Отсутствующий — честен.
 
 #### Ловушка
 
 **«А вдруг пригодится».**
 
 - «Добавлю секцию про X — вдруг понадобится.»
-    
-- «Создам файл `_api.md` — вдруг будет API.»
 
+- «Создам файл `_api.md` — вдруг будет API.»
 
 **Правильно:** добавить, когда **реально** понадобилось.
 
@@ -6726,24 +6684,22 @@ OKF подчёркивает: знаний должно быть **ровно �
 **Что читает агент:**
 
 - `AGENTS.md` — контекст
-    
-- `_codestyle.md` — как писать код
-    
-- `_files.md` — где User
-    
-- `_concepts.md` — архитектура
 
+- `_codestyle.md` — как писать код
+
+- `_files.md` — где User
+
+- `_concepts.md` — архитектура
 
 **Что НЕ читает:**
 
 - `_ci.md` — не про CI
-    
-- `_security.md` — не про секреты
-    
-- `runbooks/` — не инцидент
-    
-- `analysis/` — не анализ
 
+- `_security.md` — не про секреты
+
+- `runbooks/` — не инцидент
+
+- `analysis/` — не анализ
 
 **Экономия:** 4 файла вместо 20.
 
@@ -6754,11 +6710,10 @@ OKF подчёркивает: знаний должно быть **ровно �
 «Почему не grep?» — потому что:
 
 - Grep ищет **слова**, не **смысл**.
-    
+
 - Задача «напиши код» не содержит слова «codestyle».
-    
+
 - Таблица в `AGENTS.md` — **явное** знание. Grep — догадки.
-    
 
 **Eager loading.**
 
@@ -6793,30 +6748,26 @@ OKF подчёркивает: знаний должно быть **ровно �
 **`.opencode/` в `.git/info/exclude`.**
 
 - Локально для вашего клона
-    
-- Не заражает репозиторий
 
+- Не заражает репозиторий
 
 **`.gitignore` внутри `.opencode/`.**
 
 - Вторая линия обороны
-    
-- На случай, если `.opencode/` попадёт в git
 
+- На случай, если `.opencode/` попадёт в git
 
 **`WORK_LOG.md` — личный.**
 
 - Не синхронизируется
-    
-- Если нужно поделиться — копируйте в issue вручную
 
+- Если нужно поделиться — копируйте в issue вручную
 
 **`_decisions.md` — локальный.**
 
 - Может быть расшарен, если нужно
-    
-- Но по умолчанию — только для вас
 
+- Но по умолчанию — только для вас
 
 #### Ловушка
 
@@ -6825,9 +6776,8 @@ OKF подчёркивает: знаний должно быть **ровно �
 Можно — но осознанно. Через:
 
 - Копию в публичный репозиторий
-    
-- Или через issue/PR
 
+- Или через issue/PR
 
 **По умолчанию — не делится.**
 
@@ -6862,32 +6812,28 @@ OKF подчёркивает: знаний должно быть **ровно �
 **Frontmatter — обязателен.**
 
 - Метаданные парсятся
-    
+
 - `type`, `title`, `description` — понятны агенту без чтения body
-    
 
 **Секции — стандартные.**
 
 - `## Overview` — везде
-    
+
 - `## Key components` — в `_concepts.md`
-    
+
 - `## Symptom`, `## Cause`, `## Fix` — в `_troubleshooting.md`
-    
 
 **Таблицы вместо абзацев.**
 
 - Где возможно — таблица.
-    
-- Пара «ключ → значение» читается лучше, чем «X значит Y, а Z значит W»
 
+- Пара «ключ → значение» читается лучше, чем «X значит Y, а Z значит W»
 
 **Заголовки вместо переходов.**
 
 - Не «Далее рассмотрим...», а `## Следующая секция`
-    
+
 - Заголовок — якорь для чтения
- 
 
 #### Ловушка
 
@@ -6924,110 +6870,96 @@ OKF — открытый формат от Google Cloud. Минимализм, m
 **Простота.**
 
 - Markdown + YAML
-    
-- Читается `cat`
-    
-- Копируется `git clone`
 
+- Читается `cat`
+
+- Копируется `git clone`
 
 **Портативность.**
 
 - Не привязан к инструменту
-    
+
 - Работает с любым редактором
-    
+
 - Переносится между системами
- 
 
 **Стандарт.**
 
 - Google Cloud
-    
+
 - Открытый
-    
+
 - Стабильная спека
- 
 
 **Расширяемость.**
 
 - OKF явно разрешает добавление полей
-    
+
 - Не требует центральной регистрации типов
- 
 
 #### Что взято из OKF
 
 **Структура bundle.**
 
 - `index.md`, `log.md` — резервированные имена
-    
+
 - Concept documents — остальные файлы
- 
 
 **Frontmatter.**
 
 - Обязательное поле `type`
-    
+
 - Рекомендуемые: `title`, `description`, `resource`, `tags`, `timestamp`
- 
 
 **Cross-linking.**
 
 - Markdown-ссылки между концептами
-    
-- Ссылка утверждает «наличие отношения»
 
+- Ссылка утверждает «наличие отношения»
 
 **Citations.**
 
 - `## Citations` — конвенциональная секция
 
-
 **Толерантность.**
 
 - Не отвергать bundle из-за неизвестных полей
-    
+
 - Битые ссылки — допустимы
- 
 
 #### Что добавлено поверх OKF
 
 **`AGENTS.md` вместо `index.md`.**
 
 - OKF использует `index.md`
-    
-- OpenCode читает `AGENTS.md`
-    
-- Мы используем `AGENTS.md` + `index.md` как указатель
 
+- OpenCode читает `AGENTS.md`
+
+- Мы используем `AGENTS.md` + `index.md` как указатель
 
 **`_*.md` префикс.**
 
 - Конвенция из SASS/Jekyll
-    
-- Служебные файлы помечаются
 
+- Служебные файлы помечаются
 
 **`WORK_LOG.md`.**
 
 - Аналог OKF `log.md`
-    
-- Но локальный
 
+- Но локальный
 
 **Директории.**
 
 - `issue/`, `playbook/`, `pr/`, `analysis/`, `runbooks/`, `archive/`
-    
-- OKF не запрещает — мы добавляем
 
+- OKF не запрещает — мы добавляем
 
 **Расширенный словарь `type`.**
 
 - 26 типов
-    
+
 - Специфичны для нашей задачи
-  
 
 #### Ловушка
 
@@ -7071,20 +7003,20 @@ OKF — открытый формат от Google Cloud. Минимализм, m
                     ▼
                 OKF как фундамент
 ```
+
 **Пример:**
 
 - **Speed** требует не тормозить на перфекционизме
-    
-- **Минимализм** требует не писать лишнее
-    
-- **Ленивая загрузка** требует не грузить всё
-    
-- **Локальность** требует не блокироваться на согласовании
-    
-- **Ясность** требует структурировать
-    
-- **OKF** даёт формат
 
+- **Минимализм** требует не писать лишнее
+
+- **Ленивая загрузка** требует не грузить всё
+
+- **Локальность** требует не блокироваться на согласовании
+
+- **Ясность** требует структурировать
+
+- **OKF** даёт формат
 
 Все вместе: **быстро, минимально, по запросу, локально, структурированно, по стандарту**.
 
@@ -7093,13 +7025,12 @@ OKF — открытый формат от Google Cloud. Минимализм, m
 **Философия — не волшебство.** Она не решает:
 
 - **Плохой код.** Bundle не улучшает качество
-    
-- **Слабое ревью.** Bundle не заменяет ревьюеров
-    
-- **Плохую архитектуру.** Bundle не переделывает систему
-    
-- **Отсутствие дисциплины.** Bundle не заставит его использовать
 
+- **Слабое ревью.** Bundle не заменяет ревьюеров
+
+- **Плохую архитектуру.** Bundle не переделывает систему
+
+- **Отсутствие дисциплины.** Bundle не заставит его использовать
 
 **Bundle — инструмент.** Как молоток. Хорош в умелых руках, бесполезен в неумелых.
 
@@ -7132,25 +7063,22 @@ HIPAA, PCI-DSS. Нужны формальные процедуры, аудит, 
 **1. Это ускоряет?**
 
 - Если нет — почему делаете?
-    
-- Если да — делайте.
 
+- Если да — делайте.
 
 **2. Это минимально?**
 
 - Можно ли меньше?
-    
+
 - Что можно удалить?
-  
 
 **3. Это ясно?**
 
 - Поймёт ли коллега?
-    
+
 - Поймёт ли агент?
-    
+
 - Пойму ли я через год?
-  
 
 **Если три «да»** — решение правильное.
 
@@ -7159,29 +7087,24 @@ HIPAA, PCI-DSS. Нужны формальные процедуры, аудит, 
 Part IV закончен. Мы разобрали:
 
 - **Chapter 17.** `init-opencode`: install and update.
-    
+
 - **Chapter 18.** Extending the bundle.
-    
+
 - **Chapter 19.** Anti-patterns.
-    
+
 - **Chapter 20.** Philosophy.
-  
 
 Осталась **Part V — Appendices**:
 
 - **A.** Type dictionary.
-    
+
 - **B.** Full bundle structure.
-    
+
 - **C.** OKF spec extract.
-    
+
 - **D.** FAQ.
-    
 
 Это справочники. Их можно читать выборочно.
-
-
-
 
 ====---=============================================================
 
@@ -7190,14 +7113,8 @@ Part IV закончен. Мы разобрали:
 Part IV готов. Осталось:
 
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Appendix A — Type dictionary?
-
-
-
-
-
 
 ===---==============================================
 
@@ -7206,25 +7123,18 @@ Part IV готов. Осталось:
 Part IV — почти готов:
 
 - **Chapter 17.** `init-opencode`: install and update ✅
-    
+
 - **Chapter 18.** Extending the bundle ✅
-    
+
 - **Chapter 19.** Anti-patterns ✅
-    
+
 - **Chapter 20.** Philosophy — следующий, последний в Part IV
-    
 
 Потом:
 
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 20?
-
-
-
-
-
 
 ==---================================================================
 
@@ -7233,23 +7143,18 @@ Part IV — почти готов:
 Part IV — половина:
 
 - **Chapter 17.** `init-opencode`: install and update ✅
-    
+
 - **Chapter 18.** Extending the bundle ✅
-    
+
 - **Chapter 19.** Anti-patterns — следующий
-    
+
 - **Chapter 20.** Philosophy
-    
 
 Потом:
 
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 19?
-
-
-
 
 ==---============================================================================
 
@@ -7258,29 +7163,18 @@ Part IV — половина:
 Part IV — начали:
 
 - **Chapter 17.** `init-opencode`: install and update ✅
-    
+
 - **Chapter 18.** Extending the bundle — следующий
-    
+
 - **Chapter 19.** Anti-patterns
-    
+
 - **Chapter 20.** Philosophy
-    
 
 Потом:
 
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 18?
-
-
-
-
-
-
-
-
-
 
 ==---===========================================================================
 
@@ -7289,9 +7183,8 @@ Part IV — начали:
 Part III готов. Осталось:
 
 - **Part IV — Operations** (главы 17–20).
-    
-- **Part V — Appendices** (A–D).
 
+- **Part V — Appendices** (A–D).
 
 ===---========================================
 
@@ -7300,27 +7193,24 @@ Part III готов. Осталось:
 Part III — 5 из 6:
 
 - **Chapter 11.** Issue lifecycle ✅
-    
+
 - **Chapter 12.** Session lifecycle ✅
-    
+
 - **Chapter 13.** When CI fails ✅
-    
+
 - **Chapter 14.** Incident in prod ✅
-    
+
 - **Chapter 15.** Deep analysis ✅
-    
+
 - **Chapter 16.** Planning — следующий, последний в Part III
-    
 
 Потом:
 
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 16?
-
 
 ===---==============================================
 
@@ -7329,28 +7219,27 @@ Part III — 5 из 6:
 Part III — 4 из 6:
 
 - **Chapter 11.** Issue lifecycle ✅
-    
+
 - **Chapter 12.** Session lifecycle ✅
-    
+
 - **Chapter 13.** When CI fails ✅
-    
+
 - **Chapter 14.** Incident in prod ✅
-    
+
 - **Chapter 15.** Deep analysis — следующий
-    
+
 - **Chapter 16.** Planning
-    
 
 Потом:
 
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 15?
 
 ===-===================================================
+
 ### 13.15 Что дальше
 
 В следующей главе — **Incident in prod**. Это самый серьёзный workflow: прод упал, пользователи страдают, надо действовать быстро. Runbook — центральный инструмент.
@@ -7362,27 +7251,24 @@ Part III — 4 из 6:
 Part III — половина:
 
 - **Chapter 11.** Issue lifecycle ✅
-    
+
 - **Chapter 12.** Session lifecycle ✅
-    
+
 - **Chapter 13.** When CI fails ✅
-    
+
 - **Chapter 14.** Incident in prod — следующий
-    
+
 - **Chapter 15.** Deep analysis
-    
+
 - **Chapter 16.** Planning
-    
 
 Потом:
 
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 14?
-
 
 ======---=================================================================
 
@@ -7391,34 +7277,24 @@ Part III — половина:
 Part III — на 1/3:
 
 - **Chapter 11.** Issue lifecycle ✅
-    
+
 - **Chapter 12.** Session lifecycle ✅
-    
+
 - **Chapter 13.** When CI fails — следующий
-    
+
 - **Chapter 14.** Incident in prod
-    
+
 - **Chapter 15.** Deep analysis
-    
+
 - **Chapter 16.** Planning
-    
 
 Потом:
 
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 13?
-
-
-
-
-
-
-
-
 
 ===----------------------------================================
 
@@ -7427,35 +7303,33 @@ Part III — на 1/3:
 Part II готов. Осталось:
 
 - **Part III — Workflows** (главы 11–16).
-    
+
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-
-
-
-
 
 ===----------------------------================================
 
 ### 9.11 Что дальше
+
 В следующей главе — **utility**: `index.md`, `log.md`, `SPEC_REFERENCE.md`, `.gitignore`, `.template-version`. Пять служебных файлов, которые не читаются при работе, но обеспечивают OKF-конформность и защиту.
 ---
+
 ## Что дальше в книге
+
 Part II — почти готов:
+
 - **Chapter 5.** AGENTS.md ✅
 - **Chapter 6.** Onboarding ✅
 - **Chapter 7.** Daily work ✅
 - **Chapter 8.** Diagnostics ✅
 - **Chapter 9.** Navigation & safety ✅
 - **Chapter 10.** Utility — следующий, последний в Part II
-Потом:
+  Потом:
 - **Part III — Workflows** (главы 11–16).
 - **Part IV — Operations** (главы 17–20).
 - **Part V — Appendices** (A–D).
-Продолжаем с Chapter 10?
-
-
+  Продолжаем с Chapter 10?
 
 ===-================================================================
 
@@ -7464,26 +7338,24 @@ Part II — почти готов:
 Part II — на 80% готов:
 
 - **Chapter 5.** AGENTS.md ✅
-    
+
 - **Chapter 6.** Onboarding ✅
-    
+
 - **Chapter 7.** Daily work ✅
-    
+
 - **Chapter 8.** Diagnostics ✅
-    
+
 - **Chapter 9.** Navigation & safety — следующий
-    
+
 - **Chapter 10.** Utility
-    
 
 Потом:
 
 - **Part III — Workflows** (главы 11–16).
-    
+
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 9?
 
@@ -7495,28 +7367,25 @@ Part II — на 80% готов:
 Мы прошли:
 
 - **Part I — Foundations** (главы 1–4).
-    
+
 - **Part II** — начали. Главы 5 (AGENTS.md) и 6 (Onboarding) готовы.
-    
 
 Осталось в Part II:
 
 - **Chapter 7.** Daily work: `_templates`, `_worklog`, `_backlog`, `_decisions`, `_codestyle`, `_commands`.
-    
+
 - **Chapter 8.** Diagnostics: `_ci`, `_troubleshooting`, `runbooks/`.
-    
+
 - **Chapter 9.** Navigation: `_files`, `_env`, `_security`, `analysis/`, `_meta`.
-    
+
 - **Chapter 10.** Utility: `index.md`, `log.md`, `SPEC_REFERENCE.md`, `.gitignore`, `.template-version`.
-    
 
 Потом:
 
 - **Part III — Workflows** (главы 11–16).
-    
+
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 7 или хотите что-то поменять в темпе/структуре?

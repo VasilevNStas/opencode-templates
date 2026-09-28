@@ -5,6 +5,7 @@ description: "A practical guide to OKF and agent-ready codebases"
 timestamp: 2026-09-23
 tags: [okf, agents, opencode, guide]
 ---
+
 # Part V — Appendices
 
 _[Part I](../textbook_ru/guide_ru_part_I.md), [Part II](../textbook_ru/guide_ru_part_II.md) , [Part III](../textbook_ru/guide_ru_part_III.md), [Part IV](../textbook_ru/guide_ru_part_IV.md) — это основное содержание. Appendices — справочники. Их можно читать выборочно, использовать как reference. Не обязательно читать подряд._
@@ -19,13 +20,13 @@ _Четыре приложения: словарь типов, полная ст
 
 **`type`** — обязательное поле OKF frontmatter. Строка, идентифицирующая **вид концепта**.
 
-
 ```yaml
 ---
 type: architecture
 title: "..."
 ---
 ```
+
 Агент по `type` понимает, **что за файл** перед ним, не читая тело
 
 ### A.2 Правила именования
@@ -33,28 +34,26 @@ title: "..."
 **Используйте:**
 
 - **Существительные.** `architecture`, `finding`, `playbook`; Не глаголы
-    
-- **Единственное число.** `runbook`, не `runbooks`
-    
-- **Нижний регистр.** `project-context`, не `ProjectContext`
-    
-- **Дефисы для составных.** `analysis-index`, `runbook-index`
-    
-- **Короткие имена.** Одно слово где возможно
 
+- **Единственное число.** `runbook`, не `runbooks`
+
+- **Нижний регистр.** `project-context`, не `ProjectContext`
+
+- **Дефисы для составных.** `analysis-index`, `runbook-index`
+
+- **Короткие имена.** Одно слово где возможно
 
 **Не используйте:**
 
 - Глаголы: `log-decision` — плохо
-    
-- Общие слова: `file`, `doc`, `thing`
-    
-- Сокращения без причины: `pdca`, `okr` — если они не общеприняты
-    
-- Версии: `architecture-v2` — не надо
-    
-- Множественное число: `findings` — используйте `finding`
 
+- Общие слова: `file`, `doc`, `thing`
+
+- Сокращения без причины: `pdca`, `okr` — если они не общеприняты
+
+- Версии: `architecture-v2` — не надо
+
+- Множественное число: `findings` — используйте `finding`
 
 ### A.3 Полный словарь
 
@@ -62,59 +61,59 @@ title: "..."
 
 #### Core
 
-| `type`            | File                | Purpose                           |
-| ----------------- | ------------------- | --------------------------------- |
-| `project-context` | [`AGENTS.md`](../template/AGENTS.md)  | Точка входа, контекст проекта     |
-| `index`           | [`index.md`](../template/index.md)          | OKF-индекс bundle                 |
-| `log`             | [`log.md`](../template/log.md)            | Указатель на хронологические логи |
-| `meta`            | [`_meta.md`](../template/_meta.md)          | Метаданные bundle                 |
+| `type`            | File                                                 | Purpose                           |
+| ----------------- | ---------------------------------------------------- | --------------------------------- |
+| `project-context` | [`AGENTS.md`](../template/AGENTS.md)                 | Точка входа, контекст проекта     |
+| `index`           | [`index.md`](../template/index.md)                   | OKF-индекс bundle                 |
+| `log`             | [`log.md`](../template/log.md)                       | Указатель на хронологические логи |
+| `meta`            | [`_meta.md`](../template/_meta.md)                   | Метаданные bundle                 |
 | `spec-reference`  | [`SPEC_REFERENCE.md`](../template/SPEC_REFERENCE.md) | Выдержка из OKF                   |
 
 #### Onboarding
 
-|`type`|File|Purpose|
-|---|---|---|
-|`setup`|[`_setup.md`](../template/_setup.md)|Локальный запуск|
-|`architecture`|[`_concepts.md`](../template/_concepts.md)|Архитектура|
-|`glossary`|[`_glossary.md`](../template/_glossary.md)|Доменные термины|
+| `type`         | File                                       | Purpose          |
+| -------------- | ------------------------------------------ | ---------------- |
+| `setup`        | [`_setup.md`](../template/_setup.md)       | Локальный запуск |
+| `architecture` | [`_concepts.md`](../template/_concepts.md) | Архитектура      |
+| `glossary`     | [`_glossary.md`](../template/_glossary.md) | Доменные термины |
 
 #### Daily work
 
-|`type`|File|Purpose|
-|---|---|---|
-|`templates`|[`_templates.md`](../template/_templates.md)|Шаблоны issue/PR|
-|`worklog`|[`_worklog.md`](../template/_worklog.md), [`WORK_LOG.md`](../template/WORK_LOG.md)|Сессии|
-|`backlog`|[`_backlog.md`](../template/_backlog.md)|Будущие задачи|
-|`decision-log`|[`_decisions.md`](../template/_decisions.md)|ADR|
-|`codestyle`|[`_codestyle.md`](../template/_codestyle.md)|Стиль|
-|`commands`|[`_commands.md`](../template/_commands.md)|Команды|
+| `type`         | File                                                                               | Purpose          |
+| -------------- | ---------------------------------------------------------------------------------- | ---------------- |
+| `templates`    | [`_templates.md`](../template/_templates.md)                                       | Шаблоны issue/PR |
+| `worklog`      | [`_worklog.md`](../template/_worklog.md), [`WORK_LOG.md`](../template/WORK_LOG.md) | Сессии           |
+| `backlog`      | [`_backlog.md`](../template/_backlog.md)                                           | Будущие задачи   |
+| `decision-log` | [`_decisions.md`](../template/_decisions.md)                                       | ADR              |
+| `codestyle`    | [`_codestyle.md`](../template/_codestyle.md)                                       | Стиль            |
+| `commands`     | [`_commands.md`](../template/_commands.md)                                         | Команды          |
 
 #### Diagnostics
 
-|`type`|File|Purpose|
-|---|---|---|
-|`ci`|[`_ci.md`](../template/_ci.md)|CI workflows|
-|`troubleshooting`|[`_troubleshooting.md`](../template/_troubleshooting.md)|Локальные проблемы|
-|`runbook-index`|[`runbooks/index.md`](../template/runbooks/index.md)|Индекс runbook'ов|
-|`runbook`|`runbooks/*.md`|Процедуры инцидентов|
+| `type`            | File                                                     | Purpose              |
+| ----------------- | -------------------------------------------------------- | -------------------- |
+| `ci`              | [`_ci.md`](../template/_ci.md)                           | CI workflows         |
+| `troubleshooting` | [`_troubleshooting.md`](../template/_troubleshooting.md) | Локальные проблемы   |
+| `runbook-index`   | [`runbooks/index.md`](../template/runbooks/index.md)     | Индекс runbook'ов    |
+| `runbook`         | `runbooks/*.md`                                          | Процедуры инцидентов |
 
 #### Navigation & safety
 
-|`type`|File|Purpose|
-|---|---|---|
-|`files`|[`_files.md`](../template/_files.md)|Карта файлов|
-|`env`|[`_env.md`](../template/_env.md)|Карта окружений|
-|`security`|[`_security.md`](../template/_security.md)|Правила безопасности|
-|`analysis-index`|[`analysis/index.md`](../template/analysis/index.md)|Индекс findings|
-|`finding`|`analysis/F-*.md`|Конкретный finding|
+| `type`           | File                                                 | Purpose              |
+| ---------------- | ---------------------------------------------------- | -------------------- |
+| `files`          | [`_files.md`](../template/_files.md)                 | Карта файлов         |
+| `env`            | [`_env.md`](../template/_env.md)                     | Карта окружений      |
+| `security`       | [`_security.md`](../template/_security.md)           | Правила безопасности |
+| `analysis-index` | [`analysis/index.md`](../template/analysis/index.md) | Индекс findings      |
+| `finding`        | `analysis/F-*.md`                                    | Конкретный finding   |
 
 #### Issue lifecycle
 
-|`type`|File|Purpose|
-|---|---|---|
-|`project-summary`|`issue/PROJECT_SUMMARY_<N>.md`|Фиксация issue|
-|`playbook`|`playbook/PLAYBOOK_<N>.md`|Стратегия решения|
-|`pr`|`pr/PR_<N>.md`|Описание PR|
+| `type`            | File                           | Purpose           |
+| ----------------- | ------------------------------ | ----------------- |
+| `project-summary` | `issue/PROJECT_SUMMARY_<N>.md` | Фиксация issue    |
+| `playbook`        | `playbook/PLAYBOOK_<N>.md`     | Стратегия решения |
+| `pr`              | `pr/PR_<N>.md`                 | Описание PR       |
 
 ### A.4 Разбор каждого типа
 
@@ -129,9 +128,8 @@ title: "..."
 **Не путать с:**
 
 - `meta` — тот про bundle, `project-context` — про проект
-    
-- `architecture` — тот описывает систему, `project-context` — только ссылается
 
+- `architecture` — тот описывает систему, `project-context` — только ссылается
 
 **Ключевые секции:** Overview, Key components, Issue workflow, Reference files
 
@@ -148,9 +146,8 @@ title: "..."
 **Не путать с:**
 
 - `project-context` — тот основной, `index` — формальный
-    
-- `*-index` (analysis-index, runbook-index) — те индексы директорий
 
+- `*-index` (analysis-index, runbook-index) — те индексы директорий
 
 **Ключевые секции:** Entry point, Reference files, Dynamic artifacts.
 
@@ -181,9 +178,8 @@ title: "..."
 **Не путать с:**
 
 - `project-context` — тот про проект, `meta` — про bundle
-    
-- `spec-reference` — тот про OKF, `meta` — про конкретный bundle
 
+- `spec-reference` — тот про OKF, `meta` — про конкретный bundle
 
 **Ключевые секции:** What's here, Template version, OKF base + extensions, How to update, Rules
 
@@ -200,9 +196,8 @@ title: "..."
 **Не путать с:**
 
 - `meta` — тот про конкретный bundle
-    
-- `project-context` — тот про проект
 
+- `project-context` — тот про проект
 
 **Особенность:** английский язык (для консистентности с LLM)
 
@@ -221,9 +216,8 @@ title: "..."
 **Не путать с:**
 
 - `env` — тот про удалённые окружения
-    
-- `commands` — тот про команды после setup
 
+- `commands` — тот про команды после setup
 
 **Ключевые секции:** Prerequisites, Clone, Configuration, Database, Run, Verify, First-day reading order
 
@@ -240,9 +234,8 @@ title: "..."
 **Не путать с:**
 
 - `decision-log` — тот про «почему так», `architecture` — про «что»
-    
-- `files` — тот про файлы, `architecture` — про компоненты
 
+- `files` — тот про файлы, `architecture` — про компоненты
 
 **Ключевые секции:** Overview, Key components, Data flow, Key patterns, Deployment, Error handling, Testing strategy
 
@@ -259,9 +252,8 @@ title: "..."
 **Не путать с:**
 
 - `architecture` — тот описывает компоненты, `glossary` — определяет термины
-    
-- Общеизвестные термины (HTTP, JSON) — не сюда
 
+- Общеизвестные термины (HTTP, JSON) — не сюда
 
 **Ключевые секции:** Terms, Abbreviations, Synonyms
 
@@ -278,9 +270,8 @@ title: "..."
 **Не путать с:**
 
 - Сами динамические файлы (`PROJECT_SUMMARY_<N>.md`) — это не `templates`, а `project-summary`
-    
-- `project-context` — Issue workflow секция там, здесь — формы
 
+- `project-context` — Issue workflow секция там, здесь — формы
 
 **Ключевые секции:** File locations, PROJECT_SUMMARY, PLAYBOOK, PR description, Lifecycle
 
@@ -297,9 +288,8 @@ title: "..."
 **Не путать с:**
 
 - `decision-log` — тот про значимые решения, `worklog` — про все сессии
-    
-- `log` — OKF-указатель, `worklog` — реальные данные
 
+- `log` — OKF-указатель, `worklog` — реальные данные
 
 **Ключевые секции:** Entry format, Rules, How to add a new entry
 
@@ -316,11 +306,10 @@ title: "..."
 **Не путать с:**
 
 - GitHub Issues — те подтверждённые, backlog — черновики
-    
-- `decision-log` — тот про «почему», `backlog` — про «что делать»
-    
-- Roadmap — отдельный документ
 
+- `decision-log` — тот про «почему», `backlog` — про «что делать»
+
+- Roadmap — отдельный документ
 
 **Ключевые секции:** Priorities, Items, Ideas, Tech debt
 
@@ -337,9 +326,8 @@ title: "..."
 **Не путать с:**
 
 - `worklog` — тот про все сессии, `decision-log` — только значимые решения
-    
-- «Decision» секция в WORK_LOG — короткая ссылка, здесь — полный ADR
 
+- «Decision» секция в WORK_LOG — короткая ссылка, здесь — полный ADR
 
 **Ключевые секции:** Index, ADR-XXX записи (Context, Decision, Alternatives, Consequences)
 
@@ -356,9 +344,8 @@ title: "..."
 **Не путать с:**
 
 - `architecture` — тот про стратегию тестирования, `codestyle` — про тактику
-    
-- `commands` — тот про команды после setup, `codestyle` — про lint как gate
 
+- `commands` — тот про команды после setup, `codestyle` — про lint как gate
 
 **Ключевые секции:** SPDX headers, Lint, Language conventions, Testing
 
@@ -375,9 +362,8 @@ title: "..."
 **Не путать с:**
 
 - `setup` — тот пошаговая инструкция, `commands` — каталог
-    
-- `codestyle` — lint как правило там, здесь — lint как команда
 
+- `codestyle` — lint как правило там, здесь — lint как команда
 
 **Ключевые секции:** Build, Test, Lint, Run, Utilities
 
@@ -394,9 +380,8 @@ title: "..."
 **Не путать с:**
 
 - `troubleshooting` — тот про локально, `ci` — про CI
-    
-- `runbook` — тот про прод, `ci` — про CI
 
+- `runbook` — тот про прод, `ci` — про CI
 
 **Ключевые секции:** Workflows, Common failures, Local reproduction, When CI passes locally but fails remotely
 
@@ -413,9 +398,8 @@ title: "..."
 **Не путать с:**
 
 - `ci` — тот про CI, `troubleshooting` — про локально
-    
-- `runbook` — тот про прод, `troubleshooting` — про локально
 
+- `runbook` — тот про прод, `troubleshooting` — про локально
 
 **Ключевые секции:** Quick index, секции симптомов (Symptom/Cause/Fix), Still stuck
 
@@ -432,9 +416,8 @@ title: "..."
 **Не путать с:**
 
 - `index` — тот OKF-индекс bundle, `runbook-index` — только runbook'ов
-    
-- `analysis-index` — тот про findings
 
+- `analysis-index` — тот про findings
 
 **Ключевые секции:** If you're in the middle of an incident, Index, Creating a new runbook
 
@@ -451,9 +434,8 @@ title: "..."
 **Не путать с:**
 
 - `troubleshooting` — тот локально, `runbook` — про прод
-    
-- `postmortem` — тот разбор, `runbook` — процедура
 
+- `postmortem` — тот разбор, `runbook` — процедура
 
 **Ключевые секции:** When to use, Prerequisites, Steps, Verification, If it doesn't work, Rollback, Post-incident
 
@@ -470,9 +452,8 @@ title: "..."
 **Не путать с:**
 
 - `architecture` — тот про компоненты, `files` — про файлы
-    
-- `codestyle` — тот про конвенции имён, `files` — про существующие файлы
 
+- `codestyle` — тот про конвенции имён, `files` — про существующие файлы
 
 **Ключевые секции:** Entry points, Core modules, Data layer, Configuration, Tests
 
@@ -489,9 +470,8 @@ title: "..."
 **Не путать с:**
 
 - `setup` — тот про локально, `env` — про удалённые
-    
-- `security` — тот про секреты, `env` — про окружения
 
+- `security` — тот про секреты, `env` — про окружения
 
 **Ключевые секции:** Overview, Where things live, Access, Deploy, Prod restrictions
 
@@ -508,9 +488,8 @@ title: "..."
 **Не путать с:**
 
 - `SECURITY.md` в корне — тот публичный, `_security.md` — внутренний
-    
-- `env` — тот про окружения, `security` — про правила
 
+- `env` — тот про окружения, `security` — про правила
 
 **Ключевые секции:** Hard rules, Where secrets live, What's safe to commit, What must NEVER be committed, If a secret leaked, Reporting vulnerabilities.
 
@@ -527,9 +506,8 @@ title: "..."
 **Не путать с:**
 
 - `index` — тот OKF-индекс bundle, `analysis-index` — про findings
-    
-- `runbook-index` — тот про runbook'и
 
+- `runbook-index` — тот про runbook'и
 
 **Ключевые секции:** Reports, Findings summary
 
@@ -546,9 +524,8 @@ title: "..."
 **Не путать с:**
 
 - `project-summary` — тот про issue, `finding` — про найденную проблему
-    
-- `backlog` items — те задачи, `finding` — состояние
 
+- `backlog` items — те задачи, `finding` — состояние
 
 **Ключевые секции:** Summary, Evidence, Impact, Recommendation, Effort estimate, Related
 
@@ -565,9 +542,8 @@ title: "..."
 **Не путать с:**
 
 - `playbook` — тот стратегия, `project-summary` — фиксация
-    
-- `pr` — тот для PR, `project-summary` — для issue
 
+- `pr` — тот для PR, `project-summary` — для issue
 
 **Ключевые секции:** Issue Overview, Problem, Solution, Verification, Key Discoveries, Files Changed.
 
@@ -584,9 +560,8 @@ title: "..."
 **Не путать с:**
 
 - `project-summary` — тот фиксация, `playbook` — план
-    
-- `runbook` — тот про инцидент, `playbook` — про issue
 
+- `runbook` — тот про инцидент, `playbook` — про issue
 
 **Ключевые секции:** Context, Strategy, Patterns Used, Known Pitfalls, Verification Commands.
 
@@ -603,9 +578,8 @@ title: "..."
 **Не путать с:**
 
 - `project-summary` — тот для issue, `pr` — для PR
-    
-- Frontmatter может мешать на GitHub — убирать перед вставкой
 
+- Frontmatter может мешать на GitHub — убирать перед вставкой
 
 **Ключевые секции:** Description, Related Issue, Changes, Verification, Notes for Reviewers
 
@@ -616,33 +590,30 @@ title: "..."
 **Триггеры:**
 
 1. **Новый файл** в bundle, которому не подходит существующий тип
-    
-2. **Новая категория** знаний (например, `postmortem`)
-    
-3. **Новая директория** с своими артефактами
 
+2. **Новая категория** знаний (например, `postmortem`)
+
+3. **Новая директория** с своими артефактами
 
 **НЕ добавляйте, если:**
 
 - Есть близкий тип. `summary` vs `project-summary` — используйте существующий
-    
-- Это разовый файл. Не плодите типы ради одного
-    
-- Можно обойтись существующим. `postmortem` vs `finding` — если post-mortem'ов мало
 
+- Это разовый файл. Не плодите типы ради одного
+
+- Можно обойтись существующим. `postmortem` vs `finding` — если post-mortem'ов мало
 
 ### A.6 Процесс добавления нового типа
 
 **Шаг 1: выбрать имя.**
 
 - Существительное
-    
-- Единственное число
-    
-- Нижний регистр
-    
-- Дефисы для составных
 
+- Единственное число
+
+- Нижний регистр
+
+- Дефисы для составных
 
 **Шаг 2: использовать в frontmatter.**
 
@@ -687,18 +658,16 @@ title: "..."
 Это значит:
 
 - Если чужой агент увидит ваш `type: my-custom`, он не должен падать
-    
+
 - Он обработает как «неизвестный тип» — прочитает как обычный markdown
-    
 
 **На практике:** большинство агентов толерантны. Но:
 
 - Используйте **осмысленные** имена
-    
+
 - Документируйте типы в `_meta.md`
-    
+
 - Не полагайтесь на специфичные типы для критичной логики
-    
 
 ### A.9 Что дальше
 
@@ -711,15 +680,12 @@ title: "..."
 Appendices:
 
 - **A.** Type dictionary ✅
-    
+
 - **B.** Full bundle structure — следующий
-    
+
 - **C.** OKF spec extract
-    
+
 - **D.** FAQ
-    
-
-
 
 ## Appendix B. Full bundle structure
 
@@ -730,7 +696,6 @@ Appendices:
 Используйте как reference. Не для чтения подряд.
 
 ### B.2 Полное дерево
-
 
 ```text
 
@@ -782,6 +747,7 @@ Appendices:
         ├── PLAYBOOK_<N>.md
         └── PR_<N>.md
 ```
+
 ### B.3 Разбор по директориям
 
 #### `.opencode/` — корень bundle
@@ -829,11 +795,10 @@ Appendices:
 **Что лежит:**
 
 - `index.md` — сводная таблица
-    
+
 - `_finding.md` — шаблон
-    
+
 - `F-XXX-<name>.md` — конкретные findings
-    
 
 **Сколько:** растёт по мере анализа.
 
@@ -844,11 +809,10 @@ Appendices:
 **Что лежит:**
 
 - `index.md` — индекс
-    
+
 - `_runbook.md` — шаблон
-    
+
 - `<scenario>.md` — конкретные процедуры
-    
 
 **Сколько:** 5–15 обычно.
 
@@ -864,122 +828,115 @@ Appendices:
 
 ### B.4 Файлы — сводная таблица
 
-|Файл|`type`|Роль|Размер|Коммитится|
-|---|---|---|---|---|
-|`AGENTS.md`|`project-context`|Точка входа|60–90|Да|
-|`index.md`|`index`|OKF-индекс|35|Да|
-|`log.md`|`log`|OKF-указатель|20|Да|
-|`SPEC_REFERENCE.md`|`spec-reference`|Выдержка OKF|120|Да|
-|`_meta.md`|`meta`|Мета bundle|60–70|Да|
-|`_concepts.md`|`architecture`|Архитектура|60–100|Да|
-|`_setup.md`|`setup`|Локальный запуск|60|Да|
-|`_env.md`|`env`|Окружения|60–80|Да|
-|`_codestyle.md`|`codestyle`|Стиль|40–50|Да|
-|`_commands.md`|`commands`|Команды|35–45|Да|
-|`_files.md`|`files`|Карта файлов|40–60|Да|
-|`_glossary.md`|`glossary`|Термины|20–60|Да|
-|`_security.md`|`security`|Секреты|60|Да|
-|`_troubleshooting.md`|`troubleshooting`|Локальные проблемы|60–100|Да|
-|`_decisions.md`|`decision-log`|ADR|растёт|Да|
-|`_backlog.md`|`backlog`|Будущие задачи|60–100|Да|
-|`_worklog.md`|`worklog`|Шаблон WORK_LOG|60–80|Да|
-|`_templates.md`|`templates`|Шаблоны|100–130|Да|
-|`_ci.md`|`ci`|CI|60–80|Да|
-|`WORK_LOG.md`|`worklog`|Сессии|растёт|Нет|
-|`.gitignore`|—|Защита|20|Да|
-|`.template-version`|—|Версия|3|Нет|
+| Файл                  | `type`            | Роль               | Размер  | Коммитится |
+| --------------------- | ----------------- | ------------------ | ------- | ---------- |
+| `AGENTS.md`           | `project-context` | Точка входа        | 60–90   | Да         |
+| `index.md`            | `index`           | OKF-индекс         | 35      | Да         |
+| `log.md`              | `log`             | OKF-указатель      | 20      | Да         |
+| `SPEC_REFERENCE.md`   | `spec-reference`  | Выдержка OKF       | 120     | Да         |
+| `_meta.md`            | `meta`            | Мета bundle        | 60–70   | Да         |
+| `_concepts.md`        | `architecture`    | Архитектура        | 60–100  | Да         |
+| `_setup.md`           | `setup`           | Локальный запуск   | 60      | Да         |
+| `_env.md`             | `env`             | Окружения          | 60–80   | Да         |
+| `_codestyle.md`       | `codestyle`       | Стиль              | 40–50   | Да         |
+| `_commands.md`        | `commands`        | Команды            | 35–45   | Да         |
+| `_files.md`           | `files`           | Карта файлов       | 40–60   | Да         |
+| `_glossary.md`        | `glossary`        | Термины            | 20–60   | Да         |
+| `_security.md`        | `security`        | Секреты            | 60      | Да         |
+| `_troubleshooting.md` | `troubleshooting` | Локальные проблемы | 60–100  | Да         |
+| `_decisions.md`       | `decision-log`    | ADR                | растёт  | Да         |
+| `_backlog.md`         | `backlog`         | Будущие задачи     | 60–100  | Да         |
+| `_worklog.md`         | `worklog`         | Шаблон WORK_LOG    | 60–80   | Да         |
+| `_templates.md`       | `templates`       | Шаблоны            | 100–130 | Да         |
+| `_ci.md`              | `ci`              | CI                 | 60–80   | Да         |
+| `WORK_LOG.md`         | `worklog`         | Сессии             | растёт  | Нет        |
+| `.gitignore`          | —                 | Защита             | 20      | Да         |
+| `.template-version`   | —                 | Версия             | 3       | Нет        |
 
 ### B.5 Динамические артефакты — сводная таблица
 
-|Файл|`type`|Роль|Где|Коммитится|
-|---|---|---|---|---|
-|`issue/PROJECT_SUMMARY_<N>.md`|`project-summary`|Issue snapshot|issue/|Нет|
-|`playbook/PLAYBOOK_<N>.md`|`playbook`|Strategy|playbook/|Нет|
-|`pr/PR_<N>.md`|`pr`|PR description|pr/|Нет|
-|`analysis/index.md`|`analysis-index`|Findings index|analysis/|Да|
-|`analysis/_finding.md`|`finding`|Finding template|analysis/|Да|
-|`analysis/F-XXX-*.md`|`finding`|Specific finding|analysis/|Нет|
-|`runbooks/index.md`|`runbook-index`|Runbooks index|runbooks/|Да|
-|`runbooks/_runbook.md`|`runbook`|Runbook template|runbooks/|Да|
-|`runbooks/<scenario>.md`|`runbook`|Specific runbook|runbooks/|Зависит|
-|`archive/<N>/*.md`|varies|Archived artifacts|archive/|Нет|
+| Файл                           | `type`            | Роль               | Где       | Коммитится |
+| ------------------------------ | ----------------- | ------------------ | --------- | ---------- |
+| `issue/PROJECT_SUMMARY_<N>.md` | `project-summary` | Issue snapshot     | issue/    | Нет        |
+| `playbook/PLAYBOOK_<N>.md`     | `playbook`        | Strategy           | playbook/ | Нет        |
+| `pr/PR_<N>.md`                 | `pr`              | PR description     | pr/       | Нет        |
+| `analysis/index.md`            | `analysis-index`  | Findings index     | analysis/ | Да         |
+| `analysis/_finding.md`         | `finding`         | Finding template   | analysis/ | Да         |
+| `analysis/F-XXX-*.md`          | `finding`         | Specific finding   | analysis/ | Нет        |
+| `runbooks/index.md`            | `runbook-index`   | Runbooks index     | runbooks/ | Да         |
+| `runbooks/_runbook.md`         | `runbook`         | Runbook template   | runbooks/ | Да         |
+| `runbooks/<scenario>.md`       | `runbook`         | Specific runbook   | runbooks/ | Зависит    |
+| `archive/<N>/*.md`             | varies            | Archived artifacts | archive/  | Нет        |
 
 ### B.6 Жизненный цикл файлов
 
 #### Создаётся один раз
 
 - `AGENTS.md`
-    
-- `index.md`, `log.md`
-    
-- `SPEC_REFERENCE.md`
-    
-- `_meta.md`
-    
-- `_setup.md`, `_concepts.md`, `_glossary.md`
-    
-- `_codestyle.md`, `_commands.md`, `_files.md`
-    
-- `_env.md`, `_security.md`
-    
-- `_troubleshooting.md`, `_ci.md`
-    
-- `_worklog.md`, `_templates.md`
-    
-- `.gitignore`, `.template-version`
-    
-- `analysis/index.md`, `analysis/_finding.md`
-    
-- `runbooks/index.md`, `runbooks/_runbook.md`
 
+- `index.md`, `log.md`
+
+- `SPEC_REFERENCE.md`
+
+- `_meta.md`
+
+- `_setup.md`, `_concepts.md`, `_glossary.md`
+
+- `_codestyle.md`, `_commands.md`, `_files.md`
+
+- `_env.md`, `_security.md`
+
+- `_troubleshooting.md`, `_ci.md`
+
+- `_worklog.md`, `_templates.md`
+
+- `.gitignore`, `.template-version`
+
+- `analysis/index.md`, `analysis/_finding.md`
+
+- `runbooks/index.md`, `runbooks/_runbook.md`
 
 #### Создаётся при первой сессии
 
 - `WORK_LOG.md`
 
-
 #### Растёт постоянно
 
 - `WORK_LOG.md` — после каждой сессии
-    
-- `_troubleshooting.md` — после каждой проблемы (>10 мин)
-    
-- `_ci.md` — после каждой новой CI-ошибки
-    
-- `_backlog.md` — при появлении/завершении задач
-    
-- `_decisions.md` — при значимых решениях
 
+- `_troubleshooting.md` — после каждой проблемы (>10 мин)
+
+- `_ci.md` — после каждой новой CI-ошибки
+
+- `_backlog.md` — при появлении/завершении задач
+
+- `_decisions.md` — при значимых решениях
 
 #### Создаётся на issue
 
 - `issue/PROJECT_SUMMARY_<N>.md` — Start
-    
-- `playbook/PLAYBOOK_<N>.md` — Start
-    
-- `pr/PR_<N>.md` — End
 
+- `playbook/PLAYBOOK_<N>.md` — Start
+
+- `pr/PR_<N>.md` — End
 
 #### Создаётся при анализе
 
 - `analysis/F-XXX-*.md` — при находке
 
-
 #### Создаётся при инциденте
 
 - `runbooks/<scenario>.md` — после инцидента (новый runbook)
 
-
 #### Удаляется / архивируется
 
 - `issue/*` — после merge → `archive/`
-    
-- `playbook/*` — после merge → `archive/`
-    
-- `pr/*` — после merge → `archive/`
-    
-- `analysis/F-XXX-*.md` — после fix → статус `addressed`, может остаться
 
+- `playbook/*` — после merge → `archive/`
+
+- `pr/*` — после merge → `archive/`
+
+- `analysis/F-XXX-*.md` — после fix → статус `addressed`, может остаться
 
 ### B.7 Что коммитится, что нет
 
@@ -992,21 +949,20 @@ Appendices:
 #### Не коммитится (пользовательские)
 
 - `WORK_LOG.md` — личная память
-    
-- `.template-version` — машинный маркер
-    
-- `issue/*` — динамические
-    
-- `playbook/*` — динамические
-    
-- `pr/*` — динамические
-    
-- `archive/*` — динамические
-    
-- `analysis/F-XXX-*.md` — конкретные findings
-    
-- `runbooks/<scenario>.md` — конкретные runbook'и (по умолчанию)
 
+- `.template-version` — машинный маркер
+
+- `issue/*` — динамические
+
+- `playbook/*` — динамические
+
+- `pr/*` — динамические
+
+- `archive/*` — динамические
+
+- `analysis/F-XXX-*.md` — конкретные findings
+
+- `runbooks/<scenario>.md` — конкретные runbook'и (по умолчанию)
 
 **Почему:** это ваши данные, уникальные для проекта.
 
@@ -1047,65 +1003,62 @@ Appendices:
                      .gitignore
                      .template-version
 ```
+
 **Ключевые cross-links:**
 
 - `_setup.md` → `_env.md`, `_security.md`, `_troubleshooting.md`
-    
-- `_codestyle.md` → `_commands.md`, `_concepts.md`
-    
-- `_ci.md` → `_troubleshooting.md`, `runbooks/`
-    
-- `_worklog.md` → `_decisions.md`, `_backlog.md`
-    
-- `_templates.md` → `issue/`, `playbook/`, `pr/`
-    
-- `analysis/` → `_backlog.md`
-    
-- `_decisions.md` → `_backlog.md`
-    
-- `_meta.md` → `AGENTS.md`, `SPEC_REFERENCE.md`
 
+- `_codestyle.md` → `_commands.md`, `_concepts.md`
+
+- `_ci.md` → `_troubleshooting.md`, `runbooks/`
+
+- `_worklog.md` → `_decisions.md`, `_backlog.md`
+
+- `_templates.md` → `issue/`, `playbook/`, `pr/`
+
+- `analysis/` → `_backlog.md`
+
+- `_decisions.md` → `_backlog.md`
+
+- `_meta.md` → `AGENTS.md`, `SPEC_REFERENCE.md`
 
 ### B.9 Размеры bundle
 
 **Стандартный bundle:**
 
 - ~20 файлов в корне
-    
-- 6 директорий
-    
-- ~1500 строк markdown
 
+- 6 директорий
+
+- ~1500 строк markdown
 
 **С динамикой (через месяц):**
 
 - - `WORK_LOG.md` (100–300 строк)
-        
-- - 2–5 findings
-        
-- - 2–3 ADR
-        
-- - 1–5 backlog items
-        
-- - записи в `_troubleshooting.md`
-        
-- ~2500 строк markdown
 
+- - 2–5 findings
+
+- - 2–3 ADR
+
+- - 1–5 backlog items
+
+- - записи в `_troubleshooting.md`
+
+- ~2500 строк markdown
 
 **С динамикой (через год):**
 
 - - `WORK_LOG.md` (1000–3000 строк)
-        
-- - 20–50 findings
-        
-- - 10–30 ADR
-        
-- - 20–50 backlog items
-        
-- - архив issues
-        
-- ~8000–15000 строк markdown
 
+- - 20–50 findings
+
+- - 10–30 ADR
+
+- - 20–50 backlog items
+
+- - архив issues
+
+- ~8000–15000 строк markdown
 
 **Bundle растёт, но остаётся читаемым.** Потому что каждый файл — про своё.
 
@@ -1114,36 +1067,35 @@ Appendices:
 **Важно понимать границы.**
 
 - **Нет кода проекта.** Код в `src/`, `lib/`, `app/`.
-    
-- **Нет публичной документации.** Она в `docs/`, `README.md`.
-    
-- **Нет `.git`.** Bundle — не репозиторий.
-    
-- **Нет CI-конфигов.** Они в `.github/`, `.gitlab-ci.yml`.
-    
-- **Нет секретов.** Только правила.
-    
-- **Нет секретов в `_security.md`.** Только правила.
-    
-- **Нет roadmap.** Отдельный документ.
-    
-- **Нет диаграмм (обычно).** Только ASCII или ссылки на внешние.
-    
-- **Нет бинарных файлов.** Только markdown.
-    
-- **Нет PDF / изображений.** Если нужно — ссылки на внешние.
 
+- **Нет публичной документации.** Она в `docs/`, `README.md`.
+
+- **Нет `.git`.** Bundle — не репозиторий.
+
+- **Нет CI-конфигов.** Они в `.github/`, `.gitlab-ci.yml`.
+
+- **Нет секретов.** Только правила.
+
+- **Нет секретов в `_security.md`.** Только правила.
+
+- **Нет roadmap.** Отдельный документ.
+
+- **Нет диаграмм (обычно).** Только ASCII или ссылки на внешние.
+
+- **Нет бинарных файлов.** Только markdown.
+
+- **Нет PDF / изображений.** Если нужно — ссылки на внешние.
 
 ### B.11 Bundle vs repository
 
-|Bundle|Repository|
-|---|---|
-|`.opencode/`|Весь git-репозиторий|
-|Markdown|Код + конфиги + docs|
-|Локальный|Распространяется|
-|Не коммитится|Коммитится|
-|Один на разработчика|Один на проект|
-|Растёт с вами|Растёт с командой|
+| Bundle               | Repository           |
+| -------------------- | -------------------- |
+| `.opencode/`         | Весь git-репозиторий |
+| Markdown             | Код + конфиги + docs |
+| Локальный            | Распространяется     |
+| Не коммитится        | Коммитится           |
+| Один на разработчика | Один на проект       |
+| Растёт с вами        | Растёт с командой    |
 
 **Bundle — не часть репозитория.** Он **рядом** с ним.
 
@@ -1161,6 +1113,7 @@ Appendices:
 ├── _files.md
 └── index.md, log.md
 ```
+
 Может быть без директорий, если нет issue-цикла.
 
 #### Стандартный (для web-приложения)
@@ -1183,6 +1136,7 @@ Appendices:
     ├── index.md
     └── _metric.md
 ```
+
 Больше файлов, если есть специфика.
 
 ### B.13 Что дальше
@@ -1196,13 +1150,12 @@ Appendices:
 Appendices:
 
 - **A.** Type dictionary ✅
-    
+
 - **B.** Full bundle structure ✅
-    
+
 - **C.** OKF spec extract — следующий
-    
+
 - **D.** FAQ
-    
 
 Продолжаем с Appendix C?
 
@@ -1225,15 +1178,14 @@ Appendices:
 Официальная цитата из спеки:
 
 > OKF takes the position that knowledge is best represented in commonly accessible, established formats that are:
-> 
+>
 > - Readable by humans without tooling.
->     
+>
 > - Parseable by agents without bespoke SDKs.
->     
+>
 > - Diffable in version control.
->     
+>
 > - Portable across tools, organizations, and time.
->     
 
 **Разбор:**
 
@@ -1254,20 +1206,18 @@ Appendices:
 **Три следствия:**
 
 1. **Нет реестра схем.** Не регистрируете типы централизованно. Придумали тип — используете.
-    
+
 2. **Нет обязательного tooling.** Нет CLI, без которого «не работает». Нет парсера, без которого «не читается».
-    
+
 3. **Читается через `cat`.** Если файл выглядит как текст — он OKF.
-    
 
 **Как это отражено в нашем bundle:**
 
 - Мы используем `init-opencode` — но **не обязательно**. Bundle работает и без него.
-    
+
 - Мы используем `type` — но не регистрируем их нигде. Просто словарь в README.
-    
+
 - Bundle читается в любом редакторе. Даже в `nano`.
-    
 
 ### C.4 Структура bundle
 
@@ -1284,6 +1234,7 @@ bundle/
     ├── <concept>.md
     └── ...
 ```
+
 **Что такое bundle:** директория с markdown-концептами, организованная по правилам OKF.
 
 **Как это отражено у нас:**
@@ -1307,27 +1258,27 @@ bundle/
     ├── index.md
     └── <scenario>.md
 ```
+
 **Мы расширили:** добавили `AGENTS.md` как основную точку входа, добавили директории `issue/`, `playbook/`, `pr/` для динамических артефактов.
 
 ### C.5 Резервированные имена
 
 Из спеки:
 
-|File|Purpose|
-|---|---|
-|`index.md`|Directory table of contents|
-|`log.md`|Change history|
+| File       | Purpose                     |
+| ---------- | --------------------------- |
+| `index.md` | Directory table of contents |
+| `log.md`   | Change history              |
 
 **Все остальные `.md` файлы — concept documents.**
 
 **Как это отражено у нас:**
 
 - `index.md` — есть. Точка входа.
-    
+
 - `log.md` — есть. Указатель на логи.
-    
+
 - `AGENTS.md` — расширение. В OKF нет, но он нужен для OpenCode.
-    
 
 **Наша адаптация:** в чистом OKF `index.md` — главный файл. У нас — `AGENTS.md`. `index.md`работает как формальный указатель.
 
@@ -1336,11 +1287,10 @@ bundle/
 Из спеки:
 
 > Each concept is a UTF-8 markdown file with two parts:
-> 
+>
 > 1. **YAML frontmatter** (required)
->     
+>
 > 2. **Body** (markdown)
->     
 
 #### Frontmatter
 
@@ -1348,7 +1298,7 @@ bundle/
 
 ```yaml
 ---
-type: <Type name>                  # REQUIRED
+type: <Type name> # REQUIRED
 title: <Optional display name>
 description: <Optional one-line summary>
 resource: <Optional canonical URI>
@@ -1356,6 +1306,7 @@ tags: [<tag>, <tag>]
 timestamp: <ISO 8601 datetime>
 ---
 ```
+
 **Разбор:**
 
 **Required:** `type` — строка, идентифицирующая вид концепта.
@@ -1369,15 +1320,14 @@ timestamp: <ISO 8601 datetime>
 Мы используем все поля. Плюс расширения:
 
 - `severity` — в findings.
-    
+
 - `status` — в project-summary, playbook, pr, finding.
-    
+
 - `issue` — в project-summary, playbook, pr.
-    
+
 - `last-tested` — в runbook.
-    
+
 - `incident-date` — в postmortem (если используется).
-    
 
 **Почему `type` обязателен:** агент по нему понимает вид документа, не читая тело. `type: ci` → «это про CI». `type: finding` → «это находка».
 
@@ -1391,22 +1341,21 @@ timestamp: <ISO 8601 datetime>
 
 **Conventional sections:**
 
-|Heading|Purpose|
-|---|---|
-|`# Schema`|Structured description of fields/columns|
-|`# Examples`|Usage examples|
-|`# Citations`|External sources|
+| Heading       | Purpose                                  |
+| ------------- | ---------------------------------------- |
+| `# Schema`    | Structured description of fields/columns |
+| `# Examples`  | Usage examples                           |
+| `# Citations` | External sources                         |
 
 **Как это отражено у нас:**
 
 - Мы используем структурный markdown везде.
-    
+
 - `## Citations` — в `_setup.md`, `SPEC_REFERENCE.md`.
-    
+
 - `## References` — в остальных. Взаимозаменяемо.
-    
+
 - `# Schema`, `# Examples` — по необходимости.
-    
 
 **Почему структурный markdown:** помогает и чтению человеком, и извлечению агентом.
 
@@ -1415,19 +1364,19 @@ timestamp: <ISO 8601 datetime>
 Из спеки:
 
 > Links between concepts are standard markdown links. Two forms:
-> 
+>
 > **Absolute (from bundle root):**
-> 
+>
 > markdown
-> 
+>
 > See [customers table](/tables/customers.md)
-> 
+>
 > Recommended form — stable when files move.
-> 
+>
 > **Relative:**
-> 
+>
 > markdown
-> 
+>
 > See [neighboring concept](./other.md)
 
 **Semantics:** ссылка от A к B утверждает наличие отношения. Конкретный тип отношения передаётся окружающим текстом.
@@ -1437,11 +1386,10 @@ timestamp: <ISO 8601 datetime>
 **Как это отражено у нас:**
 
 - Мы используем **относительные** ссылки. Потому что bundle встроен в проект, и абсолютные пути зависят от корня репозитория.
-    
+
 - `[link](_setup.md)` — относительная, работает при перемещении.
-    
+
 - `/tables/customers.md` — абсолютная, работает от корня bundle.
-    
 
 **Почему мы выбрали относительные:**
 
@@ -1456,24 +1404,23 @@ timestamp: <ISO 8601 datetime>
 markdown
 
 # Citations
+
 [1] [BigQuery public dataset announcement](https://cloud.google.com/...)
 [2] [Internal runbook](https://wiki.internal/...)
 
 **Как это отражено у нас:**
 
 - `## Citations` в `SPEC_REFERENCE.md`, `_setup.md`.
-    
+
 - `## References` в остальных.
-    
+
 - Формат `[N] [title](url)` — везде.
-    
 
 **Почему два разных названия:**
 
 - **Citations** — ссылки на **внешние источники** (статьи, документация).
-    
+
 - **References** — ссылки на **связанные артефакты** (issue, PR, документы).
-    
 
 Семантически разные. OKF использует `Citations`. Мы используем оба — по контексту.
 
@@ -1482,26 +1429,24 @@ markdown
 Из спеки:
 
 > Bundle conforms to OKF v0.1 if:
-> 
+>
 > 1. Every `.md` file (except `index.md`, `log.md`) contains parseable YAML frontmatter.
->     
+>
 > 2. Every frontmatter contains a non-empty `type` field.
->     
+>
 > 3. `index.md` and `log.md` follow the described structure.
->     
 
 **Consumers must NOT reject a bundle because of:**
 
 - Missing optional frontmatter fields.
-    
+
 - Unknown `type` values.
-    
+
 - Unknown additional frontmatter keys.
-    
+
 - Broken cross-links.
-    
+
 - Missing `index.md`.
-    
 
 Это **сознательное решение**: OKF должен оставаться полезным по мере роста, рефакторинга и частичной генерации агентами.
 
@@ -1510,20 +1455,18 @@ markdown
 **Conformant:**
 
 - Все `.md` файлы (кроме `index.md`, `log.md`) имеют frontmatter.
-    
+
 - Все frontmatter имеют `type`.
-    
+
 - `index.md` и `log.md` следуют структуре.
-    
 
 **Non-conformant (но допустимо):**
 
 - Мы используем `AGENTS.md` как основную точку входа. OKF-спека этого не запрещает.
-    
+
 - Мы добавили директории (`issue/`, `playbook/`, `pr/`, `analysis/`, `runbooks/`, `archive/`). OKF-спека разрешает поддиректории.
-    
+
 - Мы добавили типы. OKF-спека разрешает неизвестные типы.
-    
 
 **Наш bundle — OKF-вдохновлённый.** Не строго конформный, но следует духу спецификации.
 
@@ -1532,13 +1475,12 @@ markdown
 Из спеки:
 
 > 1. Define a universal format that enrichment agents can write to.
->     
+>
 > 2. Tell consumption agents how to read and traverse the knowledge.
->     
+>
 > 3. Make knowledge exchangeable across systems and organizations.
->     
+>
 > 4. Standardize a minimal set of required fields.
->     
 
 **Разбор:**
 
@@ -1555,11 +1497,10 @@ markdown
 Из спеки:
 
 > - Defining a fixed taxonomy of concept types.
->     
+>
 > - Prescribing storage or query infrastructure.
->     
+>
 > - Replacing domain-specific schemas (Avro, Protobuf, OpenAPI).
->     
 
 **Разбор:**
 
@@ -1610,17 +1551,16 @@ markdown
 **У нас:** шесть директорий для динамических артефактов.
 
 - `issue/` — активные issue.
-    
+
 - `playbook/` — стратегии.
-    
+
 - `pr/` — черновики PR.
-    
+
 - `analysis/` — findings.
-    
+
 - `runbooks/` — процедуры инцидентов.
-    
+
 - `archive/` — завершённые.
-    
 
 **Почему:** OKF не описывает workflow. Мы описываем через директории.
 
@@ -1667,15 +1607,14 @@ markdown
 Это значит:
 
 - **Отсутствие опциональных полей** — не ошибка.
-    
+
 - **Неизвестные `type`** — не ошибка.
-    
+
 - **Неизвестные дополнительные поля** — не ошибка.
-    
+
 - **Битые cross-links** — не ошибка.
-    
+
 - **Отсутствие `index.md`** — не ошибка.
-    
 
 **Почему:** OKF должен оставаться полезным по мере роста, рефакторинга, частичной генерации агентами.
 
@@ -1686,13 +1625,12 @@ markdown
 **Как это отражено у нас:**
 
 - Мы не полагаемся на строгую валидацию.
-    
+
 - Битые ссылки — допустимы.
-    
+
 - Пустые секции — не ошибка (но лучше удалить).
-    
+
 - Неизвестные типы — читаются как markdown.
-    
 
 ### C.15 Как читать спеку
 
@@ -1701,22 +1639,20 @@ markdown
 **Что смотреть:**
 
 1. **Bundle structure** — как организовывать файлы.
-    
+
 2. **Concept document** — что писать в frontmatter и body.
-    
+
 3. **Conformance** — что считается конформным.
-    
+
 4. **Goals и Non-goals** — зачем OKF и что он не делает.
-    
 
 **Что игнорировать для нашего bundle:**
 
 - Абсолютные ссылки — используем относительные.
-    
+
 - `# Schema`, `# Examples` — по необходимости.
-    
+
 - Строгая конформность — мы OKF-вдохновлённые.
-    
 
 ### C.16 Citations
 
@@ -1735,16 +1671,14 @@ markdown
 Appendices:
 
 - **A.** Type dictionary ✅
-    
+
 - **B.** Full bundle structure ✅
-    
+
 - **C.** OKF spec extract ✅
-    
+
 - **D.** FAQ — следующий, последний в книге
-    
 
 Продолжаем с Appendix D?
-
 
 ## Appendix D. FAQ
 
@@ -1778,13 +1712,13 @@ OKF-термин. **Директория с markdown-концептами**, о
 
 #### Q: Чем это отличается от обычной документации?
 
-|Обычная документация|Bundle|
-|---|---|
-|Для людей|Для людей **и** агентов|
-|Публичная|Локальная|
-|Коммитится|Не коммитится|
-|Статичная|Растёт с вами|
-|Один автор|Вы + агент|
+| Обычная документация | Bundle                  |
+| -------------------- | ----------------------- |
+| Для людей            | Для людей **и** агентов |
+| Публичная            | Локальная               |
+| Коммитится           | Не коммитится           |
+| Статичная            | Растёт с вами           |
+| Один автор           | Вы + агент              |
 
 Bundle — **инструмент**, не артефакт проекта.
 
@@ -1797,11 +1731,10 @@ Bundle — **инструмент**, не артефакт проекта.
 Bundle окупается, когда:
 
 - `AGENTS.md` растёт.
-    
+
 - Есть повторяющиеся задачи (issue, CI, troubleshooting).
-    
+
 - Нужны динамические артефакты (analysis, runbooks).
-    
 
 #### Q: Это обязательно?
 
@@ -1909,12 +1842,12 @@ Workflow: идея → backlog → решение делать → GitHub Issue.
 
 #### Q: Почему `runbooks/` отдельно от `_troubleshooting.md`?
 
-|`_troubleshooting.md`|`runbooks/`|
-|---|---|
-|Локально|Прод|
-|Разработчик|On-call|
-|Не срочно|Срочно|
-|Много проблем в одном файле|Один инцидент = один файл|
+| `_troubleshooting.md`       | `runbooks/`               |
+| --------------------------- | ------------------------- |
+| Локально                    | Прод                      |
+| Разработчик                 | On-call                   |
+| Не срочно                   | Срочно                    |
+| Много проблем в одном файле | Один инцидент = один файл |
 
 Разные аудитории, разная срочность.
 
@@ -1925,9 +1858,8 @@ Workflow: идея → backlog → решение делать → GitHub Issue.
 Разные сущности:
 
 - **Finding** — «есть проблема». Состояние.
-    
+
 - **Backlog item** — «делаем X». Задача.
-    
 
 Finding может стать backlog item. Но не обязан.
 
@@ -1936,9 +1868,8 @@ Finding может стать backlog item. Но не обязан.
 #### Q: Что писать в `_decisions.md` vs `WORK_LOG.md`?
 
 - **`_decisions.md`** — значимые решения (архитектура, API, процесс).
-    
+
 - **`WORK_LOG.md`** — все сессии, включая мелкие решения.
-    
 
 Правило: если решение повлияет на других через полгода — ADR. Если «локальное решение в сессии» — WORK_LOG.
 
@@ -1948,17 +1879,17 @@ Finding может стать backlog item. Но не обязан.
 
 #### Q: Как часто обновлять файлы?
 
-|Файл|Когда|
-|---|---|
-|`_concepts.md`|При архитектурных изменениях|
-|`_ci.md`|При изменении `.github/workflows/`|
-|`_troubleshooting.md`|После каждой проблемы (>10 мин)|
-|`_backlog.md`|При появлении/завершении задач|
-|`_decisions.md`|При значимых решениях|
-|`_meta.md`|При обновлении шаблона|
-|`_env.md`|При изменении окружений|
-|`_files.md`|При изменении структуры|
-|`_setup.md`|При изменении процесса запуска|
+| Файл                  | Когда                              |
+| --------------------- | ---------------------------------- |
+| `_concepts.md`        | При архитектурных изменениях       |
+| `_ci.md`              | При изменении `.github/workflows/` |
+| `_troubleshooting.md` | После каждой проблемы (>10 мин)    |
+| `_backlog.md`         | При появлении/завершении задач     |
+| `_decisions.md`       | При значимых решениях              |
+| `_meta.md`            | При обновлении шаблона             |
+| `_env.md`             | При изменении окружений            |
+| `_files.md`           | При изменении структуры            |
+| `_setup.md`           | При изменении процесса запуска     |
 
 #### Q: Что если я хочу, чтобы агент всегда знал X?
 
@@ -1973,27 +1904,24 @@ Finding может стать backlog item. Но не обязан.
 **Тест:** «Это нужно каждой задаче или только некоторым?»
 
 - Каждой → `AGENTS.md`.
-    
+
 - Некоторым → reference file.
-    
 
 Пример:
 
 - «Проект — Ruby gem» → `AGENTS.md` (нужно всегда).
-    
+
 - «Тесты запускаются через `bundle exec rspec`» → `_commands.md` (нужно когда тестируешь).
-    
 
 #### Q: Агент не читает нужный файл. Что делать?
 
 Три причины:
 
 1. **Триггер сформулирован размыто.** «When to read: sometimes useful» — плохо. «When to read: writing code» — хорошо.
-    
+
 2. **Задача неоднозначна.** «Расскажи про проект» — агент не знает, что читать. «Расскажи про архитектуру» — понятно.
-    
+
 3. **Модель ошиблась.** Скажите прямо: «Прочитай `_concepts.md` и объясни X».
-    
 
 См. Chapter 4.
 
@@ -2030,6 +1958,7 @@ Bundle — **личный**. У каждого свой.
 bash
 
 # В ~/.bashrc или ~/.zshrc
+
 export PATH="$HOME/.local/bin:$PATH"
 
 Затем `source ~/.bashrc` (или `~/.zshrc`).
@@ -2041,11 +1970,10 @@ export PATH="$HOME/.local/bin:$PATH"
 Файлы из списка **NEVER_OVERWRITE** не перезаписываются. Если что-то потерялось:
 
 1. Проверьте бэкап: `.opencode.bak.<timestamp>/`.
-    
+
 2. Скопируйте файл из бэкапа.
-    
+
 3. На будущее: кастомизированные файлы храните как `<file>.local.md`.
-    
 
 См. Chapter 17.
 
@@ -2062,7 +1990,7 @@ git pull
 
 bash
 
-init-opencode --diff ~/Projects/my-app   # preview
+init-opencode --diff ~/Projects/my-app # preview
 init-opencode --update ~/Projects/my-app # apply
 
 См. Chapter 17.
@@ -2072,19 +2000,18 @@ init-opencode --update ~/Projects/my-app # apply
 Семь шагов:
 
 1. Создать `template/_<name>.md`.
-    
+
 2. Обновить `template/AGENTS.md`.
-    
+
 3. Обновить `bin/init-opencode` (списки NEVER/ALWAYS).
-    
+
 4. Обновить `VERSION`.
-    
+
 5. Обновить README.
-    
+
 6. Обновить `_meta.md`.
-    
+
 7. Commit, push.
-    
 
 См. Chapter 18.
 
@@ -2098,8 +2025,10 @@ OKF **толерантен** к битым ссылкам. Не критичн
 
 bash
 
-grep -r '\[.*\](.*\.md)' .opencode/ | while read line; do
-  # проверка существования
+grep -r '\[._\](._\.md)' .opencode/ | while read line; do
+
+# проверка существования
+
 done
 
 Раз в квартал — ревизия.
@@ -2109,11 +2038,10 @@ done
 **Ревизия раз в квартал.**
 
 - Проверить `timestamp` во всех файлах.
-    
+
 - Проверить актуальность содержимого.
-    
+
 - Удалить неактуальное.
-    
 
 См. Chapter 19 (Anti-patterns, раздел «Чистка bundle»).
 
@@ -2122,24 +2050,22 @@ done
 **Признаки:**
 
 - `AGENTS.md` > 150 строк.
-    
+
 - `_backlog.md` > 50 items.
-    
+
 - `_troubleshooting.md` > 300 строк.
-    
+
 - 10+ findings в `analysis/`.
-    
 
 **Что делать:**
 
 - Массовая чистка.
-    
+
 - Удалить устаревшее.
-    
+
 - Разбить на подфайлы.
-    
+
 - Пересмотреть процесс.
-    
 
 См. Chapter 19.
 
@@ -2148,13 +2074,12 @@ done
 **Порядок действий:**
 
 1. **Revoke/rotate** секрет немедленно.
-    
+
 2. Уведомить security contact.
-    
+
 3. **Не пытаться скрыть через `git rebase`** — история уже утекла.
-    
+
 4. Записать инцидент в `_decisions.md`.
-    
 
 См. Chapter 9 (`_security.md`).
 
@@ -2165,11 +2090,10 @@ done
 Если нет:
 
 1. Понять, **почему**. Может, файлы не используются? Может, ритуалы не соблюдаются?
-    
+
 2. Либо исправить процесс.
-    
+
 3. Либо удалить bundle. Мёртвый bundle хуже отсутствующего.
-    
 
 См. Chapter 19 (Anti-patterns).
 
@@ -2204,9 +2128,8 @@ done
 Можно. Но осознанно:
 
 - Скопировать в публичный репозиторий.
-    
+
 - Или через issue/PR.
-    
 
 **По умолчанию — не делится.** Потому что bundle — **личный**.
 
@@ -2219,13 +2142,12 @@ done
 OKF — стандарт от Google Cloud. Даёт:
 
 - **Портативность.** Работает с любым редактором.
-    
+
 - **Стандарт.** Открытый, стабильный.
-    
+
 - **Расширяемость.** Явно разрешает добавления.
-    
+
 - **Совместимость.** Другие OKF-инструменты понимают.
-    
 
 Свой формат — изобретение велосипеда.
 
@@ -2238,19 +2160,18 @@ OKF — стандарт от Google Cloud. Даёт:
 Из серии обсуждений, в которых разбирались:
 
 - OKF-спецификация.
-    
+
 - Принципы ленивой загрузки.
-    
+
 - Структура bundle.
-    
+
 - Каждый файл в отдельности.
-    
+
 - Workflows.
-    
+
 - Anti-patterns.
-    
+
 - Философия.
-    
 
 Материал собирался как учебное пособие для тех, кто внедряет AI-агентов.
 
@@ -2261,15 +2182,14 @@ OKF — стандарт от Google Cloud. Даёт:
 **По частям:**
 
 - **Part I (Foundations)** — обязательно.
-    
+
 - **Part II (Files)** — справочник. Выборочно.
-    
+
 - **Part III (Workflows)** — после основ.
-    
+
 - **Part IV (Operations)** — про эксплуатацию.
-    
+
 - **Part V (Appendices)** — справочники.
-    
 
 См. Preface.
 
@@ -2280,13 +2200,12 @@ OKF — стандарт от Google Cloud. Даёт:
 Рекомендуется:
 
 1. Прочитать Part I всем.
-    
+
 2. Разобрать Part II по частям (по одному файлу в неделю).
-    
+
 3. Обсудить workflows.
-    
+
 4. Задать упражнения из глав.
-    
 
 #### Q: Есть ли упражнения?
 
@@ -2307,61 +2226,56 @@ OKF — стандарт от Google Cloud. Даёт:
 **Возможные источники:**
 
 1. **Оглавление книги.** Возможно, ответ в одной из глав.
-    
+
 2. **Оглавление главы.** Каждая глава структурирована: концепция → применение → anti-patterns → упражнение.
-    
+
 3. **`SPEC_REFERENCE.md`** — выдержка из OKF.
-    
+
 4. **Сам bundle** — `AGENTS.md` и reference files содержат ответы для конкретного проекта.
-    
 
 **Если ничего не подошло:**
 
 - Создайте issue в репозитории шаблонов.
-    
+
 - Или напишите в обсуждении.
-    
 
 ### D.11 Итог книги
 
 Мы прошли:
 
 - **[[guide_ru_part_I|Part I — Foundations]]** Зачем bundle, OKF, lazy loading.
-    
+
 - **[[guide_ru_part_II|Part II — Files]]** Каждый файл по отдельности.
-    
+
 - **[[guide_ru_part_III|Part III — Workflows]]** Шесть сценариев работы.
-    
+
 - **[[guide_ru_part_IV|Part IV — Operations]]** Установка, расширение, anti-patterns, философия.
-    
+
 - **[[guide_ru_part_V|Part V — Appendices]]** Справочники.
-    
 
 **Главные идеи:**
 
 1. **`AGENTS.md` — оглавление, не энциклопедия.**
-    
+
 2. **Ленивая загрузка экономит контекст.**
-    
+
 3. **OKF даёт формат, мы добавляем методологию.**
-    
+
 4. **Bundle — инструмент, не цель.**
-    
+
 5. **Speed over quality, минимализм, локальность.**
-    
+
 6. **Bundle растёт с вами.**
-    
 
 **Что делать дальше:**
 
 - Установить bundle в свой проект.
-    
+
 - Начать с `AGENTS.md` и `WORK_LOG.md`.
-    
+
 - Постепенно добавлять остальное.
-    
+
 - Регулярно ревизовать.
-    
 
 **Bundle — это долгосрочная инвестиция.** Первые пару недель — непривычно. Через месяц — не сможете без него.
 
@@ -2374,11 +2288,10 @@ OKF — стандарт от Google Cloud. Даёт:
 Если хотите углубиться:
 
 - [OKF SPEC.md](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) — полная спецификация.
-    
+
 - Репозиторий шаблонов — `README_en.md`, `README_ru.md`.
-    
+
 - Сам bundle — `.opencode/` в вашем проекте.
-    
 
 **Удачи.**
 

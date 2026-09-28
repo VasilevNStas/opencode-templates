@@ -53,10 +53,10 @@ bundle/
 
 ## Reserved names
 
-| File | Purpose |
-|------|---------|
+| File       | Purpose                     |
+| ---------- | --------------------------- |
 | `index.md` | Directory table of contents |
-| `log.md` | Change history |
+| `log.md`   | Change history              |
 
 All other `.md` files are concept documents.
 
@@ -72,14 +72,14 @@ Each concept is a UTF-8 markdown file with two parts
 
 ```yaml
 ---
-type: <Type name>                  # REQUIRED
+type: <Type name> # REQUIRED
 title: <Optional display name>
 description: <Optional one-line summary>
 resource: <Optional canonical URI>
 tags: [<tag>, <tag>]
 generated: { by: human:<id>, at: <ISO 8601 datetime> }
-status: stable                     # optional: draft|stable|deprecated
-sources:                           # optional: list of provenance sources
+status: stable # optional: draft|stable|deprecated
+sources: # optional: list of provenance sources
   - id: source-id
     resource: https://example.com
     title: Source Title
@@ -110,10 +110,10 @@ reading and agent extraction.
 
 **Conventional OKF sections:**
 
-| Heading | Purpose |
-|---------|---------|
-| `# Schema` | Structured description of fields/columns |
-| `# Examples` | Usage examples |
+| Heading      | Purpose                                  |
+| ------------ | ---------------------------------------- |
+| `# Schema`   | Structured description of fields/columns |
+| `# Examples` | Usage examples                           |
 
 **In this bundle:** we use `# Schema` and `# Examples` when relevant.
 Citations moved to `sources:` in frontmatter (v0.2).
@@ -136,7 +136,7 @@ Recommended form — stable when files move
 See [neighboring concept](./other.md)
 ```
 
-Semantics: a link from A to B asserts *the existence of a relationship*.
+Semantics: a link from A to B asserts _the existence of a relationship_.
 The specific relationship type is conveyed by surrounding text.
 
 Consumers must tolerate broken links — they may simply point to

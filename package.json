@@ -1,0 +1,25 @@
+{
+  "name": "opencode-templates",
+  "version": "0.2.0",
+  "description": "A local knowledge bundle for working with AI agents through [OpenCode](https://opencode.ai). Lazy-loaded markdown files, OKF-inspired, never committed to your project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format:md": "prettier --write \"**/*.md\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VasilevNStas/opencode-templates.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/VasilevNStas/opencode-templates/issues"
+  },
+  "homepage": "https://github.com/VasilevNStas/opencode-templates#readme",
+  "devDependencies": {
+    "prettier": "^3.9.9"
+  }
+}

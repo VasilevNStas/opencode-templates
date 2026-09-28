@@ -25,21 +25,21 @@ Document for tracking and improving system performance. For general error handli
 
 ## SLA and SLO Targets
 
-| Metric | Target | Measurement | Alert threshold |
-|--------|--------|-------------|-----------------|
-| **Latency (P50)** | <e.g. 50ms> | p50 over last 1h | > <value> |
-| **Latency (P99)** | <e.g. 200ms> | p99 over last 1h | > <value> |
-| **Availability** | <e.g. 99.9%> | uptime % per month | < <value> |
-| **Throughput** | <e.g. 1k req/s> | requests/sec avg | < <value> |
-| **Error rate** | <e.g. <0.1%> | 5xx / total requests | > <value> |
+| Metric            | Target          | Measurement          | Alert threshold |
+| ----------------- | --------------- | -------------------- | --------------- |
+| **Latency (P50)** | <e.g. 50ms>     | p50 over last 1h     | > <value>       |
+| **Latency (P99)** | <e.g. 200ms>    | p99 over last 1h     | > <value>       |
+| **Availability**  | <e.g. 99.9%>    | uptime % per month   | < <value>       |
+| **Throughput**    | <e.g. 1k req/s> | requests/sec avg     | < <value>       |
+| **Error rate**    | <e.g. <0.1%>    | 5xx / total requests | > <value>       |
 
 ## Profiling Tools
 
-| Tool | Use case | Install / Run |
-|------|----------|---------------|
-| `<tool_1>` | <e.g. CPU profiling, memory leaks> | `<command>` |
-| `<tool_2>` | <e.g. flame graphs> | `<command>` |
-| `<tool_3>` | <e.g. network tracing> | `<command>` |
+| Tool       | Use case                           | Install / Run |
+| ---------- | ---------------------------------- | ------------- |
+| `<tool_1>` | <e.g. CPU profiling, memory leaks> | `<command>`   |
+| `<tool_2>` | <e.g. flame graphs>                | `<command>`   |
+| `<tool_3>` | <e.g. network tracing>             | `<command>`   |
 
 ### Running a profile
 
@@ -76,8 +76,8 @@ Baseline files are checked into version control for diff comparison across time.
 
 Known performance bottlenecks — updated during analysis sessions:
 
-| # | Component | Symptom | Impact | Status |
-|---|-----------|---------|--------|--------|
+| #     | Component        | Symptom               | Impact                      | Status                            |
+| ----- | ---------------- | --------------------- | --------------------------- | --------------------------------- |
 | P-001 | <component_name> | <symptom description> | <severity: high/medium/low> | identified / optimized / resolved |
 
 ### How to diagnose a bottleneck
@@ -90,12 +90,12 @@ Known performance bottlenecks — updated during analysis sessions:
 
 ## Capacity Planning
 
-| Resource | Current usage | Growth rate | Action when to scale |
-|----------|--------------|-------------|---------------------|
-| **CPU** | <e.g. 40% avg peak> | <e.g. +5%/quarter> | > 70% sustained |
-| **Memory** | <e.g. 6GB of 8GB> | <rate> | > 80% headroom needed |
-| **Disk** | <e.g. 200GB of 500GB> | <rate> | > 70% full |
-| **Network bandwidth** | <current / max> | <rate> | > 60% saturation |
+| Resource              | Current usage         | Growth rate        | Action when to scale  |
+| --------------------- | --------------------- | ------------------ | --------------------- |
+| **CPU**               | <e.g. 40% avg peak>   | <e.g. +5%/quarter> | > 70% sustained       |
+| **Memory**            | <e.g. 6GB of 8GB>     | <rate>             | > 80% headroom needed |
+| **Disk**              | <e.g. 200GB of 500GB> | <rate>             | > 70% full            |
+| **Network bandwidth** | <current / max>       | <rate>             | > 60% saturation      |
 
 Scaling triggers are managed through <infra-ticket-system> or auto-scaling policies.
 
@@ -103,8 +103,8 @@ Scaling triggers are managed through <infra-ticket-system> or auto-scaling polic
 
 Performance-sensitive checks enforced in CI:
 
-| Check | Threshold | Command |
-|-------|-----------|---------|
-| Response time | <P99 < X ms> | `<ci-performance-check>` |
-| Memory leak detection | <delta < X MB/hour> | `<memory-leak-check>` |
-| Load test smoke | <error rate < Y%> | `<load-test-smoke>` |
+| Check                 | Threshold           | Command                  |
+| --------------------- | ------------------- | ------------------------ |
+| Response time         | <P99 < X ms>        | `<ci-performance-check>` |
+| Memory leak detection | <delta < X MB/hour> | `<memory-leak-check>`    |
+| Load test smoke       | <error rate < Y%>   | `<load-test-smoke>`      |

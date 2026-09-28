@@ -75,6 +75,7 @@ It's your personal knowledge base and working tool.
 only when it decides the task matches a description in `AGENTS.md`.
 
 Example:
+
 - You say: "CI is red, figure it out."
 - The agent sees in `AGENTS.md`: `_ci.md — when CI fails`.
 - It reads `_ci.md` and diagnoses.
@@ -97,11 +98,11 @@ The bundle follows OKF v0.2 **with extensions** (see
 
 ### Lazy vs eager
 
-| Eager (everything at once) | Lazy (on demand) |
-|----------------------------|------------------|
-| One large AGENTS.md | Core + topical files |
+| Eager (everything at once)   | Lazy (on demand)            |
+| ---------------------------- | --------------------------- |
+| One large AGENTS.md          | Core + topical files        |
 | 500+ lines always in context | ~60 lines + files on demand |
-| Agent drowns in noise | Agent stays focused |
+| Agent drowns in noise        | Agent stays focused         |
 
 ---
 
@@ -135,12 +136,12 @@ language. The agent decides which files it needs.
 
 Examples:
 
-| What you say | What the agent reads |
-|--------------|----------------------|
-| "Add a new component" | `_concepts.md`, `_codestyle.md`, `_files.md` |
-| "CI is red" | `_ci.md`, `_troubleshooting.md` |
-| "Working on issue #123" | `_templates.md`, `_concepts.md` |
-| "I need a deep analysis" | `_concepts.md`, creates `analysis/*` |
+| What you say             | What the agent reads                         |
+| ------------------------ | -------------------------------------------- |
+| "Add a new component"    | `_concepts.md`, `_codestyle.md`, `_files.md` |
+| "CI is red"              | `_ci.md`, `_troubleshooting.md`              |
+| "Working on issue #123"  | `_templates.md`, `_concepts.md`              |
+| "I need a deep analysis" | `_concepts.md`, creates `analysis/*`         |
 
 ---
 
@@ -198,60 +199,60 @@ Full structure of `.opencode/`:
 
 ### Core
 
-| File | Role | Length |
-|------|------|--------|
+| File        | Role                                      | Length      |
+| ----------- | ----------------------------------------- | ----------- |
 | `AGENTS.md` | Entry point. Project context + navigation | 60–90 lines |
-| `index.md` | OKF bundle index | ~35 lines |
-| `log.md` | Pointer to chronological logs | ~20 lines |
+| `index.md`  | OKF bundle index                          | ~35 lines   |
+| `log.md`    | Pointer to chronological logs             | ~20 lines   |
 
 ### Onboarding — understanding the project
 
-| File | When to read |
-|------|--------------|
-| `_setup.md` | First run from scratch |
+| File           | When to read                      |
+| -------------- | --------------------------------- |
+| `_setup.md`    | First run from scratch            |
 | `_concepts.md` | Architecture, patterns, data flow |
-| `_glossary.md` | Unfamiliar domain term |
+| `_glossary.md` | Unfamiliar domain term            |
 
 ### Daily work — everyday tasks
 
-| File | When to read |
-|------|--------------|
-| `_templates.md` | New issue — SUMMARY, PLAYBOOK, PR |
-| `_worklog.md` | Starting/continuing a session |
-| `_testing.md` | Testing practice — fixtures, mocking, golden files, coverage |
-| `_backlog.md` | Planning, ideas, tech debt |
-| `_decisions.md` | "Why is it like this" — ADR |
-| `_codestyle.md` | Writing code — SPDX, lint, conventions |
-| `_commands.md` | Need a command — build/test/run |
+| File            | When to read                                                 |
+| --------------- | ------------------------------------------------------------ |
+| `_templates.md` | New issue — SUMMARY, PLAYBOOK, PR                            |
+| `_worklog.md`   | Starting/continuing a session                                |
+| `_testing.md`   | Testing practice — fixtures, mocking, golden files, coverage |
+| `_backlog.md`   | Planning, ideas, tech debt                                   |
+| `_decisions.md` | "Why is it like this" — ADR                                  |
+| `_codestyle.md` | Writing code — SPDX, lint, conventions                       |
+| `_commands.md`  | Need a command — build/test/run                              |
 
 ### When things break — diagnostics
 
-| File | When to read |
-|------|--------------|
-| `_ci.md` | CI failed |
+| File                  | When to read             |
+| --------------------- | ------------------------ |
+| `_ci.md`              | CI failed                |
 | `_troubleshooting.md` | Local environment broken |
-| `runbooks/` | Incident in prod |
+| `runbooks/`           | Incident in prod         |
 
 ### Navigation & safety — navigation and safety
 
-| File | When to read |
-|------|--------------|
-| `_files.md` | Looking for where things live |
-| `_env.md` | Environment map — dev, staging, prod |
-| `_security.md` | Secrets, vulnerabilities |
-| `analysis/` | Deep analysis findings |
-| `_meta.md` | How the bundle itself is organized |
-| `_api.md` | Public API — methods, commands, endpoints (optional) |
-| `_release.md` | Release process — versioning, publishing, rollback (optional) |
+| File              | When to read                                                         |
+| ----------------- | -------------------------------------------------------------------- |
+| `_files.md`       | Looking for where things live                                        |
+| `_env.md`         | Environment map — dev, staging, prod                                 |
+| `_security.md`    | Secrets, vulnerabilities                                             |
+| `analysis/`       | Deep analysis findings                                               |
+| `_meta.md`        | How the bundle itself is organized                                   |
+| `_api.md`         | Public API — methods, commands, endpoints (optional)                 |
+| `_release.md`     | Release process — versioning, publishing, rollback (optional)        |
 | `_performance.md` | Performance tracking — benchmarks, profiling, SLO targets (optional) |
 
 ### Utility
 
-| File | Role |
-|------|------|
+| File                | Role                |
+| ------------------- | ------------------- |
 | `SPEC_REFERENCE.md` | Extract of OKF v0.2 |
-| `.gitignore` | Commit protection |
-| `.template-version` | Template version |
+| `.gitignore`        | Commit protection   |
+| `.template-version` | Template version    |
 
 ---
 
@@ -324,7 +325,7 @@ Can be organized by date or by issue number.
                         ├─_decisions
                         ├─_codestyle
                         └─_commands
-                        
+
                         Navigation & safety
                         │
                         ├─_files
@@ -377,29 +378,29 @@ Local extract: [`SPEC_REFERENCE.md`](SPEC_REFERENCE.md).
 
 ### What we borrowed from OKF
 
-| OKF concept | In this template |
-|-------------|------------------|
-| Bundle | The whole `.opencode/` directory |
-| Concept document | Every `_*.md` file |
-| YAML frontmatter | The `---` block with `type`, `title`, `description` |
-| `type` (REQUIRED) | `project-context`, `architecture`, `ci`, ... |
-| Cross-linking | Relative markdown links between files |
-| Citations | `## References` / `## Citations` |
-| `index.md` | Our `index.md` — OKF entry point |
-| `log.md` | Our `log.md` — pointer to logs |
+| OKF concept       | In this template                                    |
+| ----------------- | --------------------------------------------------- |
+| Bundle            | The whole `.opencode/` directory                    |
+| Concept document  | Every `_*.md` file                                  |
+| YAML frontmatter  | The `---` block with `type`, `title`, `description` |
+| `type` (REQUIRED) | `project-context`, `architecture`, `ci`, ...        |
+| Cross-linking     | Relative markdown links between files               |
+| Citations         | `## References` / `## Citations`                    |
+| `index.md`        | Our `index.md` — OKF entry point                    |
+| `log.md`          | Our `log.md` — pointer to logs                      |
 
 ### What we added on top of OKF
 
-| Extension | Why |
-|-----------|-----|
-| `AGENTS.md` as entry point | OpenCode reads exactly this at startup |
-| `_*.md` prefix | Visually marks reference files |
-| Lazy loading | Saves agent context |
-| `WORK_LOG.md` | Local chronology (instead of OKF `log.md`) |
-| Directories `issue/`, `playbook/`, `pr/` | Dynamic workflow artifacts |
-| `analysis/` | Structured analysis output |
-| `runbooks/` | Incident procedures |
-| Extended `type` dictionary | Types specific to our tasks |
+| Extension                                | Why                                        |
+| ---------------------------------------- | ------------------------------------------ |
+| `AGENTS.md` as entry point               | OpenCode reads exactly this at startup     |
+| `_*.md` prefix                           | Visually marks reference files             |
+| Lazy loading                             | Saves agent context                        |
+| `WORK_LOG.md`                            | Local chronology (instead of OKF `log.md`) |
+| Directories `issue/`, `playbook/`, `pr/` | Dynamic workflow artifacts                 |
+| `analysis/`                              | Structured analysis output                 |
+| `runbooks/`                              | Incident procedures                        |
+| Extended `type` dictionary               | Types specific to our tasks                |
 
 ### OKF tolerance
 
@@ -421,38 +422,38 @@ refactored, and is partially generated by agents.
 OKF does not register `type` centrally, but for consistency within a
 single project it's useful to stick to a fixed set.
 
-| `type` | File |
-|--------|------|
-| `project-context` | `AGENTS.md` |
-| `index` | `index.md` |
-| `log` | `log.md` |
-| `meta` | `_meta.md` |
-| `spec-reference` | `SPEC_REFERENCE.md` |
-| `architecture` | `_concepts.md` |
-| `setup` | `_setup.md` |
-| `env` | `_env.md` |
-| `codestyle` | `_codestyle.md` |
-| `commands` | `_commands.md` |
-| `files` | `_files.md` |
-| `glossary` | `_glossary.md` |
-| `security` | `_security.md` |
-| `troubleshooting` | `_troubleshooting.md` |
-| `ci` | `_ci.md` |
-| `decision-log` | `_decisions.md` |
-| `backlog` | `_backlog.md` |
-| `worklog` | `_worklog.md`, `WORK_LOG.md` |
-| `templates` | `_templates.md` |
-| `testing` | `_testing.md` |
-| `api` | `_api.md` |
-| `release` | `_release.md` |
-| `performance` | `_performance.md` |
-| `analysis-index` | `analysis/index.md` |
-| `finding` | `analysis/F-*.md` |
-| `runbook-index` | `runbooks/index.md` |
-| `runbook` | `runbooks/*.md` |
+| `type`            | File                           |
+| ----------------- | ------------------------------ |
+| `project-context` | `AGENTS.md`                    |
+| `index`           | `index.md`                     |
+| `log`             | `log.md`                       |
+| `meta`            | `_meta.md`                     |
+| `spec-reference`  | `SPEC_REFERENCE.md`            |
+| `architecture`    | `_concepts.md`                 |
+| `setup`           | `_setup.md`                    |
+| `env`             | `_env.md`                      |
+| `codestyle`       | `_codestyle.md`                |
+| `commands`        | `_commands.md`                 |
+| `files`           | `_files.md`                    |
+| `glossary`        | `_glossary.md`                 |
+| `security`        | `_security.md`                 |
+| `troubleshooting` | `_troubleshooting.md`          |
+| `ci`              | `_ci.md`                       |
+| `decision-log`    | `_decisions.md`                |
+| `backlog`         | `_backlog.md`                  |
+| `worklog`         | `_worklog.md`, `WORK_LOG.md`   |
+| `templates`       | `_templates.md`                |
+| `testing`         | `_testing.md`                  |
+| `api`             | `_api.md`                      |
+| `release`         | `_release.md`                  |
+| `performance`     | `_performance.md`              |
+| `analysis-index`  | `analysis/index.md`            |
+| `finding`         | `analysis/F-*.md`              |
+| `runbook-index`   | `runbooks/index.md`            |
+| `runbook`         | `runbooks/*.md`                |
 | `project-summary` | `issue/PROJECT_SUMMARY_<N>.md` |
-| `playbook` | `playbook/PLAYBOOK_<N>.md` |
-| `pr` | `pr/PR_<N>.md` |
+| `playbook`        | `playbook/PLAYBOOK_<N>.md`     |
+| `pr`              | `pr/PR_<N>.md`                 |
 
 Consumers (including the agent) must **tolerate** unknown `type` values —
 this is an OKF requirement. But producers (us) try not to multiply new
@@ -621,6 +622,7 @@ init-opencode --help
 ### What it does
 
 **Install:**
+
 1. Creates `.opencode/` in the target directory.
 2. If `.opencode/` already exists — backs it up to `.opencode.bak.<timestamp>`.
 3. Copies the `template/` contents.
@@ -629,6 +631,7 @@ init-opencode --help
 6. Prints the next steps.
 
 **Update:**
+
 1. Reads `.template-version`.
 2. Compares with the current template version.
 3. Updates "always overwritten" files.
@@ -637,8 +640,8 @@ init-opencode --help
 
 ### Environment
 
-| Variable | Default | Purpose |
-|----------|---------|---------|
+| Variable                 | Default                         | Purpose                         |
+| ------------------------ | ------------------------------- | ------------------------------- |
 | `OPENCODE_TEMPLATE_REPO` | `~/Projects/opencode-templates` | Path to the template repository |
 
 Override if your template clone lives elsewhere:
@@ -703,6 +706,7 @@ ls -la /tmp/test-project/.opencode/
 init-opencode --update /tmp/test-project
 # → nothing to update
 ```
+
 ### Installing the script
 
 The script should already be in `~/.local/bin/`. If not — download it
@@ -867,6 +871,7 @@ The template follows the philosophy of
 responsibility (CI, review, static analysis), not yours.
 
 In practice:
+
 - **Cut corners.** Write working code; reviewers will catch problems.
 - **Small PRs.** Faster to write and review.
 - **Don't study the whole codebase.** Change only what the task needs.
@@ -878,6 +883,7 @@ The template isn't about tokens and savings (though that matters too).
 It's about **clarity**.
 
 When the agent sees a clean, structured `AGENTS.md`, it:
+
 - Quickly understands the project.
 - Knows exactly where to find details.
 - Doesn't get distracted by noise.
@@ -889,6 +895,7 @@ organizer with labeled drawers.
 ### OKF as foundation
 
 We build on OKF because:
+
 - **Simplicity.** Markdown + frontmatter. No binary formats.
 - **Portability.** Works with `cat`, `git clone`, any editor.
 - **Standard.** Google Cloud, open format, stable spec.
@@ -899,5 +906,5 @@ tasks. Not strictly conformant, but following the spirit of the spec.
 
 ---
 
-*Full OKF v0.2 guide: [SPEC.md](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md).*
-*Local extract: [`SPEC_REFERENCE.md`](SPEC_REFERENCE.md).*
+_Full OKF v0.2 guide: [SPEC.md](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)._
+_Local extract: [`SPEC_REFERENCE.md`](SPEC_REFERENCE.md)._

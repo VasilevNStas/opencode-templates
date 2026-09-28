@@ -17,8 +17,8 @@ open it, follow the steps in order
 
 ## Index
 
-| Scenario | Runbook | Severity | Last tested |
-|----------|---------|----------|-------------|
+| Scenario  | Runbook               | Severity     | Last tested  |
+| --------- | --------------------- | ------------ | ------------ |
 | <trigger> | [<name>](./<file>.md) | P0 / P1 / P2 | <YYYY-MM-DD> |
 
 ## Creating a new runbook

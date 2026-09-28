@@ -15,11 +15,11 @@ choices that affect architecture, public API, or development process.
 
 ## Index
 
-| # | Date | Decision | Status |
-|---|------|----------|--------|
-| ADR-003 | <YYYY-MM-DD> | <short name> | accepted |
+| #       | Date         | Decision     | Status                |
+| ------- | ------------ | ------------ | --------------------- |
+| ADR-003 | <YYYY-MM-DD> | <short name> | accepted              |
 | ADR-002 | <YYYY-MM-DD> | <short name> | superseded by ADR-003 |
-| ADR-001 | <YYYY-MM-DD> | <short name> | accepted |
+| ADR-001 | <YYYY-MM-DD> | <short name> | accepted              |
 
 ---
 
@@ -31,16 +31,20 @@ choices that affect architecture, public API, or development process.
 - **Deciders:** <@who>
 
 ### Context
+
 <What forced this decision — problem, constraints, forces at play>
 
 ### Decision
+
 <What was decided, one or two sentences>
 
 ### Alternatives considered
+
 - **<alt 1>** — <why rejected>
 - **<alt 2>** — <why rejected>
 
 ### Consequences
+
 - **Positive:** <what got better>
 - **Negative:** <what got worse, trade-offs>
 - **Follow-up:** <what needs to happen because of this>

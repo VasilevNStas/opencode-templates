@@ -31,18 +31,23 @@ End-to-end process for shipping a new version of the project. For environment co
 
 ```markdown
 ### Added
+
 - `<feature description with PR link>`
 
 ### Fixed
+
 - `<bug fix description with PR link>`
 
 ### Changed
+
 - `<behavior change description with PR link>`
 
 ### Removed
+
 - `<removed feature with deprecation notice if applicable>`
 
 ### Security
+
 - `<security fix CVE or advisory link>`
 ```
 
@@ -56,18 +61,18 @@ End-to-end process for shipping a new version of the project. For environment co
 
 ### Push to registry
 
-| Artifact type | Registry | Command |
-|---------------|----------|---------|
-| Docker image | <registry name> | `<docker push command>` |
-| Package (npm/rubygems/etc.) | <package manager registry> | `<publish command>` |
-| Documentation | <hosting service> | `<doc deploy command>` |
-| Binary artifacts | <CDN / S3 / Releases page> | `<upload command>` |
+| Artifact type               | Registry                   | Command                 |
+| --------------------------- | -------------------------- | ----------------------- |
+| Docker image                | <registry name>            | `<docker push command>` |
+| Package (npm/rubygems/etc.) | <package manager registry> | `<publish command>`     |
+| Documentation               | <hosting service>          | `<doc deploy command>`  |
+| Binary artifacts            | <CDN / S3 / Releases page> | `<upload command>`      |
 
 ### Promotion gates
 
-| Stage | Trigger | Gate |
-|-------|---------|------|
-| Staging | Push to `master` branch | CI passes, automated tests green |
+| Stage      | Trigger                           | Gate                                           |
+| ---------- | --------------------------------- | ---------------------------------------------- |
+| Staging    | Push to `master` branch           | CI passes, automated tests green               |
 | Production | Tag push (`v*`) or manual trigger | Approval from maintainer(s), smoke test passes |
 
 ## Rollback

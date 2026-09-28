@@ -14,17 +14,23 @@ never committed to your project.
 Result: instead of one 500-line `AGENTS.md`, you get a focused ~60-line core plus 25+ topical files the agent reads only when needed
 
 ## Installation
+
 Clone the template repository and link the installer:
+
 ```bash
 git clone <repo-url> ~/Projects/opencode-templates
 ln -s ~/Projects/opencode-templates/bin/init-opencode \
       ~/.local/bin/init-opencode
 ```
+
 Ensure `~/.local/bin` is in `$PATH`. Then verify:
+
 ```bash
 init-opencode --help
 ```
+
 If you prefer a copy over a symlink:
+
 ```bash
 cp ~/Projects/opencode-templates/bin/init-opencode ~/.local/bin/
 chmod +x ~/.local/bin/init-opencode
@@ -49,10 +55,10 @@ Then open OpenCode in the project and say:
 
 ## Documentation
 
-| Language | File |
-|----------|------|
-| English | [README_en.md](README_en.md) |
-| Русский | [README_ru.md](README_ru.md) |
+| Language | File                         |
+| -------- | ---------------------------- |
+| English  | [README_en.md](README_en.md) |
+| Русский  | [README_ru.md](README_ru.md) |
 
 Full guides cover: bundle structure, OKF conformance, `type` dictionary,
 workflow scenarios, FAQ, and the philosophy behind the template

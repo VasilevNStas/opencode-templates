@@ -44,38 +44,22 @@
 =============
 
 Part I — Foundations
-  1. The problem: why agents drown in context
-  2. What OKF is
-  3. The bundle as a unit of knowledge
-  4. Lazy loading
 
-Part II — The files
-  5. AGENTS.md — the entry point
-  6. Onboarding: _setup, _concepts, _glossary
-  7. Daily work: _templates, _worklog, _backlog, _decisions, _codestyle, _commands
-  8. Diagnostics: _ci, _troubleshooting, runbooks/
-  9. Navigation: _files, _env, _security, analysis/, _meta
-  10. Utility: index.md, log.md, SPEC_REFERENCE.md, .gitignore, .template-version
+1. The problem: why agents drown in context
+2. What OKF is
+3. The bundle as a unit of knowledge
+4. Lazy loading
 
-Part III — Workflows
-  11. Issue lifecycle
-  12. Session lifecycle
-  13. When CI fails
-  14. Incident in prod
-  15. Deep analysis
-  16. Planning
+Part II — The files 5. AGENTS.md — the entry point 6. Onboarding: _setup, _concepts, _glossary 7. Daily work: _templates, _worklog, _backlog, _decisions, _codestyle, _commands 8. Diagnostics: _ci, _troubleshooting, runbooks/ 9. Navigation: _files, _env, _security, analysis/, _meta 10. Utility: index.md, log.md, SPEC_REFERENCE.md, .gitignore, .template-version
 
-Part IV — Operations
-  17. init-opencode: install and update
-  18. Extending the bundle
-  19. Anti-patterns
-  20. Philosophy
+Part III — Workflows 11. Issue lifecycle 12. Session lifecycle 13. When CI fails 14. Incident in prod 15. Deep analysis 16. Planning
+
+Part IV — Operations 17. init-opencode: install and update 18. Extending the bundle 19. Anti-patterns 20. Philosophy
 
 Part V — Appendices
-  A. Type dictionary
-  B. Full bundle structure
-  C. OKF spec extract
-  D. FAQ
+A. Type dictionary
+B. Full bundle structure
+C. OKF spec extract
+D. FAQ
 
 =================
-

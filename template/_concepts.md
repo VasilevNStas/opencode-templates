@@ -16,9 +16,9 @@ pipeline, event-driven), how components relate>
 
 ## Key components
 
-| Component | Purpose | Dependencies |
-|-----------|---------|--------------|
-| `<name>` | `<what it does>` | `<depends on>` |
+| Component | Purpose          | Dependencies   |
+| --------- | ---------------- | -------------- |
+| `<name>`  | `<what it does>` | `<depends on>` |
 
 ## Data flow
 

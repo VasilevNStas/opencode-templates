@@ -26,8 +26,8 @@ issue lifecycle
 
 ### Session <N> — <short title>
 
-| # | What | Files | Status | Complexity |
-|---|------|-------|--------|-----------|
+| #     | What                | Files   | Status        | Complexity          |
+| ----- | ------------------- | ------- | ------------- | ------------------- |
 | <PR#> | <short description> | <files> | open / merged | low / medium / high |
 
 **Decision:** <non-obvious choices and why>

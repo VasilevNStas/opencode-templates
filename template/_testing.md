@@ -96,8 +96,8 @@ This file covers the **how** of testing. For strategy (what to test and why), se
 
 Shared helper methods used across test suites:
 
-| Utility | Purpose |
-|---------|---------|
+| Utility      | Purpose       |
+| ------------ | ------------- |
 | `<helper_1>` | <description> |
 | `<helper_2>` | <description> |
 
@@ -122,11 +122,11 @@ Flaky tests degrade trust in CI. Manage them proactively:
 
 ## Test Environments
 
-| Environment | Used for | Reset frequency |
-|-------------|----------|-----------------|
-| In-memory | Fast unit tests | Per-run |
+| Environment  | Used for          | Reset frequency                  |
+| ------------ | ----------------- | -------------------------------- |
+| In-memory    | Fast unit tests   | Per-run                          |
 | Dedicated DB | Integration tests | Per-run (via migration/rollback) |
-| Full stack | E2E tests | Manual or CI-provisioned |
+| Full stack   | E2E tests         | Manual or CI-provisioned         |
 
 ## Performance Tests (brief)
 

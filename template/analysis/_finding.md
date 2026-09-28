@@ -7,8 +7,11 @@ status: open
 generated: { by: human:<id>, at: <YYYY-MM-DD> }
 tags: [finding, area]
 ---
+
 # Finding: <title>
+
 ## Summary
+
 <One or two sentences: what was found>
 ## Evidence
 <Files, line numbers, metrics, links to code>

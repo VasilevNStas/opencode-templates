@@ -94,17 +94,17 @@ init-opencode --update ~/Projects/my-app
 
 Как работает обновление:
 
-| Файл                              | Поведение              | Почему                                         |
-| --------------------------------- | ---------------------- | ----------------------------------------------- |
-| AGENTS.md                         | ✅ Обновится            | Шаблон рабочей логики — должен оставаться актуальным |
-| index.md                          | ✅ Обновится            | Оглавление bundle                               |
-| _security.md                      | ✅ Обновится            | Политика безопасности — критично держать свежей  |
-| _templates.md                     | ✅ Обновится            | Шаблоны PR/issue/playbook                       |
-| analysis/_finding.md             | ✅ Обновится            | Шаблон для findings                             |
-| WORK_LOG.md                       | ❌ Не обновится         | Содержит историю ваших сессий                   |
-| _backlog.md                       | ❌ Не обновится         | Пользовательский бэклог                           |
-| _concepts.md                      | ❌ Не обновится         | Заполняется под конкретный проект                |
-| _decisions.md                     | ❌ Не обновится         | ADR-журнал решений команды                       |
+| Файл                 | Поведение       | Почему                                               |
+| -------------------- | --------------- | ---------------------------------------------------- |
+| AGENTS.md            | ✅ Обновится    | Шаблон рабочей логики — должен оставаться актуальным |
+| index.md             | ✅ Обновится    | Оглавление bundle                                    |
+| _security.md         | ✅ Обновится    | Политика безопасности — критично держать свежей      |
+| _templates.md        | ✅ Обновится    | Шаблоны PR/issue/playbook                            |
+| analysis/_finding.md | ✅ Обновится    | Шаблон для findings                                  |
+| WORK_LOG.md          | ❌ Не обновится | Содержит историю ваших сессий                        |
+| _backlog.md          | ❌ Не обновится | Пользовательский бэклог                              |
+| _concepts.md         | ❌ Не обновится | Заполняется под конкретный проект                    |
+| _decisions.md        | ❌ Не обновится | ADR-журнал решений команды                           |
 
 Проверка различий:
 
@@ -256,11 +256,11 @@ If they differ, run `init-opencode --update .`.
 
 ### Q: What's the difference between install and update?
 
-| Команда   | Делает                                       | Кого трогаем              | Когда использовать          |
-| --------- | ------------------------------------------- | ------------------------ | -------------------------- |
-| `install` | Полная замена, с бэкапом старого bundle      | Все файлы                | При первом запуске          |
-| `update`  | Только изменение, старые данные не трогаем    | ONLY_ALWAYS_OVERWRITE    | После изменений в шаблоне   |
-| `diff`    | Покажет что поменяется без записи            | N/A                      | Предпросмотр перед обновлением |
+| Команда   | Делает                                     | Кого трогаем          | Когда использовать             |
+| --------- | ------------------------------------------ | --------------------- | ------------------------------ |
+| `install` | Полная замена, с бэкапом старого bundle    | Все файлы             | При первом запуске             |
+| `update`  | Только изменение, старые данные не трогаем | ONLY_ALWAYS_OVERWRITE | После изменений в шаблоне      |
+| `diff`    | Покажет что поменяется без записи          | N/A                   | Предпросмотр перед обновлением |
 
 ### Q: Why does --update skip certain files?
 
@@ -279,6 +279,7 @@ That file contains a table mapping topic → filename. Agent only loads the
 specific files it needs for the current task, not all 25+ files at once.
 
 This saves tokens and keeps context manageable. For example:
+
 - Working on a failing test? Read `_testing.md` + `_ci.md`
 - Setting up a new dev environment? Read `_setup.md` + `_commands.md`
 - Troubleshooting locally? Read `_troubleshooting.md` + `_env.md`
@@ -292,6 +293,7 @@ This saves tokens and keeps context manageable. For example:
 игнорируются, но не ломают чтение.
 
 Потребители OKF v0.2 получают дополнительные сигналы доверия:
+
 - `generated.by/at` — кто и когда создал документ
 - `status: stable/draft` — жизненный цикл концепта
 - `sources` — provenance с credibility signals (author, last_modified)

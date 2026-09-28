@@ -5,6 +5,7 @@ description: "A practical guide to OKF and agent-ready codebases"
 timestamp: 2026-09-23
 tags: [okf, agents, opencode, guide]
 ---
+
 # Part IV — Operations
 
 _[Part I](../textbook_ru/guide_ru_part_I.md), [Part II](../textbook_ru/guide_ru_part_II.md), [Part III](../textbook_ru/guide_ru_part_III.md) были про **использование** bundle. Part IV — про **эксплуатацию**: как его устанавливать, обновлять, расширять, поддерживать. Это мета-уровень: не «как работать с проектом через bundle», а «как работать с самим bundle»._
@@ -14,6 +15,7 @@ _Четыре главы: install/update, extending, anti-patterns, philosophy._
 ---
 
 ## Chapter 17. `init-opencode`: install and update
+
 ## Глава 17. `init-opencode`: установка и обновление
 
 ### 17.1 Зачем нужен installer
@@ -23,11 +25,10 @@ Bundle состоит из 20+ файлов. Копировать их вруч�
 **Installer решает три задачи:**
 
 1. **Install** — скопировать шаблон в проект
-    
-2. **Update** — обновить шаблонные файлы, не тронув пользовательские
-    
-3. **Diff** — показать, что изменится, до обновления
 
+2. **Update** — обновить шаблонные файлы, не тронув пользовательские
+
+3. **Diff** — показать, что изменится, до обновления
 
 Без installer'а вы бы делали `cp -R template/ .opencode/` вручную. Это работает один раз. При обновлении — перезапишет все ваши данные.
 
@@ -55,12 +56,12 @@ opencode-templates/
     ├── analysis/
     └── runbooks/
 ```
+
 **Две ключевые директории:**
 
 - `bin/` — скрипт, **не** копируется в проект.
-    
-- `template/` — содержимое, **копируется** в `.opencode/`.
 
+- `template/` — содержимое, **копируется** в `.opencode/`.
 
 **VERSION-файл** — просто строка `v0.1.0`. Используется в `.template-version`.
 
@@ -73,6 +74,7 @@ git clone <repo-url> ~/Projects/opencode-templates
 ln -s ~/Projects/opencode-templates/bin/init-opencode \
       ~/.local/bin/init-opencode
 ```
+
 **Symlink предпочтительнее копии.** Если правите скрипт в репозитории — изменения сразу доступны.
 
 **Проверка:**
@@ -82,12 +84,14 @@ which init-opencode
 # → /home/user/.local/bin/init-opencode
 init-opencode --help
 ```
+
 **Если `~/.local/bin` не в PATH:**
 
 ```bash
 # В ~/.bashrc или ~/.zshrc
 export PATH="$HOME/.local/bin:$PATH"
 ```
+
 ### 17.4 Режимы
 
 Четыре режима:
@@ -99,24 +103,24 @@ init-opencode --update <project-dir>     # update
 init-opencode --diff <project-dir>       # preview
 init-opencode --help                     # help
 ```
+
 ### 17.5 Install
 
 #### Что делает
 
 1. Проверяет, что `template/` существует
-    
-2. **Бэкапит** существующий `.opencode/` (если есть)
-    
-3. Создаёт `.opencode/`
-    
-4. Копирует содержимое `template/`
-    
-5. Создаёт пустые директории (`issue/`, `playbook/`, `pr/`, `archive/`)
-    
-6. Создаёт `.template-version` с метаданными
-    
-7. Выводит next steps
 
+2. **Бэкапит** существующий `.opencode/` (если есть)
+
+3. Создаёт `.opencode/`
+
+4. Копирует содержимое `template/`
+
+5. Создаёт пустые директории (`issue/`, `playbook/`, `pr/`, `archive/`)
+
+6. Создаёт `.template-version` с метаданными
+
+7. Выводит next steps
 
 #### Бэкап
 
@@ -125,6 +129,7 @@ init-opencode --help                     # help
 ```bash
 mv .opencode/ .opencode.bak.20260922-153045/
 ```
+
 Timestamp — `YYYYMMDD-HHMMSS`. Можно откатиться, если что-то пошло не так.
 
 **Почему не перезапись:** `.opencode/` содержит ваши данные. Перезапись = потеря `WORK_LOG.md`, `_decisions.md`, `_backlog.md`, `_concepts.md`.
@@ -136,6 +141,7 @@ Timestamp — `YYYYMMDD-HHMMSS`. Можно откатиться, если чт
 ```bash
 init-opencode ~/Projects/my-app
 ```
+
 Подсказка в конце: _«Starting a new project — help me fill in the template.»_
 
 **С анализом:**
@@ -143,6 +149,7 @@ init-opencode ~/Projects/my-app
 ```bash
 init-opencode --analyze ~/Projects/existing-repo
 ```
+
 Подсказка: _«Analyze the repository and fill in the template.»_
 
 **Разница — в подсказке для агента.** Сама установка одинакова.
@@ -172,6 +179,7 @@ my-app/
 ├── src/
 └── README.md
 ```
+
 **`.template-version`:**
 
 ```text
@@ -179,54 +187,52 @@ version: v0.1.0
 installed: 2026-09-22
 source: /home/user/Projects/opencode-templates
 ```
+
 ### 17.6 Update
 
 #### Что делает
 
 1. Читает `.template-version`
-    
-2. Проверяет, что `.opencode/` существует
-    
-3. Для каждого файла из списка **ALWAYS_OVERWRITE**:
-    
-    - Сравнивает с версией из `template/` (через `cmp -s`)
-        
-    - Если отличается — копирует
-        
-4. Обновляет `.template-version`
-    
-5. Сообщает, сколько файлов обновлено
 
+2. Проверяет, что `.opencode/` существует
+
+3. Для каждого файла из списка **ALWAYS_OVERWRITE**:
+
+   - Сравнивает с версией из `template/` (через `cmp -s`)
+
+   - Если отличается — копирует
+
+4. Обновляет `.template-version`
+
+5. Сообщает, сколько файлов обновлено
 
 #### Два списка
 
 **NEVER_OVERWRITE** (пользовательские):
 
 - `WORK_LOG.md`
-    
-- `_concepts.md`
-    
-- `_setup.md`
-    
-- `_decisions.md`
-    
-- `_backlog.md`
-    
-- `_meta.md`
-    
-- Всё в `analysis/`, `runbooks/`, `issue/`, `playbook/`, `pr/`, `archive/`
 
+- `_concepts.md`
+
+- `_setup.md`
+
+- `_decisions.md`
+
+- `_backlog.md`
+
+- `_meta.md`
+
+- Всё в `analysis/`, `runbooks/`, `issue/`, `playbook/`, `pr/`, `archive/`
 
 **ALWAYS_OVERWRITE** (шаблонные):
 
 - `AGENTS.md`, `index.md`, `log.md`, `SPEC_REFERENCE.md`
-    
-- `_codestyle.md`, `_ci.md`, `_commands.md`, `_files.md`
-    
-- `_glossary.md`, `_security.md`, `_troubleshooting.md`
-    
-- `_templates.md`, `_env.md`, `_worklog.md`
 
+- `_codestyle.md`, `_ci.md`, `_commands.md`, `_files.md`
+
+- `_glossary.md`, `_security.md`, `_troubleshooting.md`
+
+- `_templates.md`, `_env.md`, `_worklog.md`
 
 **Файлы из NEVER не участвуют в цикле вообще.** Мы их просто не трогаем.
 
@@ -240,6 +246,7 @@ init-opencode --diff ~/Projects/my-app
 # 3. Применить
 init-opencode --update ~/Projects/my-app
 ```
+
 **Никогда не запускайте `--update` без предварительного `--diff`.** Может быть, вы кастомизировали один из ALWAYS-файлов — и потеряете изменения.
 
 #### Что если кастомизировали ALWAYS-файл
@@ -253,6 +260,7 @@ init-opencode --update ~/Projects/my-app
 ```bash
 cp .opencode/_codestyle.md .opencode/_codestyle.local.md
 ```
+
 Потом в `_codestyle.md` — ссылка: _«See also `_codestyle.local.md` for project-specific rules.»_
 
 **Вариант B: перенести в NEVER.**
@@ -270,15 +278,14 @@ cp .opencode/_codestyle.md .opencode/_codestyle.local.md
 #### Что делает
 
 1. Проверяет, что `.opencode/` существует
-    
-2. Для каждого ALWAYS-файла:
-    
-    - Сравнивает с `template/`
-        
-    - Если отличается — показывает `diff -u`
-        
-3. Сообщает, сколько файлов изменится
 
+2. Для каждого ALWAYS-файла:
+
+   - Сравнивает с `template/`
+
+   - Если отличается — показывает `diff -u`
+
+3. Сообщает, сколько файлов изменится
 
 **Ничего не пишет.** Только preview.
 
@@ -291,12 +298,12 @@ cp .opencode/_codestyle.md .opencode/_codestyle.local.md
 +++ template/_codestyle.md     2026-09-22 ...
 @@ -10,6 +10,10 @@
  ## Lint — 0 offenses
- 
+
  ```bash
  bundle exec rubocop
 ```
-+Lint must pass with **zero offenses** before any commit.  
-+  
++Lint must pass with **zero offenses** before any commit.
++
 +See _ci.md for CI-specific lint configuration.
 ````
 
@@ -313,6 +320,7 @@ cp .opencode/_codestyle.md .opencode/_codestyle.local.md
 init-opencode --update ~/Projects/my-app
 ```
 ````
+
 Если хотите **только часть** изменений:
 
 ```bash
@@ -322,6 +330,7 @@ init-opencode --diff ~/Projects/my-app > /tmp/changes.diff
 # Применить выборочно
 cd ~/Projects/my-app && patch -p1 < /tmp/changes.diff
 ```
+
 **Продвинутое использование.** Обычно `--update` достаточно.
 
 ### 17.8 Environment
@@ -334,24 +343,24 @@ cd ~/Projects/my-app && patch -p1 < /tmp/changes.diff
 OPENCODE_TEMPLATE_REPO=~/work/opencode-templates \
   init-opencode ~/Projects/my-app
 ```
+
 **Когда полезно:**
 
 - Шаблон в нестандартном месте
-    
-- Несколько версий шаблона (stable, dev)
-    
-- CI, где `$HOME` другой
 
+- Несколько версий шаблона (stable, dev)
+
+- CI, где `$HOME` другой
 
 **В CI:**
 
 ```yaml
-
 - name: Install bundle
   env:
     OPENCODE_TEMPLATE_REPO: /opt/opencode-templates
   run: init-opencode ${{ github.workspace }}
 ```
+
 ### 17.9 Обработка ошибок
 
 Скрипт использует `set -euo pipefail`. Это значит: любая ошибка → скрипт останавливается.
@@ -387,13 +396,12 @@ Fix: `init-opencode --help`.
 Если install упал на середине:
 
 1. Проверьте `.opencode/` — часть файлов скопирована?
-    
-2. Если да — удалите `.opencode/`
-    
-3. Проверьте бэкап: `.opencode.bak.*` — там старые данные
-    
-4. Запустите install заново
 
+2. Если да — удалите `.opencode/`
+
+3. Проверьте бэкап: `.opencode.bak.*` — там старые данные
+
+4. Запустите install заново
 
 **Бэкап гарантирует**, что старые данные не потеряны.
 
@@ -404,6 +412,7 @@ Fix: `init-opencode --help`.
 ```text
 v0.1.0
 ```
+
 Одна строка. SemVer.
 
 #### Что делать при обновлении шаблона
@@ -415,25 +424,24 @@ v0.1.0 → v0.1.1   (bug fix)
 v0.1.1 → v0.2.0   (new features, backward compatible)
 v0.2.0 → v1.0.0   (breaking changes)
 ```
+
 **SemVer для шаблонов:**
 
 - **Patch** (`v0.1.1`) — исправления в существующих файлах
-    
-- **Minor** (`v0.2.0`) — новый файл, новая секция, совместимо
-    
-- **Major** (`v1.0.0`) — структурные изменения, breaking
 
+- **Minor** (`v0.2.0`) — новый файл, новая секция, совместимо
+
+- **Major** (`v1.0.0`) — структурные изменения, breaking
 
 **Что такое breaking changes:**
 
 - Переименование файлов
-    
-- Удаление файлов
-    
-- Изменение структуры frontmatter
-    
-- Несовместимое изменение `init-opencode`
 
+- Удаление файлов
+
+- Изменение структуры frontmatter
+
+- Несовместимое изменение `init-opencode`
 
 ### 17.11 Как добавить новый файл в шаблон
 
@@ -492,9 +500,8 @@ v0.2.0 → v1.0.0   (breaking changes)
 **Решения:**
 
 - Если хотите, чтобы обновление доходило — перенесите `_concepts.md` в `ALWAYS`
-    
-- Но тогда пользовательские `_concepts.md` перезапишутся
 
+- Но тогда пользовательские `_concepts.md` перезапишутся
 
 **Компромисс:** добавьте новую секцию в отдельный файл. Например, `_concepts-advanced.md`. Пользователи, кому надо — прочитают. Остальным — не мешает.
 
@@ -505,55 +512,52 @@ v0.2.0 → v1.0.0   (breaking changes)
 **NEVER** (пользовательские):
 
 - `_concepts.md` — архитектура проекта уникальна.
-    
-- `_setup.md` — версии, команды уникальны.
-    
-- `_decisions.md` — ADR уникальны.
-    
-- `_backlog.md` — задачи уникальны.
-    
-- `_meta.md` — версия и даты уникальны.
-    
-- `WORK_LOG.md` — сессии уникальны.
 
+- `_setup.md` — версии, команды уникальны.
+
+- `_decisions.md` — ADR уникальны.
+
+- `_backlog.md` — задачи уникальны.
+
+- `_meta.md` — версия и даты уникальны.
+
+- `WORK_LOG.md` — сессии уникальны.
 
 **ALWAYS** (шаблонные):
 
 - `AGENTS.md` — структура одинакова, заполняется плейсхолдерами.
-    
-- `index.md` — структура одинакова.
-    
-- `log.md` — структура одинакова.
-    
-- `SPEC_REFERENCE.md` — выдержка из спеки, не уникальна.
-    
-- `_codestyle.md` — структура одинакова.
-    
-- `_ci.md` — структура одинакова.
-    
-- `_commands.md` — структура одинакова.
-    
-- `_files.md` — структура одинакова.
-    
-- `_glossary.md` — структура одинакова.
-    
-- `_security.md` — структура одинакова.
-    
-- `_troubleshooting.md` — структура одинакова.
-    
-- `_templates.md` — структура одинакова.
-    
-- `_env.md` — структура одинакова.
-    
-- `_worklog.md` — шаблон, не данные.
 
+- `index.md` — структура одинакова.
+
+- `log.md` — структура одинакова.
+
+- `SPEC_REFERENCE.md` — выдержка из спеки, не уникальна.
+
+- `_codestyle.md` — структура одинакова.
+
+- `_ci.md` — структура одинакова.
+
+- `_commands.md` — структура одинакова.
+
+- `_files.md` — структура одинакова.
+
+- `_glossary.md` — структура одинакова.
+
+- `_security.md` — структура одинакова.
+
+- `_troubleshooting.md` — структура одинакова.
+
+- `_templates.md` — структура одинакова.
+
+- `_env.md` — структура одинакова.
+
+- `_worklog.md` — шаблон, не данные.
 
 **Пограничные случаи:**
 
 - **`_env.md`** — может быть и там, и там. Структура общая, но URL'ы уникальны. Я поставил в ALWAYS — структура обновляется, значения теряются.
-    
-- **`_meta.md`** — версия уникальна, но структура одинакова. Я поставил в NEVER.
 
+- **`_meta.md`** — версия уникальна, но структура одинакова. Я поставил в NEVER.
 
 **Всё зависит от ваших приоритетов.** Что важнее: свежая структура или сохранённые данные?
 
@@ -566,32 +570,35 @@ v0.2.0 → v1.0.0   (breaking changes)
 ```bash
 mv .opencode .opencode.old
 ```
+
 **2. Install.**
 
 ```bash
 init-opencode ~/Projects/my-app
 ```
+
 **3. Проверить разницу.**
 
 ```bash
 diff -r .opencode.old .opencode
 ```
+
 **4. Перенести данные вручную.**
 
 - `WORK_LOG.md` — скопировать.
-    
-- `_decisions.md` — скопировать.
-    
-- `_concepts.md` — скопировать.
-    
-- `_backlog.md` — скопировать.
 
+- `_decisions.md` — скопировать.
+
+- `_concepts.md` — скопировать.
+
+- `_backlog.md` — скопировать.
 
 **5. Удалить бэкап.**
 
 ```bash
 rm -rf .opencode.old
 ```
+
 **Проблема:** ручной перенос. Но это один раз.
 
 ### 17.15 Работа с несколькими проектами
@@ -607,6 +614,7 @@ for project in ~/Projects/*; do
   init-opencode "$project"
 done
 ```
+
 **Осторожно:** проверяйте каждый проект отдельно. Не все должны получать bundle.
 
 ### 17.16 Обновление через CI
@@ -618,7 +626,7 @@ done
 name: Update bundle
 on:
   schedule:
-    - cron: '0 9 * * 1'  # Каждый понедельник в 9:00
+    - cron: "0 9 * * 1" # Каждый понедельник в 9:00
   workflow_dispatch:
 jobs:
   update:
@@ -639,12 +647,12 @@ jobs:
             git push
           fi
 ```
+
 **Что нужно:**
 
 - Bundle **должен** коммититься (иначе CI не работает)
-    
-- Или — bundle в отдельном репозитории, CI обновляет его
 
+- Или — bundle в отдельном репозитории, CI обновляет его
 
 **Обычно не нужно.** Bundle — локальный. Но для команды, где все используют один шаблон, — полезно.
 
@@ -679,24 +687,24 @@ init-opencode --update /tmp/test1
 grep "Custom" /tmp/test1/.opencode/_decisions.md
 # → должен остаться
 ```
+
 **Полный набор тестов:**
 
 1. Install в чистую директорию
-    
-2. Install в директорию с `.opencode/` (проверить бэкап)
-    
-3. Update сразу после install (no-op)
-    
-4. Update после изменения template
-    
-5. NEVER-файлы не тронуты
-    
-6. Diff показывает корректные различия
-    
-7. `--help` работает
-    
-8. Неверный аргумент → ошибка
 
+2. Install в директорию с `.opencode/` (проверить бэкап)
+
+3. Update сразу после install (no-op)
+
+4. Update после изменения template
+
+5. NEVER-файлы не тронуты
+
+6. Diff показывает корректные различия
+
+7. `--help` работает
+
+8. Неверный аргумент → ошибка
 
 ### 17.18 Anti-patterns
 
@@ -742,14 +750,14 @@ init-opencode
     ├─→ .template-version   (машинные метаданные)
     └─→ _meta.md            (человеческие метаданные)
 ```
+
 **Скрипт связывает:**
 
 - Репозиторий шаблонов (источник)
-    
-- Проект (назначение)
-    
-- Метаданные версии
 
+- Проект (назначение)
+
+- Метаданные версии
 
 ### 17.20 Упражнение
 
@@ -758,45 +766,43 @@ init-opencode
 Если ещё не установили `init-opencode`:
 
 1. Клонируйте репозиторий шаблонов
-    
-2. Создайте symlink
-    
-3. Проверьте `--help`
 
+2. Создайте symlink
+
+3. Проверьте `--help`
 
 **Часть 2: тестирование.**
 
 Создайте тестовый проект. Прогоните:
 
 1. `init-opencode /tmp/test-project`
-    
-2. Проверьте структуру
-    
-3. `init-opencode --diff /tmp/test-project` — должно быть `no differences`
-    
-4. Измените что-то в `template/`
-    
-5. `init-opencode --diff /tmp/test-project` — покажет изменения
-    
-6. `init-opencode --update /tmp/test-project`
 
+2. Проверьте структуру
+
+3. `init-opencode --diff /tmp/test-project` — должно быть `no differences`
+
+4. Измените что-то в `template/`
+
+5. `init-opencode --diff /tmp/test-project` — покажет изменения
+
+6. `init-opencode --update /tmp/test-project`
 
 **Часть 3: аудит вашего репозитория.**
 
 1. **VERSION** — актуальна?
-    
-2. **NEVER_OVERWRITE** — все файлы на месте? Ничего не забыли?
-    
-3. **ALWAYS_OVERWRITE** — все файлы на месте?
-    
-4. **README** — упоминает `init-opencode`?
 
+2. **NEVER_OVERWRITE** — все файлы на месте? Ничего не забыли?
+
+3. **ALWAYS_OVERWRITE** — все файлы на месте?
+
+4. **README** — упоминает `init-opencode`?
 
 ### 17.21 Что дальше
 
 В следующей главе — **Extending the bundle**. Как добавлять новые файлы, типы, изменять структуру. Что делать, когда стандартного набора не хватает.
 
 ## Chapter 18. Extending the bundle
+
 ## Глава 18. Расширения
 
 ### 18.1 Зачем расширять
@@ -806,11 +812,10 @@ init-opencode
 **Когда стандарта не хватает:**
 
 - Проект специфичен (например, встроенная система)
-    
-- Есть практики, которых нет в шаблоне
-    
-- Появилась новая категория знаний
 
+- Есть практики, которых нет в шаблоне
+
+- Появилась новая категория знаний
 
 **Расширение — это нормально.** OKF явно разрешает. Наш шаблон — тоже.
 
@@ -828,6 +833,7 @@ init-opencode
 4. Новая секция в существующем файле
 5. Новое правило в init-opencode
 ```
+
 Разберём каждый тип.
 
 ### 18.3 Тип 1: новый reference file
@@ -837,28 +843,26 @@ init-opencode
 **Примеры:**
 
 - `_api.md` — публичный API (методы, эндпоинты)
-    
-- `_deploy.md` — процесс деплоя
-    
-- `_release.md` — процесс релиза
-    
-- `_performance.md` — характеристики производительности
-    
-- `_testing.md` — если тесты сложные и не умещаются в `_codestyle.md`
-    
-- `_monitoring.md` — метрики, алерты, dashboards
-    
-- `_compliance.md` — GDPR, SOC2, HIPAA
 
+- `_deploy.md` — процесс деплоя
+
+- `_release.md` — процесс релиза
+
+- `_performance.md` — характеристики производительности
+
+- `_testing.md` — если тесты сложные и не умещаются в `_codestyle.md`
+
+- `_monitoring.md` — метрики, алерты, dashboards
+
+- `_compliance.md` — GDPR, SOC2, HIPAA
 
 **Когда НЕ создавать:**
 
 - Если умещается в существующий файл. Тесты — в `_codestyle.md`. Метрики — в `_env.md`.
-    
-- Если это одноразовая информация. Не заслуживает отдельного файла.
-    
-- Если файл будет пустым. Пустой файл хуже отсутствующего.
 
+- Если это одноразовая информация. Не заслуживает отдельного файла.
+
+- Если файл будет пустым. Пустой файл хуже отсутствующего.
 
 #### Как создать
 
@@ -878,9 +882,12 @@ description: "<one-line>"
 timestamp: <YYYY-MM-DD>
 tags: [<name>]
 ---
+
 # <Title>
+
 <content>
 ```
+
 **3. Обновить `AGENTS.md`.**
 
 Добавить в reference files:
@@ -917,45 +924,57 @@ tags: [api, reference]
 ---
 
 # Public API
+
 The public surface of the library. Everything here is guaranteed by
 semver. Everything else is internal
 
 ## Methods
+
 ### `Parser.parse(input)`
+
 Parses input and returns AST
+
 - **Input:** `String` or `IO`
 - **Returns:** `AST::Node`
 - **Raises:** `ParserError` on invalid input
 - **Since:** v1.0.0
-  
+
 ### `Parser.parse_stream(io)`
+
 Same as `parse`, but reads incrementally
+
 - **Input:** `IO`-like object
 - **Returns:** `Enumerator<AST::Node>`
 - **Since:** v1.2.0
-  
+
 ## Commands (CLI)
+
 ### `json-parser parse <file>`
+
 Parses file and prints AST to stdout
+
 - **Options:** `--pretty`, `--stream`
 - **Exit codes:** 0 success, 1 parse error, 2 IO error
-  
+
 ## Stability
+
 - **Stable:** everything in this document
 - **Deprecated:** `Parser.parse_legacy` — removed in v2.0.0
 - **Internal:** everything under `JSON::Parser::Internal`
 ```
+
 **Почему полезен:** агент по `_api.md` понимает, что можно менять, а что — публичный контракт.
 
 **Где в `AGENTS.md`:**
 
 ```markdown
-
 **Navigation & safety**
-| File | When to read |
-|------|-------------|
+
+| File               | When to read                              |
+| ------------------ | ----------------------------------------- |
 | [_api.md](_api.md) | Public API — methods, commands, endpoints |
 ```
+
 ### 18.4 Тип 2: новая директория
 
 **Когда:** нужна отдельная категория динамических артефактов.
@@ -963,22 +982,20 @@ Parses file and prints AST to stdout
 **Примеры:**
 
 - `metrics/` — замеры производительности по сессиям
-    
-- `incidents/` — история инцидентов (post-mortem)
-    
-- `experiments/` — эксперименты, A/B-тесты
-    
-- `meetings/` — заметки со встреч
-    
-- `research/` — исследовательские заметки
 
+- `incidents/` — история инцидентов (post-mortem)
+
+- `experiments/` — эксперименты, A/B-тесты
+
+- `meetings/` — заметки со встреч
+
+- `research/` — исследовательские заметки
 
 **Когда НЕ создавать:**
 
 - Если это часть существующей категории. Post-mortem — в `runbooks/`
-    
-- Если директория будет почти пустой
 
+- Если директория будет почти пустой
 
 #### Как создать
 
@@ -998,11 +1015,14 @@ tags: [<name>, index]
 ---
 
 # <Title>
+
 <описание>
+
 ## Index
+
 | Date | Item | Status |
-|------|------|--------|
-| ... | ... | ... |
+| ---- | ---- | ------ |
+| ...  | ...  | ...    |
 ```
 
 **4. Создать шаблон `_<name>.md`**
@@ -1034,6 +1054,7 @@ Minor bump
 │   ├── 2026-09-15-db-failover.md
 │   └── 2026-08-20-api-outage.md
 ```
+
 **`incidents/index.md`:**
 
 ```markdown
@@ -1046,15 +1067,18 @@ tags: [incidents, index]
 ---
 
 # Incidents
+
 Post-mortem records for past incidents. For runbooks (procedures),
 see `runbooks/`
 
 ## Index
-| Date | Incident | Severity | Status |
-|------|----------|----------|--------|
-| 2026-09-15 | DB failover | P0 | resolved |
-| 2026-08-20 | API outage | P1 | resolved |
+
+| Date       | Incident    | Severity | Status   |
+| ---------- | ----------- | -------- | -------- |
+| 2026-09-15 | DB failover | P0       | resolved |
+| 2026-08-20 | API outage  | P1       | resolved |
 ```
+
 **`incidents/_postmortem.md`:**
 
 ```markdown
@@ -1071,13 +1095,16 @@ tags: [postmortem, <area>]
 # Post-mortem: <title>
 
 ## Timeline
+
 - HH:MM — <event>
 - HH:MM — <event>
-  
+
 ## Root cause
+
 <5 Whys>
 
 ## Impact
+
 <Who was affected, how long, financial>
 
 ## What went well
@@ -1085,22 +1112,26 @@ tags: [postmortem, <area>]
 ## What could be improved
 
 ## Action items
+
 - [ ] <action 1> — owner, deadline
 - [ ] <action 2>
-      
+
 ## Related
+
 - Runbook: [<runbook>](../runbooks/<file>.md)
 - ADR: [ADR-XXX](../_decisions.md#adr-xxx)
 ```
+
 **Где в `AGENTS.md`:**
 
 ```markdown
-
 **When things break**
-| File | When to read |
-|------|-------------|
+
+| File                             | When to read          |
+| -------------------------------- | --------------------- |
 | [incidents/](incidents/index.md) | Past incident records |
 ```
+
 **Почему полезно:** post-mortem — не runbook. Runbook — процедура. Post-mortem — разбор. Разные жанры.
 
 ### 18.5 Тип 3: новый `type`
@@ -1110,22 +1141,20 @@ tags: [postmortem, <area>]
 **Примеры:**
 
 - `type: runbook-index` — уже есть
-    
-- `type: postmortem` — новый
-    
-- `type: metrics` — новый
-    
-- `type: experiment` — новый
 
+- `type: postmortem` — новый
+
+- `type: metrics` — новый
+
+- `type: experiment` — новый
 
 **Когда НЕ создавать:**
 
 - Если есть близкий. `project-summary` vs `summary`
-    
-- Если это разовый файл. Не плодите типы ради одного файла
-    
-- Если можно обойтись без `type`. Но OKF требует `type` в каждом файле
 
+- Если это разовый файл. Не плодите типы ради одного файла
+
+- Если можно обойтись без `type`. Но OKF требует `type` в каждом файле
 
 #### Как добавить
 
@@ -1152,22 +1181,20 @@ Minor bump.
 **Используйте:**
 
 - Существительные: `postmortem`, `finding`, `playbook`
-    
-- Единственное число: `runbook`, а не `runbooks`
-    
-- Одно слово где возможно: `ci`, не `continuous-integration`
-    
-- Дефисы для составных: `runbook-index`, `project-summary`
 
+- Единственное число: `runbook`, а не `runbooks`
+
+- Одно слово где возможно: `ci`, не `continuous-integration`
+
+- Дефисы для составных: `runbook-index`, `project-summary`
 
 **Не используйте:**
 
 - Глаголы: `decision-log` — существительное, ок. `log-decision` — плохо
-    
-- Общие слова: `file`, `doc`, `thing`
-    
-- Сокращения без причины: `pdca`, `okr` — если они не общеприняты в команде
 
+- Общие слова: `file`, `doc`, `thing`
+
+- Сокращения без причины: `pdca`, `okr` — если они не общеприняты в команде
 
 #### Список типов в шаблоне
 
@@ -1180,6 +1207,7 @@ security, troubleshooting, ci, decision-log, backlog, worklog, templates,
 analysis-index, finding, runbook-index, runbook,
 project-summary, playbook, pr
 ```
+
 **Не создавайте новый тип, если можно использовать существующий.** Например, `postmortem`— новое, но если у вас один post-mortem в год — используйте `type: finding` или `type: log`.
 
 ### 18.6 Тип 4: новая секция в существующем файле
@@ -1189,22 +1217,20 @@ project-summary, playbook, pr
 **Примеры:**
 
 - В `_codestyle.md` — секция «Commit message format»
-    
-- В `_concepts.md` — секция «Performance characteristics»
-    
-- В `_setup.md` — секция «Troubleshooting during setup»
-    
-- В `_ci.md` — секция «Nightly jobs»
 
+- В `_concepts.md` — секция «Performance characteristics»
+
+- В `_setup.md` — секция «Troubleshooting during setup»
+
+- В `_ci.md` — секция «Nightly jobs»
 
 **Когда:**
 
 - Секция логически принадлежит файлу
-    
-- Файл не разрастётся до неприличия
-    
-- Секция не пересекается с другой
 
+- Файл не разрастётся до неприличия
+
+- Секция не пересекается с другой
 
 #### Как добавить
 
@@ -1220,19 +1246,22 @@ Patch bump: `v0.1.0 → v0.1.1`.
 
 ```markdown
 ## Commit message format
+
 Format: `<type>: <subject>`
 Types:
+
 - `feat` — new feature
 - `fix` — bug fix
 - `docs` — documentation
 - `refactor` — refactoring
 - `test` — tests
 - `chore` — maintenance
-Subject: imperative mood, no period, < 72 chars.
-Examples:
+  Subject: imperative mood, no period, < 72 chars.
+  Examples:
 - `feat: add streaming mode to parser`
 - `fix: handle nil input in Session#load`
 ```
+
 **Польза:** агент будет писать коммиты в правильном формате.
 
 ### 18.7 Тип 5: новое правило в `init-opencode`
@@ -1242,13 +1271,12 @@ Examples:
 **Примеры:**
 
 - Добавить файл в NEVER/ALWAYS
-    
-- Добавить новую директорию
-    
-- Изменить логику бэкапа
-    
-- Добавить новую опцию
 
+- Добавить новую директорию
+
+- Изменить логику бэкапа
+
+- Добавить новую опцию
 
 #### Как добавить
 
@@ -1287,6 +1315,7 @@ cmd_update() {
   done
 }
 ```
+
 **Обновить `usage()`** с описанием новой опции.
 
 **Обновить README_en.md и README_ru.md.**
@@ -1309,27 +1338,33 @@ tags: [api, reference]
 ---
 
 # Public API
+
 The public surface of the project. Everything here is guaranteed by
 semver. Everything else is internal
 
 ## Methods
+
 ### `<Class>.<method>(<args>)`
+
 <description>
 - **Input:** <types>
 - **Returns:** <type>
 - **Raises:** <exceptions>
 - **Since:** <version>
 ```
+
 #### Шаг 2: обновить AGENTS.md
 
 В `template/AGENTS.md`, в reference files:
 
 ```markdown
 **Navigation & safety**
-| File | When to read |
-|------|-------------|
+
+| File               | When to read                              |
+| ------------------ | ----------------------------------------- |
 | [_api.md](_api.md) | Public API — methods, commands, endpoints |
 ```
+
 #### Шаг 3: обновить init-opencode
 
 В `bin/init-opencode`:
@@ -1341,11 +1376,13 @@ ALWAYS_OVERWRITE=(
   ...
 )
 ```
+
 #### Шаг 4: обновить VERSION
 
 ```text
 v0.2.0 → v0.3.0
 ```
+
 Minor bump: новый файл.
 
 #### Шаг 5: обновить README
@@ -1369,11 +1406,12 @@ Minor bump: новый файл.
 В `template/_meta.md`, секция `OKF base + extensions`:
 
 ```markdown
-| Extension | What we added |
-|-----------|---------------|
-| ... | ... |
+| Extension | What we added        |
+| --------- | -------------------- |
+| ...       | ...                  |
 | `_api.md` | Public API reference |
 ```
+
 #### Шаг 7: commit, push
 
 ```bash
@@ -1381,6 +1419,7 @@ git add .
 git commit -m "Add _api.md reference file"
 git push
 ```
+
 #### Шаг 8: обновить в проектах
 
 ```bash
@@ -1388,6 +1427,7 @@ cd ~/Projects/my-app
 init-opencode --diff .   # покажет новый файл
 init-opencode --update . # применит
 ```
+
 **Готово.** Новый файл появился во всех проектах при следующем update.
 
 ### 18.9 Расширение в проекте (без изменения шаблона)
@@ -1411,8 +1451,10 @@ init-opencode --update . # применит
 ```markdown
 All shared workflow rules from `~/.config/opencode/AGENTS.md`.
 Project-specific extensions:
+
 - [_local.md](_local.md) — project-specific rules
 ```
+
 **`AGENTS.local.md` не в списках**, `--update` его не тронет.
 
 **Альтернатива:** редактируйте `AGENTS.md` проекта и **не запускайте `--update`**. Но тогда не получите обновлений.
@@ -1503,6 +1545,7 @@ Minor bump для новых файлов, major для переименован
               ▼
          .opencode/
 ```
+
 **Расширение bundle — это правка нескольких файлов.** Не одного.
 
 ### 18.13 Упражнение
@@ -1512,11 +1555,10 @@ Minor bump для новых файлов, major для переименован
 Есть ли в вашем проекте знания, которых **нет** в bundle?
 
 - Специфичные практики
-    
-- Необычные процессы
-    
-- Регулярные задачи
 
+- Необычные процессы
+
+- Регулярные задачи
 
 **Что стоит добавить?** Создайте `_<name>.md` или добавьте секцию.
 
@@ -1525,32 +1567,30 @@ Minor bump для новых файлов, major для переименован
 Если у вас уже есть расширения:
 
 1. **Они нужны?** Или можно удалить?
-    
-2. **Они актуальны?** Или устарели?
-    
-3. **Они задокументированы?** В `AGENTS.md`, README, словаре типов?
 
+2. **Они актуальны?** Или устарели?
+
+3. **Они задокументированы?** В `AGENTS.md`, README, словаре типов?
 
 **Часть 3: end-to-end.**
 
 Добавьте **один** новый reference file в свой шаблон:
 
 1. Создайте `template/_<name>.md`
-    
-2. Обновите `AGENTS.md`
-    
-3. Обновите `init-opencode`
-    
-4. Обновите `VERSION`
-    
-5. Обновите README
-    
-6. Обновите `_meta.md`
-    
-7. Commit, push
-    
-8. Проверьте в тестовом проекте
 
+2. Обновите `AGENTS.md`
+
+3. Обновите `init-opencode`
+
+4. Обновите `VERSION`
+
+5. Обновите README
+
+6. Обновите `_meta.md`
+
+7. Commit, push
+
+8. Проверьте в тестовом проекте
 
 **Замерьте время.** Оптимум: 20–30 минут на один файл.
 
@@ -1559,6 +1599,7 @@ Minor bump для новых файлов, major для переименован
 В следующей главе — **Anti-patterns**. Общие ошибки, которые встречаются при работе с bundle. Не в отдельных файлах, а во всей системе.
 
 ## Chapter 19. Anti-patterns
+
 ## Глава 19. Анти паттерны
 
 ### 19.1 Что такое anti-pattern
@@ -1568,13 +1609,12 @@ Minor bump для новых файлов, major для переименован
 В отличие от простой ошибки, anti-pattern:
 
 - **Кажется хорошей идеей.** Логика понятна, намерения благие.
-    
-- **Повторяется.** Один раз — случайность. Много раз — паттерн.
-    
-- **Имеет последствия.** Не сразу, но накапливаются.
-    
-- **Не очевидна.** Трудно заметить без рефлексии.
 
+- **Повторяется.** Один раз — случайность. Много раз — паттерн.
+
+- **Имеет последствия.** Не сразу, но накапливаются.
+
+- **Не очевидна.** Трудно заметить без рефлексии.
 
 **Пример простой ошибки:** забыли обновить `timestamp`.
 
@@ -1589,15 +1629,14 @@ Minor bump для новых файлов, major для переименован
 **Каждая категория ниже** — про свой уровень:
 
 - **Structural** — как устроен bundle
-    
-- **Content** — как пишем
-    
-- **Process** — как используем
-    
-- **Relational** — как связываем
-    
-- **Evolutionary** — как развиваем
 
+- **Content** — как пишем
+
+- **Process** — как используем
+
+- **Relational** — как связываем
+
+- **Evolutionary** — как развиваем
 
 ### 19.3 Structural anti-patterns
 
@@ -1612,24 +1651,22 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Шум в контексте
-    
-- Потеря фокуса агентом
-    
-- Расширяется бесконтрольно
-    
-- Дублирует reference files
 
+- Потеря фокуса агентом
+
+- Расширяется бесконтрольно
+
+- Дублирует reference files
 
 **Как лечить:**
 
 - Вынести всё, что «только когда пишешь код» → `_codestyle.md`
-    
-- CI-таблицы → `_ci.md`
-    
-- Карту файлов → `_files.md`
-    
-- Architecture details → `_concepts.md`
 
+- CI-таблицы → `_ci.md`
+
+- Карту файлов → `_files.md`
+
+- Architecture details → `_concepts.md`
 
 **Правило:** `AGENTS.md` — оглавление. Максимум 90 строк.
 
@@ -1642,18 +1679,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Глаз не находит нужное
-    
-- Порядок случайный
-    
-- Добавить новый файл некуда
 
+- Порядок случайный
+
+- Добавить новый файл некуда
 
 **Как лечить:**
 
 - Группировка по ситуации: onboarding, daily, break, navigation
-    
-- 3–5 групп — оптимум
 
+- 3–5 групп — оптимум
 
 #### Anti-pattern 3: файлы без назначения
 
@@ -1664,18 +1699,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Не используется
-    
-- Устаревает
-    
-- Захламляет bundle
 
+- Устаревает
+
+- Захламляет bundle
 
 **Как лечить:**
 
 - Для каждого файла сформулировать одно предложение: **«Этот файл отвечает на вопрос X»**
-    
-- Если не получается — удалить файл
 
+- Если не получается — удалить файл
 
 #### Anti-pattern 4: дублирование между файлами
 
@@ -1686,20 +1719,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Рассинхрон неизбежен
-    
-- При обновлении забываете обновить копию
-    
-- Через месяц — противоречия
 
+- При обновлении забываете обновить копию
+
+- Через месяц — противоречия
 
 **Как лечить:**
 
 - **Правило «link, don't duplicate».**
-    
-- Оставить в одном месте, в другом — ссылку
-    
-- Проверка: **«если изменится X — придётся править в двух файлах?»** Если да — дублирование
 
+- Оставить в одном месте, в другом — ссылку
+
+- Проверка: **«если изменится X — придётся править в двух файлах?»** Если да — дублирование
 
 #### Anti-pattern 5: bundle в корне репозитория
 
@@ -1710,20 +1741,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Загрязняет репозиторий
-    
-- Смешивается с публичной документацией
-    
-- Не понятно, что это локальное
-    
-- Риск случайного коммита
 
+- Смешивается с публичной документацией
+
+- Не понятно, что это локальное
+
+- Риск случайного коммита
 
 **Как лечить:**
 
 - Bundle в `.opencode/`
-    
-- В `.git/info/exclude`
 
+- В `.git/info/exclude`
 
 #### Anti-pattern 6: неполный bundle
 
@@ -1734,18 +1763,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Динамические артефакты некуда класть
-    
-- Workflows не работают
-    
-- Bundle не самодостаточен
 
+- Workflows не работают
+
+- Bundle не самодостаточен
 
 **Как лечить:**
 
 - Использовать `init-opencode` — он ставит полный bundle
-    
-- Если ручная установка — не забывать про `issue/`, `playbook/`, `pr/`, `analysis/`, `runbooks/`, `archive/`
 
+- Если ручная установка — не забывать про `issue/`, `playbook/`, `pr/`, `analysis/`, `runbooks/`, `archive/`
 
 ### 19.4 Content anti-patterns
 
@@ -1760,20 +1787,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - «Потом» не наступает
-    
-- Агент читает пустоту
-    
-- Захламляет bundle
 
+- Агент читает пустоту
+
+- Захламляет bundle
 
 **Как лечить:**
 
 - Если не заполнено — удалить
-    
-- Или заполнить **сразу**. Хотя бы минимально
-    
-- **Пустой файл хуже отсутствующего.** Отсутствие = «не нужно». Пустой = «нужно, но забыли»
 
+- Или заполнить **сразу**. Хотя бы минимально
+
+- **Пустой файл хуже отсутствующего.** Отсутствие = «не нужно». Пустой = «нужно, но забыли»
 
 #### Anti-pattern 8: устаревшие файлы
 
@@ -1784,20 +1809,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Агент работает по ложным данным
-    
-- Хуже, чем отсутствие файла
-    
-- Подрывает доверие к bundle
 
+- Хуже, чем отсутствие файла
+
+- Подрывает доверие к bundle
 
 **Как лечить:**
 
 - Обновлять при каждом значимом изменении
-    
-- Раз в квартал — ревизия `timestamp`
-    
-- Если файл не актуален — обновить или удалить
 
+- Раз в квартал — ревизия `timestamp`
+
+- Если файл не актуален — обновить или удалить
 
 #### Anti-pattern 9: длинные файлы
 
@@ -1808,26 +1831,24 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Файл перестаёт читаться
-    
-- Агент тонет в деталях
-    
-- Сложно поддерживать
 
+- Агент тонет в деталях
+
+- Сложно поддерживать
 
 **Как лечить:**
 
 - Если файл > 100 строк — разбить или сократить
-    
-- **`_concepts.md`** — 80 строк оптимум
-    
-- **`_setup.md`** — 60 строк
-    
-- **`_troubleshooting.md`** — 80–100 строк (растёт)
-    
-- **`_ci.md`** — 60–80 строк
-    
-- **`AGENTS.md`** — 60–90 строк
 
+- **`_concepts.md`** — 80 строк оптимум
+
+- **`_setup.md`** — 60 строк
+
+- **`_troubleshooting.md`** — 80–100 строк (растёт)
+
+- **`_ci.md`** — 60–80 строк
+
+- **`AGENTS.md`** — 60–90 строк
 
 #### Anti-pattern 10: файлы без timestamp
 
@@ -1838,18 +1859,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Невозможно понять актуальность
-    
-- Агент не отличает свежее от старого
-    
-- Нарушение OKF-конвенции
 
+- Агент не отличает свежее от старого
+
+- Нарушение OKF-конвенции
 
 **Как лечить:**
 
 - Заполнять **сразу** при создании файла
-    
-- Обновлять при каждом изменении
 
+- Обновлять при каждом изменении
 
 #### Anti-pattern 11: файлы с секретами
 
@@ -1860,20 +1879,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Утечка при первом коммите
-    
-- Даже если не коммитится — рискует
-    
-- Нарушение базовых правил
 
+- Даже если не коммитится — рискует
+
+- Нарушение базовых правил
 
 **Как лечить:**
 
 - **Никогда** не хранить секреты в bundle
-    
-- Только ссылки: «Vault, путь X»
-    
-- Если случайно попал — отозвать, ротировать, очистить
 
+- Только ссылки: «Vault, путь X»
+
+- Если случайно попал — отозвать, ротировать, очистить
 
 #### Anti-pattern 12: смешение языков
 
@@ -1884,20 +1901,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Непрофессионально
-    
-- Агенту сложнее
-    
-- Сложно поддерживать
 
+- Агенту сложнее
+
+- Сложно поддерживать
 
 **Как лечить:**
 
 - Выбрать **один** язык для bundle
-    
-- Рекомендую английский — родной для LLM
-    
-- Личные пометки — на русском, но не смешивать
 
+- Рекомендую английский — родной для LLM
+
+- Личные пометки — на русском, но не смешивать
 
 ### 19.5 Process anti-patterns
 
@@ -1912,20 +1927,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Bundle устаревает
-    
-- Через месяц бесполезен
-    
-- Лучше не иметь, чем иметь мёртвый
 
+- Через месяц бесполезен
+
+- Лучше не иметь, чем иметь мёртвый
 
 **Как лечить:**
 
 - Начать с **одного** файла — WORK_LOG
-    
-- Ввести ритуал: конец сессии → запись
-    
-- Через неделю — заметите пользу
 
+- Ввести ритуал: конец сессии → запись
+
+- Через неделю — заметите пользу
 
 #### Anti-pattern 14: bundle используется частично
 
@@ -1936,20 +1949,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Динамика теряется
-    
-- Связи между файлами не работают
-    
-- Bundle не самодостаточен
 
+- Связи между файлами не работают
+
+- Bundle не самодостаточен
 
 **Как лечить:**
 
 - Использовать **весь** bundle
-    
-- Если какой-то файл не нужен — удалить, а не игнорировать
-    
-- **Пустой файл хуже отсутствующего.**
 
+- Если какой-то файл не нужен — удалить, а не игнорировать
+
+- **Пустой файл хуже отсутствующего.**
 
 #### Anti-pattern 15: bundle без ритуала
 
@@ -1960,24 +1971,22 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Нерегулярно → бесполезно
-    
-- Пропустили сессию → пропустили ещё
-    
-- Через месяц — заброшен
 
+- Пропустили сессию → пропустили ещё
+
+- Через месяц — заброшен
 
 **Как лечить:**
 
 - Ввести **триггеры**:
-    
-    - Начало сессии → прочитать WORK_LOG
-        
-    - Конец сессии → записать WORK_LOG
-        
-    - Новая идея → в backlog
-        
-    - Значимое решение → ADR
-        
+
+  - Начало сессии → прочитать WORK_LOG
+
+  - Конец сессии → записать WORK_LOG
+
+  - Новая идея → в backlog
+
+  - Значимое решение → ADR
 
 #### Anti-pattern 16: bundle заменяет реальную работу
 
@@ -1988,18 +1997,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Bundle — инструмент, не цель
-    
-- Цель — закрывать задачи
-    
-- Бесконечное «улучшение» bundle — форма прокрастинации
 
+- Цель — закрывать задачи
+
+- Бесконечное «улучшение» bundle — форма прокрастинации
 
 **Как лечить:**
 
 - **Правило:** bundle обновляется **по мере работы**. Не вместо.
-    
-- Если за день не сделали ни одной задачи, но правили bundle — что-то не так
 
+- Если за день не сделали ни одной задачи, но правили bundle — что-то не так
 
 #### Anti-pattern 17: bundle для галочки
 
@@ -2010,18 +2017,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Bundle становится мёртвым грузом
-    
-- Тратите время на поддержку без пользы
-    
-- Лучше не иметь
 
+- Тратите время на поддержку без пользы
+
+- Лучше не иметь
 
 **Как лечить:**
 
 - Честно ответить: **«Помогает ли bundle?»**
-    
-- Если нет — либо понять, почему, либо удалить
 
+- Если нет — либо понять, почему, либо удалить
 
 ### 19.6 Relational anti-patterns
 
@@ -2036,18 +2041,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Агент пытается читать — не находит
-    
-- Раздражает
-    
-- Подрывает доверие
 
+- Раздражает
+
+- Подрывает доверие
 
 **Как лечить:**
 
 - При удалении файла — grep по ссылкам
-    
-- Регулярная проверка: `grep -r '\[.*\](.*\.md)' .` и проверка
 
+- Регулярная проверка: `grep -r '\[.*\](.*\.md)' .` и проверка
 
 #### Anti-pattern 19: циклы ссылок
 
@@ -2058,18 +2061,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Агент может уйти в цикл
-    
-- Запутывает
-    
-- Бессмысленно
 
+- Запутывает
+
+- Бессмысленно
 
 **Как лечить:**
 
 - Держать граф ссылок **ацикличным**
-    
-- Если цикл — заменить одну из ссылок на текстовое упоминание
 
+- Если цикл — заменить одну из ссылок на текстовое упоминание
 
 #### Anti-pattern 20: файлы, ссылающиеся сами на себя
 
@@ -2080,14 +2081,12 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Бессмысленно
-    
-- Выглядит как баг
 
+- Выглядит как баг
 
 **Как лечить:**
 
 - Проверка: `grep -r "$(basename "$f")" "$f"`
-
 
 #### Anti-pattern 21: bundle для одного человека
 
@@ -2098,18 +2097,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Агент не понимает
-    
-- Коллега не понимает
-    
-- Вы через полгода не понимаете
 
+- Коллега не понимает
+
+- Вы через полгода не понимаете
 
 **Как лечить:**
 
 - **Правило «другого человека»**: если коллега прочитает — поймёт?
-    
-- Писать для будущего себя, не для текущего
 
+- Писать для будущего себя, не для текущего
 
 #### Anti-pattern 22: bundle без контекста
 
@@ -2120,18 +2117,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Нет понимания мотивации
-    
-- Агенту сложно принимать решения
-    
-- «Почему» — важнее, чем «что»
 
+- Агенту сложно принимать решения
+
+- «Почему» — важнее, чем «что»
 
 **Как лечить:**
 
 - В `_concepts.md` — не только «что», но и «почему так»
-    
-- Или ссылка на ADR: _«Почему pipeline — см. ADR-005.»_
 
+- Или ссылка на ADR: _«Почему pipeline — см. ADR-005.»_
 
 ### 19.7 Evolutionary anti-patterns
 
@@ -2146,22 +2141,20 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Устарел
-    
-- `_troubleshooting.md` не пополняется
-    
-- `_backlog.md` неактуален
-    
-- Bundle — **живая система**
 
+- `_troubleshooting.md` не пополняется
+
+- `_backlog.md` неактуален
+
+- Bundle — **живая система**
 
 **Как лечить:**
 
 - `_troubleshooting.md` — после каждой решённой проблемы
-    
-- `_backlog.md` — при появлении/завершении задач
-    
-- `_ci.md` — при изменении workflows
 
+- `_backlog.md` — при появлении/завершении задач
+
+- `_ci.md` — при изменении workflows
 
 #### Anti-pattern 24: bundle растёт бесконтрольно
 
@@ -2172,22 +2165,20 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Файлы нечитаемы
-    
-- Планирование замедляется
-    
-- Полезное тонет в мусоре
 
+- Планирование замедляется
+
+- Полезное тонет в мусоре
 
 **Как лечить:**
 
 - Раз в месяц — ревизия
-    
-- `_backlog.md` — удалять неактуальное
-    
-- `_files.md` — только 15–30 ключевых файлов
-    
-- `_decisions.md` — статус `deprecated` для устаревших ADR
 
+- `_backlog.md` — удалять неактуальное
+
+- `_files.md` — только 15–30 ключевых файлов
+
+- `_decisions.md` — статус `deprecated` для устаревших ADR
 
 #### Anti-pattern 25: расширения без надобности
 
@@ -2198,18 +2189,16 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Bundle сложнее
-    
-- Больше поддержки
-    
-- Новому человеку непонятно
 
+- Больше поддержки
+
+- Новому человеку непонятно
 
 **Как лечить:**
 
 - **Минимализм.** Только то, что **реально** нужно
-    
-- Ревизия раз в полгода: какой файл не читал ни разу? Удалить.
 
+- Ревизия раз в полгода: какой файл не читал ни разу? Удалить.
 
 #### Anti-pattern 26: breaking changes без версии
 
@@ -2220,20 +2209,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Пользователи теряют файл
-    
-- Ссылки битые
-    
-- `--update` может сломаться
 
+- Ссылки битые
+
+- `--update` может сломаться
 
 **Как лечить:**
 
 - **SemVer.** Breaking changes — major bump
-    
-- Переименования — breaking
-    
-- Удаления — breaking
 
+- Переименования — breaking
+
+- Удаления — breaking
 
 #### Anti-pattern 27: нет миграции
 
@@ -2244,20 +2231,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Пользователи в панике
-    
-- Данные потеряны
-    
-- Доверие подорвано
 
+- Данные потеряны
+
+- Доверие подорвано
 
 **Как лечить:**
 
 - Для major изменений — **migration guide**
-    
-- `init-opencode --migrate` — опциональный режим
-    
-- Или — предоставить скрипт миграции
 
+- `init-opencode --migrate` — опциональный режим
+
+- Или — предоставить скрипт миграции
 
 ### 19.8 Мета-anti-pattern: слишком серьёзно
 
@@ -2268,20 +2253,18 @@ Minor bump для новых файлов, major для переименован
 **Почему плохо:**
 
 - Bundle — **инструмент**, не цель
-    
-- Время уходит на полировку
-    
-- Задачи не закрываются
 
+- Время уходит на полировку
+
+- Задачи не закрываются
 
 **Как лечить:**
 
 - **Помните философию:** speed over quality
-    
-- Bundle может быть несовершенным
-    
-- Лучше — работающий, чем идеальный
 
+- Bundle может быть несовершенным
+
+- Лучше — работающий, чем идеальный
 
 ### 19.9 Как замечать anti-patterns
 
@@ -2292,47 +2275,42 @@ Minor bump для новых файлов, major для переименован
 **Про структуру:**
 
 - `AGENTS.md` растёт?
-    
-- Файлы дублируются?
-    
-- Есть пустые файлы?
 
+- Файлы дублируются?
+
+- Есть пустые файлы?
 
 **Про контент:**
 
 - Все `timestamp` свежие?
-    
-- Все ссылки работают?
-    
-- Нет секретов?
 
+- Все ссылки работают?
+
+- Нет секретов?
 
 **Про процесс:**
 
 - Все файлы используются?
-    
-- Ритуалы соблюдаются?
-    
-- Bundle помогает или мешает?
 
+- Ритуалы соблюдаются?
+
+- Bundle помогает или мешает?
 
 **Про связи:**
 
 - Ссылки работают?
-    
-- Нет циклов?
-    
-- Понятно без контекста?
 
+- Нет циклов?
+
+- Понятно без контекста?
 
 **Про эволюцию:**
 
 - Bundle растёт?
-    
-- Или устаревает?
-    
-- Расширения нужны?
 
+- Или устаревает?
+
+- Расширения нужны?
 
 **Если нашли 3+ проблемы** — пора чистить
 
@@ -2341,16 +2319,14 @@ Minor bump для новых файлов, major для переименован
 **Когда чистить:**
 
 - Раз в квартал — планово
-    
-- При обнаружении anti-pattern
-    
-- Перед крупным изменением
 
+- При обнаружении anti-pattern
+
+- Перед крупным изменением
 
 **Как чистить:**
 
 **Шаг 1: инвентаризация.**
-
 
 ```bash
 # Список файлов и размеров
@@ -2363,49 +2339,46 @@ grep -r '\[.*\](.*\.md)' .opencode/ | while read line; do
 done
 
 ```
+
 **Шаг 2: категоризация.**
 
 Для каждого файла:
 
 - **Используется** — оставить
-    
-- **Используется редко** — оставить, но проверить
-    
-- **Не используется** — удалить
-    
-- **Пустой** — удалить или заполнить
 
+- **Используется редко** — оставить, но проверить
+
+- **Не используется** — удалить
+
+- **Пустой** — удалить или заполнить
 
 **Шаг 3: ревизия контента.**
 
 Для каждого оставшегося файла:
 
 - Актуален? Обновить.
-    
-- Дублируется? Объединить.
-    
-- Устарел? Удалить.
 
+- Дублируется? Объединить.
+
+- Устарел? Удалить.
 
 **Шаг 4: ревизия структуры.**
 
 - `AGENTS.md` — оптимальный размер?
-    
-- Группировка в reference files — правильная?
-    
-- Словарь `type` — все типы используются?
 
+- Группировка в reference files — правильная?
+
+- Словарь `type` — все типы используются?
 
 **Шаг 5: документация.**
 
 После чистки — обновить:
 
 - README (если что-то изменилось).
-    
-- `_meta.md` (расширения).
-    
-- `VERSION` (если правки значительные).
 
+- `_meta.md` (расширения).
+
+- `VERSION` (если правки значительные).
 
 ### 19.11 Профилактика
 
@@ -2414,49 +2387,44 @@ done
 **1. Ритуалы.**
 
 - Начало сессии: прочитать WORK_LOG.
-    
-- Конец сессии: записать WORK_LOG.
-    
-- Новая идея: в backlog.
-    
-- Значимое решение: ADR.
 
+- Конец сессии: записать WORK_LOG.
+
+- Новая идея: в backlog.
+
+- Значимое решение: ADR.
 
 **2. Регулярная ревизия.**
 
 - Раз в месяц: проверить backlog.
-    
-- Раз в квартал: полная чистка bundle.
-    
-- Раз в полгода: аудит структуры.
 
+- Раз в квартал: полная чистка bundle.
+
+- Раз в полгода: аудит структуры.
 
 **3. Правило другого человека.**
 
 - Перед добавлением файла: «Коллега поймёт?»
-    
-- Перед секцией: «Это в другом файле?»
-    
-- Перед ссылкой: «Она работает?»
 
+- Перед секцией: «Это в другом файле?»
+
+- Перед ссылкой: «Она работает?»
 
 **4. Минимализм.**
 
 - Новый файл — только если **реально** нужен.
-    
-- Новая секция — только если **действительно** важна.
-    
-- Новая директория — только если есть что положить.
 
+- Новая секция — только если **действительно** важна.
+
+- Новая директория — только если есть что положить.
 
 **5. Консистентность.**
 
 - Один язык
-    
-- Один стиль
-    
-- Одна структура
 
+- Один стиль
+
+- Одна структура
 
 ### 19.12 Связь с другими файлами
 
@@ -2475,22 +2443,20 @@ Anti-patterns могут быть **в любом файле** и **в люб
 Для каждой найденной проблемы:
 
 - **Что именно** не так
-    
-- **Что делать** (обновить / удалить / объединить)
-    
-- **Когда** (сегодня / на выходных / в конце квартала)
 
+- **Что делать** (обновить / удалить / объединить)
+
+- **Когда** (сегодня / на выходных / в конце квартала)
 
 **Часть 3: ритуалы.**
 
 Определите **три ритуала**, которые вы введёте:
 
 - Например: конец сессии → 5 строк в WORK_LOG
-    
+
 - Раз в неделю → ревизия backlog
-    
+
 - Раз в месяц → проверка `timestamp` во всех файлах
-   
 
 **Запишите** их в `_meta.md` или в `AGENTS.md` своего проекта.
 
@@ -2498,8 +2464,8 @@ Anti-patterns могут быть **в любом файле** и **в люб
 
 В следующей главе — **Philosophy**. Почему bundle устроен именно так. Философия, которая стоит за всеми решениями: минимализм, speed over quality, OKF.
 
-
 ## Chapter 20. Philosophy
+
 ## Глава 20. Философия
 
 ### 20.1 Зачем эта глава
@@ -2507,13 +2473,12 @@ Anti-patterns могут быть **в любом файле** и **в люб
 Все предыдущие главы отвечали на вопросы **«что»** и **«как»**:
 
 - **Что** лежит в bundle
-    
-- **Как** этим пользоваться
-    
-- **Как** расширять
-    
-- **Что** не делать
 
+- **Как** этим пользоваться
+
+- **Как** расширять
+
+- **Что** не делать
 
 Эта глава — про **«почему»**.
 
@@ -2526,15 +2491,15 @@ Anti-patterns могут быть **в любом файле** и **в люб
 Всё устройство bundle сводится к шести принципам:
 
 1. **Speed over quality.**
-    
+
 2. **Минимализм.**
-    
+
 3. **Ленивая загрузка.**
-    
+
 4. **Локальность.**
-    
+
 5. **Ясность через структуру.**
-    
+
 6. **OKF как фундамент.**
 
 Разберём каждый.
@@ -2548,11 +2513,11 @@ Anti-patterns могут быть **в любом файле** и **в люб
 Проект фильтрует изменения через:
 
 - CI (тесты, линт, сборка)
-    
+
 - Ревью (человек проверяет)
-    
+
 - Статический анализ (RuboCop, ESLint)
-    
+
 - Мониторинг (метрики после деплоя)
 
 Если что-то плохое прошло все фильтры — это **проблема процесса**, а не ваша.
@@ -2580,20 +2545,18 @@ Anti-patterns могут быть **в любом файле** и **в люб
 **Bundle не требует идеальности.**
 
 - `_concepts.md` может быть неполным. Заполните по мере необходимости
-    
-- `_troubleshooting.md` — обогащается после каждой проблемы
-    
-- `_backlog.md` — не roadmap, а черновик
 
+- `_troubleshooting.md` — обогащается после каждой проблемы
+
+- `_backlog.md` — не roadmap, а черновик
 
 **Bundle не тормозит.** Правило «за 5 секунд»:
 
 - Найти нужный файл — за 5 секунд
-    
-- Записать сессию — за 5 минут
-    
-- Обновить backlog — за 2 минуты
 
+- Записать сессию — за 5 минут
+
+- Обновить backlog — за 2 минуты
 
 Если что-то занимает дольше — **это проблема дизайна**
 
@@ -2618,11 +2581,10 @@ Anti-patterns могут быть **в любом файле** и **в люб
 **Bundle тоже не должен быть идеальным.**
 
 - Если файл не идеален — оставьте.
-    
-- Если ссылка битая — поправьте позже.
-    
-- Если ADR написан коряво — важно, чтобы **был**.
 
+- Если ссылка битая — поправьте позже.
+
+- Если ADR написан коряво — важно, чтобы **был**.
 
 **Лучше работающий несовершенный bundle, чем идеальный неработающий.**
 
@@ -2657,42 +2619,38 @@ OKF подчёркивает: знаний должно быть **ровно �
 **Длина файлов ограничена.**
 
 - `AGENTS.md` — 60–90 строк.
-    
-- `_setup.md` — 60 строк.
-    
-- `_concepts.md` — 80 строк.
-    
-- `_files.md` — 15–30 записей.
 
+- `_setup.md` — 60 строк.
+
+- `_concepts.md` — 80 строк.
+
+- `_files.md` — 15–30 записей.
 
 Если файл растёт больше — сигнал пересмотреть.
 
 **Удаление — часть работы.**
 
 - Устаревшие ADR — `deprecated`
-    
-- Выполненные задачи — удаляются из `_backlog.md`
-    
-- Ненужные файлы — удаляются
 
+- Выполненные задачи — удаляются из `_backlog.md`
+
+- Ненужные файлы — удаляются
 
 **Пустой файл хуже отсутствующего.**
 
 - Отсутствие файла = «не нужно»
-    
-- Пустой файл = «нужно, но забыли»
-    
-- Пустой файл **врёт**. Отсутствующий — честен.
 
+- Пустой файл = «нужно, но забыли»
+
+- Пустой файл **врёт**. Отсутствующий — честен.
 
 #### Ловушка
 
 **«А вдруг пригодится».**
 
 - «Добавлю секцию про X — вдруг понадобится.»
-    
-- «Создам файл `_api.md` — вдруг будет API.»
 
+- «Создам файл `_api.md` — вдруг будет API.»
 
 **Правильно:** добавить, когда **реально** понадобилось.
 
@@ -2735,24 +2693,22 @@ OKF подчёркивает: знаний должно быть **ровно �
 **Что читает агент:**
 
 - `AGENTS.md` — контекст
-    
-- `_codestyle.md` — как писать код
-    
-- `_files.md` — где User
-    
-- `_concepts.md` — архитектура
 
+- `_codestyle.md` — как писать код
+
+- `_files.md` — где User
+
+- `_concepts.md` — архитектура
 
 **Что НЕ читает:**
 
 - `_ci.md` — не про CI
-    
-- `_security.md` — не про секреты
-    
-- `runbooks/` — не инцидент
-    
-- `analysis/` — не анализ
 
+- `_security.md` — не про секреты
+
+- `runbooks/` — не инцидент
+
+- `analysis/` — не анализ
 
 **Экономия:** 4 файла вместо 20.
 
@@ -2763,11 +2719,10 @@ OKF подчёркивает: знаний должно быть **ровно �
 «Почему не grep?» — потому что:
 
 - Grep ищет **слова**, не **смысл**.
-    
+
 - Задача «напиши код» не содержит слова «codestyle».
-    
+
 - Таблица в `AGENTS.md` — **явное** знание. Grep — догадки.
-    
 
 **Eager loading.**
 
@@ -2802,30 +2757,26 @@ OKF подчёркивает: знаний должно быть **ровно �
 **`.opencode/` в `.git/info/exclude`.**
 
 - Локально для вашего клона
-    
-- Не заражает репозиторий
 
+- Не заражает репозиторий
 
 **`.gitignore` внутри `.opencode/`.**
 
 - Вторая линия обороны
-    
-- На случай, если `.opencode/` попадёт в git
 
+- На случай, если `.opencode/` попадёт в git
 
 **`WORK_LOG.md` — личный.**
 
 - Не синхронизируется
-    
-- Если нужно поделиться — копируйте в issue вручную
 
+- Если нужно поделиться — копируйте в issue вручную
 
 **`_decisions.md` — локальный.**
 
 - Может быть расшарен, если нужно
-    
-- Но по умолчанию — только для вас
 
+- Но по умолчанию — только для вас
 
 #### Ловушка
 
@@ -2834,9 +2785,8 @@ OKF подчёркивает: знаний должно быть **ровно �
 Можно — но осознанно. Через:
 
 - Копию в публичный репозиторий
-    
-- Или через issue/PR
 
+- Или через issue/PR
 
 **По умолчанию — не делится.**
 
@@ -2871,32 +2821,28 @@ OKF подчёркивает: знаний должно быть **ровно �
 **Frontmatter — обязателен.**
 
 - Метаданные парсятся
-    
+
 - `type`, `title`, `description` — понятны агенту без чтения body
-    
 
 **Секции — стандартные.**
 
 - `## Overview` — везде
-    
+
 - `## Key components` — в `_concepts.md`
-    
+
 - `## Symptom`, `## Cause`, `## Fix` — в `_troubleshooting.md`
-    
 
 **Таблицы вместо абзацев.**
 
 - Где возможно — таблица.
-    
-- Пара «ключ → значение» читается лучше, чем «X значит Y, а Z значит W»
 
+- Пара «ключ → значение» читается лучше, чем «X значит Y, а Z значит W»
 
 **Заголовки вместо переходов.**
 
 - Не «Далее рассмотрим...», а `## Следующая секция`
-    
+
 - Заголовок — якорь для чтения
- 
 
 #### Ловушка
 
@@ -2933,110 +2879,96 @@ OKF — открытый формат от Google Cloud. Минимализм, m
 **Простота.**
 
 - Markdown + YAML
-    
-- Читается `cat`
-    
-- Копируется `git clone`
 
+- Читается `cat`
+
+- Копируется `git clone`
 
 **Портативность.**
 
 - Не привязан к инструменту
-    
+
 - Работает с любым редактором
-    
+
 - Переносится между системами
- 
 
 **Стандарт.**
 
 - Google Cloud
-    
+
 - Открытый
-    
+
 - Стабильная спека
- 
 
 **Расширяемость.**
 
 - OKF явно разрешает добавление полей
-    
+
 - Не требует центральной регистрации типов
- 
 
 #### Что взято из OKF
 
 **Структура bundle.**
 
 - `index.md`, `log.md` — резервированные имена
-    
+
 - Concept documents — остальные файлы
- 
 
 **Frontmatter.**
 
 - Обязательное поле `type`
-    
+
 - Рекомендуемые: `title`, `description`, `resource`, `tags`, `timestamp`
- 
 
 **Cross-linking.**
 
 - Markdown-ссылки между концептами
-    
-- Ссылка утверждает «наличие отношения»
 
+- Ссылка утверждает «наличие отношения»
 
 **Citations.**
 
 - `## Citations` — конвенциональная секция
 
-
 **Толерантность.**
 
 - Не отвергать bundle из-за неизвестных полей
-    
+
 - Битые ссылки — допустимы
- 
 
 #### Что добавлено поверх OKF
 
 **`AGENTS.md` вместо `index.md`.**
 
 - OKF использует `index.md`
-    
-- OpenCode читает `AGENTS.md`
-    
-- Мы используем `AGENTS.md` + `index.md` как указатель
 
+- OpenCode читает `AGENTS.md`
+
+- Мы используем `AGENTS.md` + `index.md` как указатель
 
 **`_*.md` префикс.**
 
 - Конвенция из SASS/Jekyll
-    
-- Служебные файлы помечаются
 
+- Служебные файлы помечаются
 
 **`WORK_LOG.md`.**
 
 - Аналог OKF `log.md`
-    
-- Но локальный
 
+- Но локальный
 
 **Директории.**
 
 - `issue/`, `playbook/`, `pr/`, `analysis/`, `runbooks/`, `archive/`
-    
-- OKF не запрещает — мы добавляем
 
+- OKF не запрещает — мы добавляем
 
 **Расширенный словарь `type`.**
 
 - 26 типов
-    
+
 - Специфичны для нашей задачи
-  
 
 #### Ловушка
 
@@ -3080,20 +3012,20 @@ OKF — открытый формат от Google Cloud. Минимализм, m
                     ▼
                 OKF как фундамент
 ```
+
 **Пример:**
 
 - **Speed** требует не тормозить на перфекционизме
-    
-- **Минимализм** требует не писать лишнее
-    
-- **Ленивая загрузка** требует не грузить всё
-    
-- **Локальность** требует не блокироваться на согласовании
-    
-- **Ясность** требует структурировать
-    
-- **OKF** даёт формат
 
+- **Минимализм** требует не писать лишнее
+
+- **Ленивая загрузка** требует не грузить всё
+
+- **Локальность** требует не блокироваться на согласовании
+
+- **Ясность** требует структурировать
+
+- **OKF** даёт формат
 
 Все вместе: **быстро, минимально, по запросу, локально, структурированно, по стандарту**.
 
@@ -3102,13 +3034,12 @@ OKF — открытый формат от Google Cloud. Минимализм, m
 **Философия — не волшебство.** Она не решает:
 
 - **Плохой код.** Bundle не улучшает качество
-    
-- **Слабое ревью.** Bundle не заменяет ревьюеров
-    
-- **Плохую архитектуру.** Bundle не переделывает систему
-    
-- **Отсутствие дисциплины.** Bundle не заставит его использовать
 
+- **Слабое ревью.** Bundle не заменяет ревьюеров
+
+- **Плохую архитектуру.** Bundle не переделывает систему
+
+- **Отсутствие дисциплины.** Bundle не заставит его использовать
 
 **Bundle — инструмент.** Как молоток. Хорош в умелых руках, бесполезен в неумелых.
 
@@ -3141,25 +3072,22 @@ HIPAA, PCI-DSS. Нужны формальные процедуры, аудит, 
 **1. Это ускоряет?**
 
 - Если нет — почему делаете?
-    
-- Если да — делайте.
 
+- Если да — делайте.
 
 **2. Это минимально?**
 
 - Можно ли меньше?
-    
+
 - Что можно удалить?
-  
 
 **3. Это ясно?**
 
 - Поймёт ли коллега?
-    
+
 - Поймёт ли агент?
-    
+
 - Пойму ли я через год?
-  
 
 **Если три «да»** — решение правильное.
 
@@ -3168,29 +3096,24 @@ HIPAA, PCI-DSS. Нужны формальные процедуры, аудит, 
 Part IV закончен. Мы разобрали:
 
 - **Chapter 17.** `init-opencode`: install and update.
-    
+
 - **Chapter 18.** Extending the bundle.
-    
+
 - **Chapter 19.** Anti-patterns.
-    
+
 - **Chapter 20.** Philosophy.
-  
 
 Осталась **Part V — Appendices**:
 
 - **A.** Type dictionary.
-    
+
 - **B.** Full bundle structure.
-    
+
 - **C.** OKF spec extract.
-    
+
 - **D.** FAQ.
-    
 
 Это справочники. Их можно читать выборочно.
-
-
-
 
 ====---=============================================================
 
@@ -3199,14 +3122,8 @@ Part IV закончен. Мы разобрали:
 Part IV готов. Осталось:
 
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Appendix A — Type dictionary?
-
-
-
-
-
 
 ===---==============================================
 
@@ -3215,25 +3132,18 @@ Part IV готов. Осталось:
 Part IV — почти готов:
 
 - **Chapter 17.** `init-opencode`: install and update ✅
-    
+
 - **Chapter 18.** Extending the bundle ✅
-    
+
 - **Chapter 19.** Anti-patterns ✅
-    
+
 - **Chapter 20.** Philosophy — следующий, последний в Part IV
-    
 
 Потом:
 
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 20?
-
-
-
-
-
 
 ==---================================================================
 
@@ -3242,23 +3152,18 @@ Part IV — почти готов:
 Part IV — половина:
 
 - **Chapter 17.** `init-opencode`: install and update ✅
-    
+
 - **Chapter 18.** Extending the bundle ✅
-    
+
 - **Chapter 19.** Anti-patterns — следующий
-    
+
 - **Chapter 20.** Philosophy
-    
 
 Потом:
 
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 19?
-
-
-
 
 ==---============================================================================
 
@@ -3267,29 +3172,18 @@ Part IV — половина:
 Part IV — начали:
 
 - **Chapter 17.** `init-opencode`: install and update ✅
-    
+
 - **Chapter 18.** Extending the bundle — следующий
-    
+
 - **Chapter 19.** Anti-patterns
-    
+
 - **Chapter 20.** Philosophy
-    
 
 Потом:
 
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 18?
-
-
-
-
-
-
-
-
-
 
 ==---===========================================================================
 
@@ -3298,9 +3192,8 @@ Part IV — начали:
 Part III готов. Осталось:
 
 - **Part IV — Operations** (главы 17–20).
-    
-- **Part V — Appendices** (A–D).
 
+- **Part V — Appendices** (A–D).
 
 ===---========================================
 
@@ -3309,27 +3202,24 @@ Part III готов. Осталось:
 Part III — 5 из 6:
 
 - **Chapter 11.** Issue lifecycle ✅
-    
+
 - **Chapter 12.** Session lifecycle ✅
-    
+
 - **Chapter 13.** When CI fails ✅
-    
+
 - **Chapter 14.** Incident in prod ✅
-    
+
 - **Chapter 15.** Deep analysis ✅
-    
+
 - **Chapter 16.** Planning — следующий, последний в Part III
-    
 
 Потом:
 
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 16?
-
 
 ===---==============================================
 
@@ -3338,28 +3228,27 @@ Part III — 5 из 6:
 Part III — 4 из 6:
 
 - **Chapter 11.** Issue lifecycle ✅
-    
+
 - **Chapter 12.** Session lifecycle ✅
-    
+
 - **Chapter 13.** When CI fails ✅
-    
+
 - **Chapter 14.** Incident in prod ✅
-    
+
 - **Chapter 15.** Deep analysis — следующий
-    
+
 - **Chapter 16.** Planning
-    
 
 Потом:
 
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 15?
 
 ===-===================================================
+
 ### 13.15 Что дальше
 
 В следующей главе — **Incident in prod**. Это самый серьёзный workflow: прод упал, пользователи страдают, надо действовать быстро. Runbook — центральный инструмент.
@@ -3371,27 +3260,24 @@ Part III — 4 из 6:
 Part III — половина:
 
 - **Chapter 11.** Issue lifecycle ✅
-    
+
 - **Chapter 12.** Session lifecycle ✅
-    
+
 - **Chapter 13.** When CI fails ✅
-    
+
 - **Chapter 14.** Incident in prod — следующий
-    
+
 - **Chapter 15.** Deep analysis
-    
+
 - **Chapter 16.** Planning
-    
 
 Потом:
 
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 14?
-
 
 ======---=================================================================
 
@@ -3400,34 +3286,24 @@ Part III — половина:
 Part III — на 1/3:
 
 - **Chapter 11.** Issue lifecycle ✅
-    
+
 - **Chapter 12.** Session lifecycle ✅
-    
+
 - **Chapter 13.** When CI fails — следующий
-    
+
 - **Chapter 14.** Incident in prod
-    
+
 - **Chapter 15.** Deep analysis
-    
+
 - **Chapter 16.** Planning
-    
 
 Потом:
 
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 13?
-
-
-
-
-
-
-
-
 
 ===----------------------------================================
 
@@ -3436,35 +3312,33 @@ Part III — на 1/3:
 Part II готов. Осталось:
 
 - **Part III — Workflows** (главы 11–16).
-    
+
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-
-
-
-
 
 ===----------------------------================================
 
 ### 9.11 Что дальше
+
 В следующей главе — **utility**: `index.md`, `log.md`, `SPEC_REFERENCE.md`, `.gitignore`, `.template-version`. Пять служебных файлов, которые не читаются при работе, но обеспечивают OKF-конформность и защиту.
 ---
+
 ## Что дальше в книге
+
 Part II — почти готов:
+
 - **Chapter 5.** AGENTS.md ✅
 - **Chapter 6.** Onboarding ✅
 - **Chapter 7.** Daily work ✅
 - **Chapter 8.** Diagnostics ✅
 - **Chapter 9.** Navigation & safety ✅
 - **Chapter 10.** Utility — следующий, последний в Part II
-Потом:
+  Потом:
 - **Part III — Workflows** (главы 11–16).
 - **Part IV — Operations** (главы 17–20).
 - **Part V — Appendices** (A–D).
-Продолжаем с Chapter 10?
-
-
+  Продолжаем с Chapter 10?
 
 ===-================================================================
 
@@ -3473,26 +3347,24 @@ Part II — почти готов:
 Part II — на 80% готов:
 
 - **Chapter 5.** AGENTS.md ✅
-    
+
 - **Chapter 6.** Onboarding ✅
-    
+
 - **Chapter 7.** Daily work ✅
-    
+
 - **Chapter 8.** Diagnostics ✅
-    
+
 - **Chapter 9.** Navigation & safety — следующий
-    
+
 - **Chapter 10.** Utility
-    
 
 Потом:
 
 - **Part III — Workflows** (главы 11–16).
-    
+
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 9?
 
@@ -3504,28 +3376,25 @@ Part II — на 80% готов:
 Мы прошли:
 
 - **Part I — Foundations** (главы 1–4).
-    
+
 - **Part II** — начали. Главы 5 (AGENTS.md) и 6 (Onboarding) готовы.
-    
 
 Осталось в Part II:
 
 - **Chapter 7.** Daily work: `_templates`, `_worklog`, `_backlog`, `_decisions`, `_codestyle`, `_commands`.
-    
+
 - **Chapter 8.** Diagnostics: `_ci`, `_troubleshooting`, `runbooks/`.
-    
+
 - **Chapter 9.** Navigation: `_files`, `_env`, `_security`, `analysis/`, `_meta`.
-    
+
 - **Chapter 10.** Utility: `index.md`, `log.md`, `SPEC_REFERENCE.md`, `.gitignore`, `.template-version`.
-    
 
 Потом:
 
 - **Part III — Workflows** (главы 11–16).
-    
+
 - **Part IV — Operations** (главы 17–20).
-    
+
 - **Part V — Appendices** (A–D).
-    
 
 Продолжаем с Chapter 7 или хотите что-то поменять в темпе/структуре?

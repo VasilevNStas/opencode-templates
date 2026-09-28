@@ -17,18 +17,18 @@ see below.
 
 ## Workflows
 
-| Workflow | What it checks | Reproduce locally |
-|----------|----------------|-------------------|
-| `<name>.yml` | <purpose> | `<command>` |
-| `<name>.yml` | <purpose> | `<command>` |
+| Workflow     | What it checks | Reproduce locally |
+| ------------ | -------------- | ----------------- |
+| `<name>.yml` | <purpose>      | `<command>`       |
+| `<name>.yml` | <purpose>      | `<command>`       |
 
 ## Common failures
 
-| Failure | Likely cause | Fix |
-|---------|-------------|-----|
-| `<error message>` | <root cause> | `<command>` |
-| `Lint: N offenses` | Style violations | `<lint command>` |
-| `Tests failed` | Real test failure | `<single test command>` |
+| Failure            | Likely cause      | Fix                     |
+| ------------------ | ----------------- | ----------------------- |
+| `<error message>`  | <root cause>      | `<command>`             |
+| `Lint: N offenses` | Style violations  | `<lint command>`        |
+| `Tests failed`     | Real test failure | `<single test command>` |
 
 ## Local reproduction
 

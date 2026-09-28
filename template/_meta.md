@@ -36,13 +36,13 @@ Version details also in [`.template-version`](.template-version) (machine-readab
 
 This bundle follows OKF v0.1 with the following extensions:
 
-| Extension | What we added |
-|-----------|---------------|
-| `AGENTS.md` as entry point | OKF uses `index.md`; we use `AGENTS.md` and provide `index.md` as a pointer |
-| `_*.md` naming | Prefix `_` marks reference files (partials) |
-| `WORK_LOG.md` | Local work log, analogous to OKF's `log.md` |
-| Subdirectories | `issue/`, `playbook/`, `pr/`, `analysis/`, `runbooks/`, `archive/` for dynamic content |
-| Custom `type` values | `project-context`, `setup`, `worklog`, `backlog`, `decision-log`, `testing`, `api`, `release`, `performance`, etc. |
+| Extension                  | What we added                                                                                                      |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| `AGENTS.md` as entry point | OKF uses `index.md`; we use `AGENTS.md` and provide `index.md` as a pointer                                        |
+| `_*.md` naming             | Prefix `_` marks reference files (partials)                                                                        |
+| `WORK_LOG.md`              | Local work log, analogous to OKF's `log.md`                                                                        |
+| Subdirectories             | `issue/`, `playbook/`, `pr/`, `analysis/`, `runbooks/`, `archive/` for dynamic content                             |
+| Custom `type` values       | `project-context`, `setup`, `worklog`, `backlog`, `decision-log`, `testing`, `api`, `release`, `performance`, etc. |
 
 Local extract of the spec: [SPEC_REFERENCE.md](SPEC_REFERENCE.md).
 

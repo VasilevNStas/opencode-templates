@@ -14,30 +14,30 @@ Curated map, not an exhaustive listing. For the full list, use
 
 ## Entry points
 
-| File | Purpose | When to touch |
-|------|---------|---------------|
+| File     | Purpose        | When to touch    |
+| -------- | -------------- | ---------------- |
 | `<path>` | <what it does> | <when to modify> |
 
 ## Core modules
 
-| File | Purpose | When to touch |
-|------|---------|---------------|
+| File     | Purpose        | When to touch    |
+| -------- | -------------- | ---------------- |
 | `<path>` | <what it does> | <when to modify> |
 
 ## Data layer
 
-| File | Purpose | When to touch |
-|------|---------|---------------|
+| File     | Purpose        | When to touch    |
+| -------- | -------------- | ---------------- |
 | `<path>` | <what it does> | <when to modify> |
 
 ## Configuration
 
-| File | Purpose | When to touch |
-|------|---------|---------------|
+| File     | Purpose        | When to touch    |
+| -------- | -------------- | ---------------- |
 | `<path>` | <what it does> | <when to modify> |
 
 ## Tests
 
-| File | Purpose | When to touch |
-|------|---------|---------------|
+| File     | Purpose        | When to touch    |
+| -------- | -------------- | ---------------- |
 | `<path>` | <what it does> | <when to modify> |

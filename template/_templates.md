@@ -14,11 +14,11 @@ Three templates for the issue lifecycle. For the process, see
 
 ## File locations
 
-| Template | File | Directory |
-|----------|------|-----------|
-| PROJECT_SUMMARY | `PROJECT_SUMMARY_<N>.md` | `issue/` |
-| PLAYBOOK | `PLAYBOOK_<N>.md` | `playbook/` |
-| PR description | `PR_<N>.md` | `pr/` |
+| Template        | File                     | Directory   |
+| --------------- | ------------------------ | ----------- |
+| PROJECT_SUMMARY | `PROJECT_SUMMARY_<N>.md` | `issue/`    |
+| PLAYBOOK        | `PLAYBOOK_<N>.md`        | `playbook/` |
+| PR description  | `PR_<N>.md`              | `pr/`       |
 
 After the PR is merged, move all three to `archive/`
 
@@ -63,21 +63,21 @@ tags: [<tag>]
 
 ## Files Changed
 
-| File | Change |
-|------|--------|
+| File     | Change         |
+| -------- | -------------- |
 | `<path>` | <what changed> |
 
 ## References
 
-- [1] [Issue #<N>](<url>)
-- [2] [Related PR](<url>)
+- [1] [Issue #<N>](url)
+- [2] [Related PR](url)
 ```
 
 ---
 
 ## 2. PLAYBOOK
 
-```markdown
+````markdown
 ---
 type: playbook
 issue: "#<N>"
@@ -114,6 +114,8 @@ tags: [<tag>]
 ```bash
 <command to verify the change>
 ```
+````
+
 ---
 
 ## 3. PR description
@@ -137,8 +139,8 @@ Fixes #<N>
 
 ## Changes
 
-| File | Change |
-|------|--------|
+| File     | Change         |
+| -------- | -------------- |
 | `<path>` | <what changed> |
 
 ## Verification
@@ -154,6 +156,7 @@ Fixes #<N>
 ```
 
 ---
+
 ## Lifecycle
 
 1. **Start** — create `issue/PROJECT_SUMMARY_<N>.md` and

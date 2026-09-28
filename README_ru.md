@@ -76,6 +76,7 @@ Bundle — **локальный**, никогда не коммитится в �
 когда решает, что задача соответствует описанию в `AGENTS.md`.
 
 Пример:
+
 - Вы говорите: «CI упал, разберись».
 - Агент видит в `AGENTS.md`: `_ci.md — when CI fails`.
 - Читает `_ci.md`, диагностирует.
@@ -98,11 +99,11 @@ Bundle следует OKF v0.2 **с расширениями** (см. разде
 
 ### Lazy vs eager
 
-| Eager (всё сразу) | Lazy (по запросу) |
-|-------------------|-------------------|
-| Один большой AGENTS.md | Ядро + тематические файлы |
+| Eager (всё сразу)             | Lazy (по запросу)            |
+| ----------------------------- | ---------------------------- |
+| Один большой AGENTS.md        | Ядро + тематические файлы    |
 | 500+ строк всегда в контексте | ~60 строк + файлы по запросу |
-| Агент тонет в шуме | Агент фокусируется |
+| Агент тонет в шуме            | Агент фокусируется           |
 
 ---
 
@@ -136,12 +137,12 @@ OpenCode при старте сессии собирает `AGENTS.md` со вс
 
 Примеры:
 
-| Что вы говорите | Что читает агент |
-|-----------------|------------------|
-| «Добавь новый компонент» | `_concepts.md`, `_codestyle.md`, `_files.md` |
-| «CI красный» | `_ci.md`, `_troubleshooting.md` |
-| «Работаем над issue #123» | `_templates.md`, `_concepts.md` |
-| «Нужен глубокий анализ» | `_concepts.md`, создаёт `analysis/*` |
+| Что вы говорите           | Что читает агент                             |
+| ------------------------- | -------------------------------------------- |
+| «Добавь новый компонент»  | `_concepts.md`, `_codestyle.md`, `_files.md` |
+| «CI красный»              | `_ci.md`, `_troubleshooting.md`              |
+| «Работаем над issue #123» | `_templates.md`, `_concepts.md`              |
+| «Нужен глубокий анализ»   | `_concepts.md`, создаёт `analysis/*`         |
 
 ---
 
@@ -199,60 +200,60 @@ OpenCode при старте сессии собирает `AGENTS.md` со вс
 
 ### Ядро
 
-| Файл | Роль | Длина |
-|------|------|-------|
+| Файл        | Роль                                      | Длина       |
+| ----------- | ----------------------------------------- | ----------- |
 | `AGENTS.md` | Точка входа. Контекст проекта + навигация | 60–90 строк |
-| `index.md` | OKF-индекс bundle | ~35 строк |
-| `log.md` | Указатель на хронологические логи | ~20 строк |
+| `index.md`  | OKF-индекс bundle                         | ~35 строк   |
+| `log.md`    | Указатель на хронологические логи         | ~20 строк   |
 
 ### Onboarding — понимание проекта
 
-| Файл | Когда читать |
-|------|--------------|
-| `_setup.md` | Первый запуск с нуля |
+| Файл           | Когда читать                     |
+| -------------- | -------------------------------- |
+| `_setup.md`    | Первый запуск с нуля             |
 | `_concepts.md` | Архитектура, паттерны, data flow |
-| `_glossary.md` | Незнакомый доменный термин |
+| `_glossary.md` | Незнакомый доменный термин       |
 
 ### Daily work — ежедневные задачи
 
-| Файл | Когда читать |
-|------|--------------|
-| `_templates.md` | Новая issue — SUMMARY, PLAYBOOK, PR |
-| `_worklog.md` | Начало/продолжение сессии |
-| `_testing.md` | Тестирование — фикстуры, моки, golden files, покрытия |
-| `_backlog.md` | Планирование, идеи, техдолг |
-| `_decisions.md` | «Почему так сделано» — ADR |
-| `_codestyle.md` | Пишешь код — SPDX, lint, конвенции |
-| `_commands.md` | Нужна команда — build/test/run |
+| Файл            | Когда читать                                          |
+| --------------- | ----------------------------------------------------- |
+| `_templates.md` | Новая issue — SUMMARY, PLAYBOOK, PR                   |
+| `_worklog.md`   | Начало/продолжение сессии                             |
+| `_testing.md`   | Тестирование — фикстуры, моки, golden files, покрытия |
+| `_backlog.md`   | Планирование, идеи, техдолг                           |
+| `_decisions.md` | «Почему так сделано» — ADR                            |
+| `_codestyle.md` | Пишешь код — SPDX, lint, конвенции                    |
+| `_commands.md`  | Нужна команда — build/test/run                        |
 
 ### When things break — диагностика
 
-| Файл | Когда читать |
-|------|--------------|
-| `_ci.md` | CI упал |
+| Файл                  | Когда читать                |
+| --------------------- | --------------------------- |
+| `_ci.md`              | CI упал                     |
 | `_troubleshooting.md` | Локальное окружение сломано |
-| `runbooks/` | Инцидент в prod |
+| `runbooks/`           | Инцидент в prod             |
 
 ### Navigation & safety — навигация и безопасность
 
-| Файл | Когда читать |
-|------|--------------|
-| `_files.md` | Ищешь, где что лежит |
-| `_env.md` | Карта окружений — dev, staging, prod |
-| `_security.md` | Секреты, уязвимости |
-| `analysis/` | Результаты глубокого анализа |
-| `_meta.md` | Как устроен сам bundle |
-| `_api.md` | Публичное API — методы, команды, эндпоинты (опционально) |
-| `_release.md` | Процесс релиза — версионирование, публикация, откат (опционально) |
+| Файл              | Когда читать                                                      |
+| ----------------- | ----------------------------------------------------------------- |
+| `_files.md`       | Ищешь, где что лежит                                              |
+| `_env.md`         | Карта окружений — dev, staging, prod                              |
+| `_security.md`    | Секреты, уязвимости                                               |
+| `analysis/`       | Результаты глубокого анализа                                      |
+| `_meta.md`        | Как устроен сам bundle                                            |
+| `_api.md`         | Публичное API — методы, команды, эндпоинты (опционально)          |
+| `_release.md`     | Процесс релиза — версионирование, публикация, откат (опционально) |
 | `_performance.md` | Производительность — бенчмарки, профилирование, SLO (опционально) |
 
 ### Служебные
 
-| Файл | Роль |
-|------|------|
+| Файл                | Роль                 |
+| ------------------- | -------------------- |
 | `SPEC_REFERENCE.md` | Выдержка из OKF v0.2 |
-| `.gitignore` | Защита от коммита |
-| `.template-version` | Версия шаблона |
+| `.gitignore`        | Защита от коммита    |
+| `.template-version` | Версия шаблона       |
 
 ---
 
@@ -326,7 +327,7 @@ work».
                         ├─_decisions
                         ├─_codestyle
                         └─_commands
-                        
+
                         Navigation & safety
                         │
                         ├─_files
@@ -379,29 +380,29 @@ _decisions.md ─────→ _backlog.md       (Follow-up → task)
 
 ### Что мы взяли из OKF
 
-| Концепция OKF | В нашем шаблоне |
-|---------------|-----------------|
-| Bundle | Вся `.opencode/` директория |
-| Concept document | Каждый `_*.md` файл |
-| YAML frontmatter | Блок `---` с `type`, `title`, `description` |
+| Концепция OKF     | В нашем шаблоне                              |
+| ----------------- | -------------------------------------------- |
+| Bundle            | Вся `.opencode/` директория                  |
+| Concept document  | Каждый `_*.md` файл                          |
+| YAML frontmatter  | Блок `---` с `type`, `title`, `description`  |
 | `type` (REQUIRED) | `project-context`, `architecture`, `ci`, ... |
-| Cross-linking | Относительные markdown-ссылки между файлами |
-| Citations | `## References` / `## Citations` |
-| `index.md` | Наш `index.md` — OKF entry point |
-| `log.md` | Наш `log.md` — указатель на логи |
+| Cross-linking     | Относительные markdown-ссылки между файлами  |
+| Citations         | `## References` / `## Citations`             |
+| `index.md`        | Наш `index.md` — OKF entry point             |
+| `log.md`          | Наш `log.md` — указатель на логи             |
 
 ### Что мы добавили поверх OKF
 
-| Расширение | Зачем |
-|-----------|-------|
-| `AGENTS.md` как entry point | OpenCode читает именно его при старте |
-| Префикс `_*.md` | Визуально маркирует reference files |
-| Ленивая загрузка | Экономия контекста агента |
-| `WORK_LOG.md` | Локальная хронология (вместо OKF `log.md`) |
-| Директории `issue/`, `playbook/`, `pr/` | Динамические артефакты workflow |
-| `analysis/` | Структурированный вывод анализа |
-| `runbooks/` | Процедуры инцидентов |
-| Расширенный словарь `type` | Специфичные для наших задач типы |
+| Расширение                              | Зачем                                      |
+| --------------------------------------- | ------------------------------------------ |
+| `AGENTS.md` как entry point             | OpenCode читает именно его при старте      |
+| Префикс `_*.md`                         | Визуально маркирует reference files        |
+| Ленивая загрузка                        | Экономия контекста агента                  |
+| `WORK_LOG.md`                           | Локальная хронология (вместо OKF `log.md`) |
+| Директории `issue/`, `playbook/`, `pr/` | Динамические артефакты workflow            |
+| `analysis/`                             | Структурированный вывод анализа            |
+| `runbooks/`                             | Процедуры инцидентов                       |
+| Расширенный словарь `type`              | Специфичные для наших задач типы           |
 
 ### Толерантность OKF
 
@@ -423,38 +424,38 @@ OKF требует, чтобы потребители **не отвергали*
 OKF не регистрирует `type` централизованно, но для консистентности
 внутри одного проекта полезно придерживаться фиксированного набора.
 
-| `type` | Файл |
-|--------|------|
-| `project-context` | `AGENTS.md` |
-| `index` | `index.md` |
-| `log` | `log.md` |
-| `meta` | `_meta.md` |
-| `spec-reference` | `SPEC_REFERENCE.md` |
-| `architecture` | `_concepts.md` |
-| `setup` | `_setup.md` |
-| `env` | `_env.md` |
-| `codestyle` | `_codestyle.md` |
-| `commands` | `_commands.md` |
-| `files` | `_files.md` |
-| `glossary` | `_glossary.md` |
-| `security` | `_security.md` |
-| `troubleshooting` | `_troubleshooting.md` |
-| `ci` | `_ci.md` |
-| `decision-log` | `_decisions.md` |
-| `backlog` | `_backlog.md` |
-| `worklog` | `_worklog.md`, `WORK_LOG.md` |
-| `templates` | `_templates.md` |
-| `testing` | `_testing.md` |
-| `api` | `_api.md` |
-| `release` | `_release.md` |
-| `performance` | `_performance.md` |
-| `analysis-index` | `analysis/index.md` |
-| `finding` | `analysis/F-*.md` |
-| `runbook-index` | `runbooks/index.md` |
-| `runbook` | `runbooks/*.md` |
+| `type`            | Файл                           |
+| ----------------- | ------------------------------ |
+| `project-context` | `AGENTS.md`                    |
+| `index`           | `index.md`                     |
+| `log`             | `log.md`                       |
+| `meta`            | `_meta.md`                     |
+| `spec-reference`  | `SPEC_REFERENCE.md`            |
+| `architecture`    | `_concepts.md`                 |
+| `setup`           | `_setup.md`                    |
+| `env`             | `_env.md`                      |
+| `codestyle`       | `_codestyle.md`                |
+| `commands`        | `_commands.md`                 |
+| `files`           | `_files.md`                    |
+| `glossary`        | `_glossary.md`                 |
+| `security`        | `_security.md`                 |
+| `troubleshooting` | `_troubleshooting.md`          |
+| `ci`              | `_ci.md`                       |
+| `decision-log`    | `_decisions.md`                |
+| `backlog`         | `_backlog.md`                  |
+| `worklog`         | `_worklog.md`, `WORK_LOG.md`   |
+| `templates`       | `_templates.md`                |
+| `testing`         | `_testing.md`                  |
+| `api`             | `_api.md`                      |
+| `release`         | `_release.md`                  |
+| `performance`     | `_performance.md`              |
+| `analysis-index`  | `analysis/index.md`            |
+| `finding`         | `analysis/F-*.md`              |
+| `runbook-index`   | `runbooks/index.md`            |
+| `runbook`         | `runbooks/*.md`                |
 | `project-summary` | `issue/PROJECT_SUMMARY_<N>.md` |
-| `playbook` | `playbook/PLAYBOOK_<N>.md` |
-| `pr` | `pr/PR_<N>.md` |
+| `playbook`        | `playbook/PLAYBOOK_<N>.md`     |
+| `pr`              | `pr/PR_<N>.md`                 |
 
 Потребители (в т.ч. агент) должны **толерантно** относиться к
 неизвестным `type` — это требование OKF. Но производители (мы)
@@ -485,8 +486,8 @@ init-opencode --analyze ~/Projects/existing-repo
 
 ### Переменные окружения
 
-| Переменная | По умолчанию | Назначение |
-|------------|--------------|------------|
+| Переменная               | По умолчанию                    | Назначение                  |
+| ------------------------ | ------------------------------- | --------------------------- |
 | `OPENCODE_TEMPLATE_REPO` | `~/Projects/opencode-templates` | Путь к репозиторию шаблонов |
 
 Переопределите, если клон шаблона лежит в другом месте:
@@ -552,6 +553,7 @@ ls -la /tmp/test-project/.opencode/
 init-opencode --update /tmp/test-project
 # → nothing to update
 ```
+
 ### Обновление
 
 ```bash
@@ -691,6 +693,7 @@ init-opencode --help
 ### Что делает
 
 **Установка:**
+
 1. Создаёт `.opencode/` в целевой директории.
 2. Если `.opencode/` уже существует — бекапит в `.opencode.bak.<timestamp>`.
 3. Копирует `template/` содержимое.
@@ -699,6 +702,7 @@ init-opencode --help
 6. Выводит следующие шаги.
 
 **Обновление:**
+
 1. Читает `.template-version`.
 2. Сравнивает с текущей версией шаблона.
 3. Обновляет «always overwritten» файлы.
@@ -870,6 +874,7 @@ solo-проекта это может быть избыточно.
 проекта (CI, ревью, статический анализ), не ваша.
 
 На практике:
+
 - **Режьте углы.** Пишите рабочий код, ревьюеры поймают проблемы.
 - **Маленькие PR.** Быстрее писать и ревьюить.
 - **Не изучайте весь код.** Меняйте то, что требует задача.
@@ -880,6 +885,7 @@ solo-проекта это может быть избыточно.
 Шаблон не про токены и экономию (хотя и это важно). Он про **ясность**.
 
 Когда агент видит чистый, структурированный `AGENTS.md`, он:
+
 - Быстро понимает проект.
 - Точно знает, где искать детали.
 - Не отвлекается на шум.
@@ -891,6 +897,7 @@ solo-проекта это может быть избыточно.
 ### OKF как фундамент
 
 Мы строим на OKF, потому что:
+
 - **Простота.** Markdown + frontmatter. Никаких бинарных форматов.
 - **Портативность.** Работает с `cat`, `git clone`, любым редактором.
 - **Стандарт.** Google Cloud, открытый формат, стабильная спека.
@@ -901,5 +908,5 @@ AI-агента. Не строго конформный, но следующий
 
 ---
 
-*Полное руководство по OKF v0.2: [SPEC.md](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md).*
-*Локальная выдержка: [`SPEC_REFERENCE.md`](SPEC_REFERENCE.md).*
+_Полное руководство по OKF v0.2: [SPEC.md](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)._
+_Локальная выдержка: [`SPEC_REFERENCE.md`](SPEC_REFERENCE.md)._

@@ -28,8 +28,8 @@ Complete reference for public interfaces consumers interact with. For internal i
 
 ### Rate Limiting
 
-| Endpoint | Limit | Window |
-|----------|-------|--------|
+| Endpoint   | Limit                      | Window                   |
+| ---------- | -------------------------- | ------------------------ |
 | `/api/...` | <requests per minute/hour> | <sliding window / fixed> |
 
 Exceeding limits returns HTTP `<status code>` with `Retry-After` header.
@@ -61,8 +61,8 @@ Exceeding limits returns HTTP `<status code>` with `Retry-After` header.
 
 - **Error responses:**
 
-| Status | Meaning | Action |
-|--------|---------|--------|
+| Status   | Meaning             | Action       |
+| -------- | ------------------- | ------------ |
 | `<code>` | <error description> | <what to do> |
 
 - **Example curl:**
@@ -78,17 +78,17 @@ curl -X <METHOD> <full_url> \
 
 If the project exposes a CLI, document its core commands here:
 
-| Command | Purpose | Flags | Example |
-|---------|---------|-------|---------|
+| Command     | Purpose        | Flags      | Example           |
+| ----------- | -------------- | ---------- | ----------------- |
 | `<command>` | <what it does> | `<--flag>` | `<example usage>` |
 
 ### Common flags
 
-| Flag | Default | Description |
-|------|---------|-------------|
-| `--help` | — | Show help for command |
-| `--version` | — | Print version |
-| `<env_flag>` | `<default>` | Target environment |
+| Flag         | Default     | Description           |
+| ------------ | ----------- | --------------------- |
+| `--help`     | —           | Show help for command |
+| `--version`  | —           | Print version         |
+| `<env_flag>` | `<default>` | Target environment    |
 
 ## Versioning
 
@@ -101,16 +101,16 @@ If the project exposes a CLI, document its core commands here:
 
 Officially supported client libraries:
 
-| Language | Library | Install |
-|----------|---------|---------|
-| <lang> | <package name> | `<install command>` |
+| Language | Library        | Install             |
+| -------- | -------------- | ------------------- |
+| <lang>   | <package name> | `<install command>` |
 
 ## Webhooks
 
 For event-driven integrations:
 
-| Event | Payload fields | Retry policy |
-|-------|---------------|--------------|
+| Event          | Payload fields         | Retry policy                  |
+| -------------- | ---------------------- | ----------------------------- |
 | `<event_name>` | `<key, type, meaning>` | <number> retries with backoff |
 
 Subscription endpoint: `<URL to register webhooks>`
