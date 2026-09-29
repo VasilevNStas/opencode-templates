@@ -8,7 +8,7 @@ tags: [okf, agents, opencode, guide]
 
 # Part V — Appendices
 
-_[Part I](../textbook_ru/guide_ru_part_I.md), [Part II](../textbook_ru/guide_ru_part_II.md) , [Part III](../textbook_ru/guide_ru_part_III.md), [Part IV](../textbook_ru/guide_ru_part_IV.md) — это основное содержание. Appendices — справочники. Их можно читать выборочно, использовать как reference. Не обязательно читать подряд._
+_[Part I](../textbook_ru/guide_ru_part_I.md), [Part II](../textbook_ru/guide_ru_part_II.md), [Part III](../textbook_ru/guide_ru_part_III.md), [Part IV](../textbook_ru/guide_ru_part_IV.md) — это основное содержание. Appendices — справочники. Их можно читать выборочно, использовать как reference. Не обязательно читать подряд._
 
 _Четыре приложения: словарь типов, полная структура bundle, выдержка из OKF, FAQ._
 
@@ -1572,11 +1572,11 @@ OKF — стандарт от Google Cloud. Даёт:
 ### D.11 Итог книги
 
 Мы прошли:
-- **[[guide_ru_part_I|Part I — Foundations]]** Зачем bundle, OKF, lazy loading
-- **[[guide_ru_part_II|Part II — Files]]** Каждый файл по отдельности
-- **[[guide_ru_part_III|Part III — Workflows]]** Шесть сценариев работы
-- **[[guide_ru_part_IV|Part IV — Operations]]** Установка, расширение, anti-patterns, философия
-- **[[guide_ru_part_V|Part V — Appendices]]** Справочники
+- **[Part I — Foundations](../textbook_ru/guide_ru_part_I.md)** Зачем bundle, OKF, lazy loading
+- **[Part II — Files](../textbook_ru/guide_ru_part_II.md)** Каждый файл по отдельности
+- **[Part III — Workflows](../textbook_ru/guide_ru_part_III.md)** Шесть сценариев работы
+- **[Part IV — Operations](../textbook_ru/guide_ru_part_IV.md)** Установка, расширение, anti-patterns, философия
+- **[Part V — Appendices](../textbook_ru/guide_ru_part_V.md)** Справочники
 
 **Главные идеи:**
 1. **`AGENTS.md` — оглавление, не энциклопедия*
