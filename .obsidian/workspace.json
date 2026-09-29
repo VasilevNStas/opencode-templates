@@ -29,7 +29,7 @@
               "state": {
                 "file": "textbook_ru/guide_ru_part_III.md",
                 "mode": "source",
-                "source": true
+                "source": false
               },
               "icon": "lucide-file",
               "title": "guide_ru_part_III"
@@ -43,7 +43,7 @@
               "state": {
                 "file": "textbook_ru/guide_ru_part_IV.md",
                 "mode": "source",
-                "source": true
+                "source": false
               },
               "icon": "lucide-file",
               "title": "guide_ru_part_IV"
@@ -56,8 +56,8 @@
               "type": "markdown",
               "state": {
                 "file": "textbook_ru/guide_ru_part_V.md",
-                "mode": "preview",
-                "source": true
+                "mode": "source",
+                "source": false
               },
               "icon": "lucide-file",
               "title": "guide_ru_part_V"
@@ -84,7 +84,7 @@
               "type": "markdown",
               "state": {
                 "file": "textbook_ru/guide_ru_part_II.md",
-                "mode": "preview",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
@@ -92,7 +92,7 @@
             }
           }
         ],
-        "currentTab": 5
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -170,7 +170,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "textbook_ru/guide_ru_part_II.md",
+                "file": "textbook_ru/guide_ru_part_V.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -189,7 +189,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "textbook_ru/guide_ru_part_II.md",
+                "file": "textbook_ru/guide_ru_part_V.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -232,7 +232,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "textbook_ru/guide_ru_part_II.md",
+                "file": "textbook_ru/guide_ru_part_V.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -260,10 +260,13 @@
       "bases:Create new base": false
     }
   },
-  "active": "5a178f98e6d38e95",
+  "active": "0e718c4b09ae94ed",
   "lastOpenFiles": [
-    "textbook_ru/guide_ru_part_I.md",
     "textbook_ru/guide_ru_part_II.md",
+    "textbook_ru/guide_ru_part_V.md",
+    "textbook_ru/guide_ru_part_IV.md",
+    "textbook_ru/guide_ru_part_I.md",
+    "textbook_ru/guide_ru_part_III.md",
     "textbook_ru/guide_ru.md",
     "package-lock.json",
     "node_modules/prettier/plugins/yaml.d.ts",
@@ -277,10 +280,7 @@
     "node_modules/prettier/plugins/graphql.d.ts",
     "node_modules/prettier/THIRD-PARTY-NOTICES.md",
     "node_modules/prettier/README.md",
-    "textbook_ru/guide_ru_part_V.md",
-    "textbook_ru/guide_ru_part_III.md",
     "(../textbook_ru/guide_ru_part_II.md",
-    "textbook_ru/guide_ru_part_IV.md",
     "guide_ru_part_I.md",
     "template/AGENTS.md",
     "guide_ru_part_V.md",
