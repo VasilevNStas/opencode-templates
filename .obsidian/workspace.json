@@ -27,12 +27,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README_ru.md",
-                "mode": "preview",
+                "file": "README_en.md",
+                "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README_ru"
+              "title": "README_en"
             }
           }
         ],
@@ -114,7 +114,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "README_ru.md",
+                "file": "README_en.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -133,7 +133,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "README_ru.md",
+                "file": "README_en.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
@@ -176,7 +176,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "README_ru.md",
+                "file": "README_en.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
@@ -206,8 +206,8 @@
   },
   "active": "03242bcaafb995d6",
   "lastOpenFiles": [
-    "README_en.md",
     "README_ru.md",
+    "README_en.md",
     "README.md",
     "textbook_en/guide_en.md",
     "template/_files.md",

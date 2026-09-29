@@ -10,7 +10,7 @@ A complete guide to `.opencode/` — a local knowledge bundle for working with a
 - [How it works](#how%20it%20works)
 - [Bundle structure](#bundle%20structure)
 - [Template files](#template%20files)
-- [Dynamic artifacts](#dynamic%20artifacts)
+- [Dynamic artifacts](#dynamic-artifacts)
 - [How files relate](#how%20files%20relate)
 - [OKF and this template](#okf%20and%20this%20template)
 - [`type` dictionary](#type%20dictionary)
