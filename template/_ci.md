@@ -9,9 +9,7 @@ tags: [ci, workflows]
 
 # CI Workflows
 
-Diagnostics for CI failures. For local problems, see
-[_troubleshooting.md](_troubleshooting.md). For CI-specific commands,
-see below.
+Diagnostics for CI failures. For local problems, see [_troubleshooting.md](_troubleshooting.md). For CI-specific commands, see below.
 
 **All workflows must pass** before a PR can be merged.
 
@@ -46,12 +44,8 @@ Faster alternative — run the individual commands from `Workflows` above.
 
 ## When CI passes locally but fails remotely
 
-1. **Check versions.** Local tool versions may differ from CI (Ruby, Node,
-   PostgreSQL, etc.). Verify via `.tool-versions`, `.ruby-version`, or the
-   workflow YAML.
-2. **Check environment variables.** CI has its own set. See
-   [_security.md](_security.md) and [_env.md](_env.md).
-3. **Check parallelism.** CI may run tests in parallel — race conditions
-   appear there first.
+1. **Check versions.** Local tool versions may differ from CI (Ruby, Node, PostgreSQL, etc.). Verify via `.tool-versions`, `.ruby-version`, or the workflow YAML.
+2. **Check environment variables.** CI has its own set. See [_security.md](_security.md) and [_env.md](_env.md).
+3. **Check parallelism.** CI may run tests in parallel — race conditions appear there first.
 4. **Check caching.** CI cache may be stale. Try clearing it.
 5. **Re-run the job** with debug logging enabled.

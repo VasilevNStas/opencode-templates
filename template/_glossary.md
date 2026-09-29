@@ -9,9 +9,7 @@ tags: [glossary, domain]
 
 # Glossary
 
-Domain terms specific to this project. Not a technical dictionary — for
-general concepts (HTTP, JSON, Ruby, Python, JS), use official docs.
-It helps the agent avoid having to ask the same thing again.
+Domain terms specific to this project. Not a technical dictionary — for general concepts (HTTP, JSON, Ruby, Python, JS), use official docs. It helps the agent avoid having to ask the same thing again.
 
 ## Terms
 

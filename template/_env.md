@@ -6,7 +6,6 @@ generated: { by: human:creator, at: 2026-09-22T00:00:00Z }
 status: stable
 tags: [env, infrastructure]
 ---
-
 # Environments
 
 Non-local environments. For local setup, see [_setup.md](_setup.md).
@@ -47,7 +46,7 @@ For secrets handling, see [_security.md](_security.md).
 
 ## Prod restrictions
 
-- **Never** modify prod data directly — use migrations or scripts.
-- **Never** deploy outside the process — see Deploy above.
-- **Never** share prod credentials — see [_security.md](_security.md).
-- **Always** announce changes in <channel> before running.
+- **Never** modify prod data directly — use migrations or scripts
+- **Never** deploy outside the process — see Deploy above
+- **Never** share prod credentials — see [_security.md](_security.md)
+- **Always** announce changes in <channel> before running

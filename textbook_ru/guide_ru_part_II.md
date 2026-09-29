@@ -2,7 +2,9 @@
 type: book
 title: "Knowledge Bundles for AI Agents, part II"
 description: "A practical guide to OKF and agent-ready codebases"
-timestamp: 2026-09-23
+generated:
+  by: human:author
+  at: 2026-09-23T00:00:00Z
 tags: [okf, agents, opencode, guide]
 ---
 
@@ -833,7 +835,7 @@ _glossary.md ──→ _files.md          (term → file)
 **Ошибка 3: `_glossary.md` с `HTTP` и `JSON`** Общеизвестные термины.
 **Ошибка 4: дублирование между файлами** `_concepts.md` описывает компоненты, `_glossary.md` тоже. Разделяйте: concepts — «что и как», glossary — «что значит».
 **Ошибка 5: слишком длинные** `_setup.md` — 100 строк норма. 300 — уже руководство. `_concepts.md` — 80 строк норма. `_glossary.md` — 40 строк норма.
-**Ошибка 6: `timestamp` не обновляется** Файлы устаревают.
+**Ошибка 6: `generated` не обновляется** Файлы устаревают.
 **Ошибка 7: ссылки на несуществующие файлы** Проверяйте.
 ### 6.8 Упражнение
 
@@ -842,7 +844,7 @@ _glossary.md ──→ _files.md          (term → file)
 1. **Может ли новый человек поднять проект за час**, имея только `_setup.md` и репозиторий? Если нет — что пропущено?
 2. **Можете ли вы объяснить архитектуру за 2 минуты**, не открывая код? Если нет — `_concepts.md` слабый.
 3. **Есть ли в проекте жаргон**, который вы объясняете каждому новому человеку? Если да — этому место в `_glossary.md`.
-4. **Все три файла обновлены за последние 3 месяца?** Если нет — проверьте `timestamp`.
+4. **Все три файла обновлены за последние 3 месяца?** Если нет — проверьте `generated.at`.
 5. **Ссылки между файлами работают?** Кликните по каждой.
 ### 6.9 Что дальше
 
@@ -1644,7 +1646,7 @@ git checkout -b <issue-number>
 ### 7.9 Частые ошибки (все шесть файлов)
 
 **Ошибка 1: дублирование** → Одна и та же информация в двух файлах. Расинхрон неизбежен. Ссылайтесь.
-**Ошибка 2: не обновляется `timestamp`** → Файл менялся — дата старая. Обновляйте.
+**Ошибка 2: `generated` не обновляется** → Файл менялся — дата старая. Обновляйте.
 **Ошибка 3: нет границ** → Файлы разрастаются, пересекаются. Проверяйте: «это в другом файле?».
 **Ошибка 4: секции, которые не используются** → Пустые заголовки хуже отсутствующих. Удаляйте.
 **Ошибка 5: cross-links не работают** → Ссылки на несуществующие файлы. Проверяйте.
@@ -2073,8 +2075,9 @@ tags: [runbook, area]
 
 #### Ключевые секции
 
-**`last-tested` в frontmatter** — отдельно от `timestamp`.
-`timestamp` — когда файл менялся.
+**`last-tested` в frontmatter** — отдельно от `generated.at`.
+`generated.at` — когда файл менялся.
+.
 `last-tested` — когда проверяли процедуру
 
 **`When to use` — точный триггер.** Не «если что-то не работает», а «если пришёл alert `DBLatencyHigh`». В 3 часа ночи on-call должен мгновенно понять, что этот runbook подходит.
@@ -2692,7 +2695,7 @@ F-004
 **Ошибка 9: findings в `index.md`, а не в отдельных файлах**
 **Ошибка 10: дублирование с `_backlog.md`**
 **Ошибка 11: статус не обновляется**
-**Ошибка 12: нет `timestamp`**
+**Ошибка 12: нет `generated`**
 ### 9.6 `_meta.md` — bundle meta
 
 #### Зачем
@@ -2703,7 +2706,7 @@ F-004
 | `AGENTS.md`              | `_meta.md`                |
 | ------------------------ | ------------------------- |
 | Про **проект**           | Про **bundle**            |
-| «Этот проект — Ruby gem» | «Этот bundle — OKF v0.1»  |
+| «Этот проект — Ruby gem» | «Этот bundle — OKF v0.2»  |
 | Уникален для проекта     | Одинаков во всех проектах |
 
 Тест: «Это про код проекта или про файлы `.opencode/`?» → код → `AGENTS.md`, файлы → `_meta.md`
@@ -2745,7 +2748,7 @@ Full index: `index.md`
 
 ## OKF base + extensions
 
-This bundle follows OKF v0.1 with the following extensions:
+This bundle follows OKF v0.2 with the following extensions:
 
 | Extension  | What we added          |
 | ---- | ------------------------------------- |
@@ -2785,7 +2788,7 @@ init-opencode --update <project-dir>
 
 - **Never put secrets** in any file here
 
-- **Update `timestamp`** whenever you edit a file
+- **Update `generated.at`** whenever you edit a file
 
 ## References
 
@@ -2802,7 +2805,7 @@ init-opencode --update <project-dir>
 **`Template version` — четыре поля** Version, Installed, Last updated, Source. `Last updated` отдельно от `Installed` — обновление и установка разные события;
 **`OKF base + extensions` — самая важная секция** Таблица: что стандартное → что наше. Список должен **обновляться** при добавлении расширений;
 **`How to update` — три категории** Never / Always / Diff. Критично, чтобы `--update` не затирал пользовательские данные;
-**`Rules` — 3 правила** Never commit, never secrets, update timestamp;
+**`Rules` — 3 правила** Never commit, never secrets, update `generated.at`;
 **`_meta.md` почти не меняется.** При первичной установке — заполняется. При обновлении — версия. В остальное время — статичен;
 #### Частые ошибки
 
@@ -2814,7 +2817,7 @@ init-opencode --update <project-dir>
 **Ошибка 6: нет правил обновления**
 **Ошибка 7: `_meta.md` редактируется слишком часто** Должен меняться редко.
 **Ошибка 8: `_meta.md` содержит секреты**
-**Ошибка 9: нет `timestamp`**
+**Ошибка 9: нет `generated`**
 
 ### 9.7 Как они связаны
 
@@ -2948,7 +2951,7 @@ See the full list in `AGENTS.md` (section "Reference files")
 
 ## OKF spec
 
-- `SPEC_REFERENCE.md` — extract of OKF v0.1
+- `SPEC_REFERENCE.md` — extract of OKF v0.2
 
 ## Log
 
@@ -3065,7 +3068,7 @@ explicit — its content is a pointer, not a log
 ````markdown
 ---
 type: spec-reference
-title: "OKF v0.1 — Open Knowledge Format (Google)"
+title: "OKF v0.2 — Open Knowledge Format (Google)"
 description: "Extract of the Google spec for representing knowledge as markdown files"
 resource: "https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md"
 generated:
@@ -3074,7 +3077,7 @@ generated:
 tags: [okf, meta, spec]
 ---
 
-# OKF v0.1 — Open Knowledge Format (extract)
+# OKF v0.2 — Open Knowledge Format (extract)
 
 > **This is an extract, not the full specification.** Original:
 > [SPEC.md](https://github.com/...)
@@ -3125,7 +3128,9 @@ title: <Optional display name>
 description: <Optional one-line summary>
 resource: <Optional canonical URI>
 tags: [<tag>, <tag>]
-timestamp: <ISO 8601 datetime>
+generated:
+  by: human:<id>
+  at: <ISO 8601 datetime>
 ---
 ```
 
@@ -3137,7 +3142,7 @@ preserve unknown keys and not reject documents with unrecognized fields.
 ### 2. Body (markdown)
 
 Standard markdown. Structural markdown recommended over free text
-**In this bundle:** we use `## References` and `## Citations`
+**In this bundle:** we use `## References`; body `# Citations` is deprecated in v0.2 (use `sources:` in frontmatter)
 interchangeably
 
 ## Cross-linking
@@ -3149,7 +3154,7 @@ embedded in a project
 
 ## Conformance
 
-A bundle conforms to OKF v0.1 if:
+A bundle conforms to OKF v0.2 if:
 
 1. Every `.md` file (except `index.md`, `log.md`) contains parseable
    YAML frontmatter

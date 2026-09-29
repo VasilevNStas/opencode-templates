@@ -2,7 +2,9 @@
 type: book
 title: Knowledge Bundles for AI Agents, part I
 description: A practical guide to OKF and agent-ready codebases
-timestamp: 2026-09-23
+generated:
+  by: human:author
+  at: 2026-09-23T00:00:00Z
 tags:
   - okf
   - agents
@@ -398,7 +400,14 @@ title: <Optional display name>
 description: <Optional one-line summary>
 resource: <Optional canonical URI>
 tags: [<tag>, <tag>]
-timestamp: <ISO 8601 datetime>
+generated:
+  by: human:<id> # или reference_agent/version, process:name
+  at: <ISO 8601 datetime>
+status: stable # draft | stable | deprecated
+sources: # provenance (см. раздел "Trust Signals")
+  - id: source-id
+    resource: https://example.com
+    author: team:name
 ---
 ```
 
@@ -417,7 +426,9 @@ timestamp: <ISO 8601 datetime>
 - `description` — одно предложение для описания содержимого
 - `resource` — канонический URI ресурса
 - `tags` — категории
-- `timestamp` — когда файл менялся
+- `generated: {by, at}` — кто создал/обновил и когда (v0.2)
+- `status` — жизненный цикл: draft / stable / deprecated
+- `sources:` — provenance внешних источников (см. Trust Signals)
 
 **Расширения:**
 
@@ -433,11 +444,13 @@ Body — обычный markdown. Никаких ограничений на с�
 
 OKF описывает **конвенциональные секции** — но они не обязательны:
 
-| Заголовок     | Назначение                       |
-| ------------- | -------------------------------- |
-| `# Schema`    | Структурированное описание полей |
-| `# Examples`  | Примеры использования            |
-| `# Citations` | Внешние источники                |
+| Заголовок       | Назначение                                          |
+| --------------- | --------------------------------------------------- |
+| `# Schema`      | Структурированное описание полей                    |
+| `# Examples`    | Примеры использования                               |
+| `# Computation` | Санкционированные вычисления (Attested Computation) |
+
+> **Примечание:** `# Citations` устарел в OKF v0.2 и заменён на `sources:` во frontmatter. Не используйте body-секцию `# Citations`.
 
 Вы можете использовать их или нет. Если используете — они узнаваемы.
 
@@ -517,7 +530,7 @@ OKF v0.2 добавила **опциональные first-class поля** д
 
 | v0.1                        | v0.2                    | Fallback                                                                                           |
 | --------------------------- | ----------------------- | -------------------------------------------------------------------------------------------------- |
-| `timestamp: <ISO 8601>`     | `generated: { by, at }` | Потребители **могут** откатиться к legacy `timestamp`, если `generated` отсутствует                |
+| `timestamp: <ISO 8601>`     | `generated: { by, at }` | Потребители **должны** использовать `generated`. При его отсутствии legacy `timestamp` — graceful degradation для v0.1-документов, но производители обязаны писать `generated`         |
 | `# Citations` (секция body) | `sources` (frontmatter) | Потребители **должны** читать `sources` и **могут** парсить legacy `# Citations` в v0.1-документах |
 
 **Всё остальное — additive (опционально)** v0.1 bundle **совместим** с
@@ -539,25 +552,23 @@ OKF v0.2 явно формулирует философию:
 
 #### Наш bundle и OKF v0.2
 
-Наш шаблон **совместим** с v0.2:
+Наш шаблон **конформен** с v0.2:
 
 - Все файлы имеют `type` — обязательное условие выполнено.
-
-- Дополнительные поля (`timestamp`, `status`, `tags`) — опциональны и толерантно обрабатываются.
-
-- Мы **не используем** пока `sources`, `verified`, `stale_after` — но можем добавить при необходимости.
-
-- `timestamp` остаётся в нашем словаре, хотя v0.2 предлагает `generated`. Мы можем добавить `generated` как расширение.
+- Мы используем `generated: {by, at}` вместо deprecated `timestamp`.
+- Дополнительные поля (`status`, `tags`) — опциональны и толерантно обрабатываются.
+- Provenance через `sources:`, верификация через `verified:` — добавляются по мере необходимости.
 
 #### Проверка конформности
 
-Для проверки bundle на соответствие OKF v0.2 можно использовать:
+OKF v0.2 **не предписывает** ни одного конкретного инструмента для валидации — это часть его minimalist philosophy.
 
-- `okf-parser` — валидатор с поддержкой v0.2
+Вместо этого сообщество использует:
 
-- `okf-lint` — линтер для bundle
-
-Оба инструмента различают **нормативные ошибки** (нарушение обязательных правил) и **advisory diagnostics** (предупреждения). Битые ссылки — это **warning**, а не ошибка.
+- YAML frontmatter валидацию через `yamllint` или аналогичные инструменты;
+- Проверку обязательных полей (`type`, `generated`) через grep/pre-commit hooks;
+- В проекте [saschb2b/skills](https://github.com/saschb2b/skills) есть OKF-aware linting;
+- LangChain openwiki демонстрирует практическое применение.
 
 ### 2.9 Что OKF не делает
 

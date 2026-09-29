@@ -9,16 +9,13 @@ tags: [meta, okf]
 
 # Bundle Meta
 
-This `.opencode/` directory is an [OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)
-bundle with extensions. It is **local only** — never committed to the
-project repository
+This `.opencode/` directory is an [OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) bundle with extensions. It is **local only** — never committed to the project repository
 
 ## What's here
 
 - **Project context** — [AGENTS.md](AGENTS.md), entry point
 - **Reference files** — `_*.md`, lazy-loaded
-- **Dynamic artifacts** — `issue/`, `playbook/`, `pr/`, `analysis/`,
-  `runbooks/`, `archive/`
+- **Dynamic artifacts** — `issue/`, `playbook/`, `pr/`, `analysis/`, `runbooks/`, `archive/`
 - **Work log** — [WORK_LOG.md](WORK_LOG.md), local only
 
 Full index: [index.md](index.md)
@@ -34,7 +31,7 @@ Version details also in [`.template-version`](.template-version) (machine-readab
 
 ## OKF base + extensions
 
-This bundle follows OKF v0.1 with the following extensions:
+This bundle follows OKF v0.2 with the following extensions:
 
 | Extension                  | What we added                                                                                                      |
 | -------------------------- | ------------------------------------------------------------------------------------------------------------------ |
@@ -56,12 +53,12 @@ init-opencode --update <project-dir>
 ```
 
 - **Never overwritten:** `WORK_LOG.md`, `_decisions.md`, `_backlog.md`,
-  `_concepts.md`, `analysis/*`, `runbooks/*`, `issue/*`, `playbook/*`,
-  `pr/*`, `archive/*`
+  `_concepts.md`, `_setup.md`, `_meta.md`, `analysis/*`, `runbooks/*`, `issue/*`,
+  `playbook/*`, `pr/*`, `archive/*`
 - **Always overwritten:** `_codestyle.md`, `_ci.md`, `_commands.md`,
   `_files.md`, `_glossary.md`, `_security.md`, `_troubleshooting.md`,
-  `_templates.md`, `_testing.md`, `_api.md`, `_release.md`, `_performance.md`,
-  `AGENTS.md`, `index.md`, `log.md`, `_meta.md`
+  `_templates.md`, `_env.md`, `_worklog.md`, `AGENTS.md`, `index.md`,
+  `log.md`, `SPEC_REFERENCE.md`, `_meta.md`
 - **Diff preview:**
   ```bash
   init-opencode --diff <project-dir>

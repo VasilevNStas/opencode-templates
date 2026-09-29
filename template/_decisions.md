@@ -9,9 +9,7 @@ tags: [adr, architecture, decisions]
 
 # Architecture Decisions
 
-Each significant decision gets its own entry. **Newest first.**
-Small decisions stay in [WORK_LOG.md](WORK_LOG.md); this file is for
-choices that affect architecture, public API, or development process.
+Each significant decision gets its own entry. **Newest first.** Small decisions stay in [WORK_LOG.md](WORK_LOG.md); this file is for choices that affect architecture, public API, or development process.
 
 ## Index
 

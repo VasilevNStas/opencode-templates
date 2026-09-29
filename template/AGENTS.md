@@ -31,15 +31,15 @@ tags: [language, type]
 
 Every issue follows the same lifecycle. Active files live in `.opencode/`.
 
-| Stage                                                        | File                           | Purpose                                                      |
-| ------------------------------------------------------------ | ------------------------------ | ------------------------------------------------------------ |
-| Start                                                        | `issue/PROJECT_SUMMARY_<N>.md` | Issue overview, problem, solution, verification              |
-| Start                                                        | `playbook/PLAYBOOK_<N>.md`     | Strategy, patterns, pitfalls, verification commands          |
-| During                                                       | `.opencode/WORK_LOG.md`        | Session-by-session progress (see [_worklog.md](_worklog.md)) |
-| During                                                       | `_decisions.md`                | Non-obvious choices worth an ADR                             |
-| End                                                          | `pr/PR_<N>.md`                 | PR description — use [_templates.md](_templates.md)          |
-| End                                                          | `.opencode/archive/`           | Move completed issue files here                              |
-| Templates and full workflow: [_templates.md](_templates.md). |
+| Stage            | File           | Purpose                                     |
+| -------- | ------------- | -------------------------------- |
+| Start |`issue/PROJECT_SUMMARY_<N>.md` | Issue overview, problem, solution, verification   |
+| Start |`playbook/PLAYBOOK_<N>.md` | Strategy, patterns, pitfalls, verification commands       |
+| During |`.opencode/WORK_LOG.md`| Session-by-session progress (see [_worklog.md](_worklog.md)) |
+| During |`_decisions.md`|Non-obvious choices worth an ADR |
+| End | `pr/PR_<N>.md`| PR description — use [_templates.md](_templates.md) |
+| End | `.opencode/archive/` | Move completed issue files here  |
+| Templates and full workflow: [_templates.md](_templates.md) |
 
 ---
 
@@ -86,7 +86,9 @@ Every issue follows the same lifecycle. Active files live in `.opencode/`.
 ---
 
 _This `.opencode/` directory is an OKF bundle. Entry point: this file. Bundle index: [index.md](index.md). Change log pointer: [log.md](log.md)._
+
 ---
 
 _All shared workflow rules (branch discipline, commits, PR requirements, mindset) are inherited from `~/.config/opencode/AGENTS.md`_
+
 ---

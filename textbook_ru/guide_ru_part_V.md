@@ -2,7 +2,9 @@
 type: book
 title: "Knowledge Bundles for AI Agents, part V"
 description: "A practical guide to OKF and agent-ready codebases"
-timestamp: 2026-09-23
+generated:
+  by: human:author
+  at: 2026-09-23T00:00:00Z
 tags: [okf, agents, opencode, guide]
 ---
 
@@ -150,7 +152,7 @@ title: "..."
 
 **Файл:** [`SPEC_REFERENCE.md`](../template/SPEC_REFERENCE.md)
 
-**Назначение:** выдержка из OKF v0.1. Офлайн-доступ к спеке
+**Назначение:** выдержка из OKF v0.2. Офлайн-доступ к спеке
 **Когда используется:** один раз на bundle
 **Не путать с:**
 - `meta` — тот про конкретный bundle
@@ -486,7 +488,7 @@ title: "..."
 ├── index.md                      ← OKF entry point
 ├── log.md                        ← OKF log pointer
 ├── AGENTS.md                     ← главный файл
-├── SPEC_REFERENCE.md             ← выдержка из OKF v0.1
+├── SPEC_REFERENCE.md             ← выдержка из OKF v0.2
 ├── _meta.md                      ← мета о bundle
 │
 ├── _concepts.md                  ← архитектура
@@ -806,7 +808,7 @@ title: "..."
 
 ### C.1 Назначение приложения
 
-Это **выдержка из спецификации OKF v0.1** с комментариями о том, **как она применена в нашем bundle**.
+Это **выдержка из спецификации OKF v0.2** с комментариями о том, **как она применена в нашем bundle**.
 Полный текст спеки: [SPEC.md](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md).
 
 Локальная версия без комментариев: `SPEC_REFERENCE.md` в самом bundle.
@@ -927,7 +929,7 @@ generated:
 
 **Разбор:**
 **Required:** `type` — строка, идентифицирующая вид концепта.
-**Recommended:** `title`, `description`, `resource`, `tags`, `timestamp`.
+**Recommended:** `title`, `description`, `resource`, `tags`, `generated.at`.
 **Extensions:** производители могут добавлять любые дополнительные ключи. Потребители должны сохранять неизвестные ключи и не отвергать документы с нераспознанными полями.
 
 **Как это отражено у нас:**
@@ -954,12 +956,12 @@ generated:
 | ------------- | ---------------------------------------- |
 | `# Schema`    | Structured description of fields/columns |
 | `# Examples`  | Usage examples                           |
-| `# Citations` | External sources                         |
+| `# Computation` | Sanctioned computation for Attested Computation |
 
 **Как это отражено у нас:**
 - Мы используем структурный markdown везде;
-- `## Citations` — в `_setup.md`, `SPEC_REFERENCE.md`;
-- `## References` — в остальных. Взаимозаменяемо;
+- Body `# Citations` — deprecated в v0.2, использовать `sources:` во frontmatter;
+- Взаимозаменяемо;
 - `# Schema`, `# Examples` — по необходимости;
 
 **Почему структурный markdown:** помогает и чтению человеком, и извлечению агентом.
@@ -991,36 +993,33 @@ generated:
 
 **Толерантность к битым ссылкам:** мы проверяем ссылки вручную раз в квартал. Но OKF не требует.
 
-### C.8 Citations
+Из спеки v0.2:
 
-Из спеки:
+Вместо body-секции `# Citations` используется frontmatter `sources:`:
 
-markdown
-
-# Citations
-
-[1] [BigQuery public dataset announcement](https://cloud.google.com/...)
-[2] [Internal runbook](https://wiki.internal/...)
+```yaml
+sources:
+  - id: bigquery-dataset
+    resource: https://cloud.google.com/bigquery/public-data
+    title: BigQuery public dataset announcement
+    author: team:gcp-analytics
+    last_modified: 2026-01-15
+  - id: internal-runbook
+    resource: wiki.internal/runbooks/001
+    title: Internal runbook
+    author: team:sre-oncall
+    last_modified: 2026-06-01
+```
 
 **Как это отражено у нас:**
+- `sources:` в frontmatter — основной способ;
+- `## References` для ссылок на связанные артефакты (issue, PR, документы);
+- Body-секция `# Citations` — deprecated в v0.2, не использовать.
 
-- `## Citations` в `SPEC_REFERENCE.md`, `_setup.md`;
-- `## References` в остальных;
-- Формат `[N] [title](url)` — везде;
-
-**Почему два разных названия:**
-
-- **Citations** — ссылки на **внешние источники** (статьи, документация);
-- **References** — ссылки на **связанные артефакты** (issue, PR, документы);
-
-Семантически разные. OKF использует `Citations`. Мы используем оба — по контексту.
-
-### C.9 Conformance
-
-Из спеки:
-
-> Bundle conforms to OKF v0.1 if:
-> 1. Every `.md` file (except `index.md`, `log.md`) contains parseable YAML frontmatter.
+**Почему `sources:` вместо `# Citations`:**
+- Provenance теперь структурировано (author, last_modified, usage_count);
+- Потребители могут автоматически проверять credibility сигналов;
+- No ambiguity между внешними источниками и ссылками на артефакты.
 > 2. Every frontmatter contains a non-empty `type` field.
 > 3. `index.md` and `log.md` follow the described structure.
 
@@ -1448,7 +1447,7 @@ done
 #### Q: Bundle устаревает. Что делать?
 
 **Ревизия раз в квартал.**
-- Проверить `timestamp` во всех файлах
+- Проверить `generated.at` во всех файлах
 - Проверить актуальность содержимого
 - Удалить неактуальное
 См. Chapter 19 (Anti-patterns, раздел «Чистка bundle»)

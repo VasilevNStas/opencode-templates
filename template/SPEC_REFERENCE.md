@@ -90,9 +90,9 @@ sources: # optional: list of provenance sources
 Values are not centrally registered. Consumers must tolerate unknown
 `type` values
 
-**Recommended fields:** `title` (display name), `description` (one
-sentence), `resource` (canonical URI), `tags` (categories), `generated.at`
-(timestamp of last meaningful change), `status` (lifecycle state)
+**Recommended fields:** `title` (display name), `description` (one sentence), `resource` (canonical URI), `tags` (categories)
+
+**Optional families (v0.2):** `generated: {by, at}` (producer identity + timestamp), `verified: [{by, at}]` (sign-off), `sources:` (provenance with credibility signals), `status` (draft|stable|deprecated), `stale_after` (expiration date)
 
 **Trust signals (v0.2):** `generated.by` (producer actor), `verified` (human/machine sign-off), `sources` (provenance with credibility signals), `stale_after` (expiration date)
 
@@ -110,10 +110,11 @@ reading and agent extraction.
 
 **Conventional OKF sections:**
 
-| Heading      | Purpose                                  |
-| ------------ | ---------------------------------------- |
-| `# Schema`   | Structured description of fields/columns |
-| `# Examples` | Usage examples                           |
+| Heading           | Purpose                                          |
+| ----------------- | ------------------------------------------------ |
+| `# Schema`        | Structured description of fields/columns         |
+| `# Examples`      | Usage examples                                   |
+| `# Computation`   | Sanctioned computation for Attested Computation  |
 
 **In this bundle:** we use `# Schema` and `# Examples` when relevant.
 Citations moved to `sources:` in frontmatter (v0.2).
@@ -158,10 +159,16 @@ v0.2 is additive, backward-compatible with v0.1. A v0.1 bundle drops
 in unchanged. Key renames: `timestamp` → `generated.at`, body `# Citations`
 → `sources:` in frontmatter. Both forms fallback gracefully.
 
+When trust/lifecycle/provenance/computation families are present, consumers have additional obligations:
+
+- Consumers **MUST** treat a bare `verified` mapping (`{by, at}`) as a one-element list
+- Consumers **SHOULD** derive trust tiers and staleness only from the fields specified here
+- Consumers **SHOULD** surface, not silently drop, a failing attestation
+
 Consumers **must not** reject a bundle because of:
 
 - Missing optional frontmatter fields
-- Unknown `type` values
+- Unknown `type` values  
 - Unknown additional frontmatter keys
 - Broken cross-links
 - Missing `index.md`

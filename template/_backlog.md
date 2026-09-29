@@ -9,12 +9,8 @@ tags: [backlog, planning]
 
 # Backlog
 
-Future work — **not yet** started. For work already done, see
-[WORK_LOG.md](WORK_LOG.md). For confirmed tasks, use the project's issue
-tracker (GitHub Issues, GitLab Issues, etc.).
-Backlog is a **local draft**, not an official tracker. Cheap to write,
-cheap to delete. Promote items to real issues when you decide to act.
-
+Future work — **not yet** started. For work already done, see[WORK_LOG.md](WORK_LOG.md). For confirmed tasks, use the project's issue tracker (GitHub Issues, GitLab Issues, etc.).
+Backlog is a **local draft**, not an official tracker. Cheap to write, cheap to delete. Promote items to real issues when you decide to act.
 ## Priorities
 
 | Priority | Meaning                           |
@@ -36,7 +32,6 @@ cheap to delete. Promote items to real issues when you decide to act.
 
 - <idea 1>
 - <idea 2>
-
 ## Tech debt
 
 | Item    | Why it hurts | Effort    | Priority |

@@ -288,7 +288,7 @@ This saves tokens and keeps context manageable. For example:
 
 ## Совместимость
 
-Формат совместим с OKF v0.1 и v0.2. Потребители, ориентированные на v0.1,
+Формат соответствует OKF v0.2. Визуально совместим с v0.1 через fallback (legacy timestamp).
 будут видеть только `timestamp` → `generated.at` (fallback), `sources:`
 игнорируются, но не ломают чтение.
 

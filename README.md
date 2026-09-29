@@ -1,9 +1,6 @@
 # OpenCode Project Template
 
-A local knowledge bundle for working with AI agents through
-[OpenCode](https://opencode.ai). Lazy-loaded markdown files, OKF-inspired,
-never committed to your project.
-
+A local knowledge bundle for working with AI agents through [OpenCode](https://opencode.ai). Lazy-loaded markdown files, OKF-inspired, never committed to your project.
 ## What's inside
 
 - **`AGENTS.md`** — entry point, minimal project context + workflow
@@ -12,7 +9,6 @@ never committed to your project.
 - **OKF v0.2** — YAML frontmatter with `type`, `generated`, `status`, `sources` for trust signals
 
 Result: instead of one 500-line `AGENTS.md`, you get a focused ~60-line core plus 25+ topical files the agent reads only when needed
-
 ## Installation
 
 Clone the template repository and link the installer:
@@ -109,8 +105,7 @@ Subdirectories contain dynamic artifacts: `issue/`, `playbook/`, `pr/`, `archive
 
 ## Key principles
 
-- **Lazy loading** `AGENTS.md` is a table of contents, not an
-  encyclopedia — agent reads topical files only when needed
+- **Lazy loading** `AGENTS.md` is a table of contents, not an encyclopedia — agent reads topical files only when needed
 - **Local only** `.opencode/` is never committed to your project
 - **OKF v0.2 compliant** Markdown + YAML frontmatter with trust signals (`generated`, `status`, `sources`)
 - **Readable by everyone** If you can `cat` a file, you can read OKF; if you can `git clone`, you can distribute it

@@ -2,7 +2,9 @@
 type: book
 title: "Knowledge Bundles for AI Agents, part III"
 description: "A practical guide to OKF and agent-ready codebases"
-timestamp: 2026-09-23
+generated:
+  by: human:author
+  at: 2026-09-23T00:00:00Z
 tags: [okf, agents, opencode, guide]
 ---
 
@@ -2258,7 +2260,9 @@ title: "Eval on user input in Session"
 description: "Direct eval on params allows RCE"
 severity: high
 status: todo
-timestamp: 2026-09-22
+generated:
+  by: human:<id>
+  at: 2026-09-22T00:00:00Z
 tags: [finding, security]
 ---
 
@@ -2430,7 +2434,9 @@ Report — это markdown-файл с `type: report` (или без спец�
 type: report
 title: "Security Audit 2026-09"
 description: "Audit of user input handling"
-timestamp: 2026-09-22
+generated:
+  by: human:<id>
+  at: 2026-09-22T00:00:00Z
 tags: [report, security, audit]
 ---
 
