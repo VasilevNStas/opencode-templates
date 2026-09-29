@@ -11,8 +11,6 @@ tags: [okf, agents, opencode, guide]
 _[Part I](../textbook_ru/guide_ru_part_I.md), [Part II](../textbook_ru/guide_ru_part_II.md), [Part III](../textbook_ru/guide_ru_part_III.md), [Part IV](../textbook_ru/guide_ru_part_IV.md) — это основное содержание. Appendices — справочники. Их можно читать выборочно, использовать как reference. Не обязательно читать подряд._
 
 _Четыре приложения: словарь типов, полная структура bundle, выдержка из OKF, FAQ._
-
----
 ## Appendix A. Type dictionary
 
 ### A.1 Что такое `type`
@@ -1602,6 +1600,7 @@ OKF — стандарт от Google Cloud. Даёт:
 - [OKF SPEC.md](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md) — полная спецификация
 - Репозиторий шаблонов — `README_en.md`, `README_ru.md`
 - Сам bundle — `.opencode/` в вашем проекте
+
 **Удачи**
 
 ---
