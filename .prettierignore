@@ -1,0 +1,12 @@
+# Don't format these
+node_modules/
+package-lock.json
+.git/
+.gitignore
+README.md
+README_en.md
+README_ru.md
+VERSION
+
+# Template files are formatted manually or by separate process
+template/SPEC_REFERENCE.md
